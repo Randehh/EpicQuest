@@ -1,0 +1,11 @@
+name: EpicQuest
+main: randy.epicquest.main
+version: 3.0
+depend: [Vault]
+commands:
+  quest:
+    description: Quest stuff
+    usage: /<command> help
+  q:
+    description: Quest stuff
+    usage: /<command> help

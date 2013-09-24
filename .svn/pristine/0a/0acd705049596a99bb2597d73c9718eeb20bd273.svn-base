@@ -1,0 +1,64 @@
+package randy.listeners;
+
+import org.bukkit.Location;
+import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.SignChangeEvent;
+
+import randy.epicquest.EpicQuestDatabase;
+import randy.epicquest.EpicSign;
+import randy.epicquest.EpicSystem;
+
+public class TypeSignChange implements Listener {
+	
+	@EventHandler
+	public void onSignChange(SignChangeEvent event){
+		
+		//Get variables of the player and sign position
+		Player player = event.getPlayer();
+		Sign sign = (Sign) event.getBlock().getState();
+		int x = sign.getX();
+		int y = sign.getY();
+		int z = sign.getZ();
+		
+		if(player.hasPermission("epicquest.admin.sign")){
+			
+			//Check which options were written down
+			if(event.getLine(0).equalsIgnoreCase("[EpicQuest]")){
+				if(event.getLine(1).equalsIgnoreCase("[Give]")){
+					if(event.getLine(2).equalsIgnoreCase("Random")){
+						
+						//Random quest!
+						event.setLine(0, "");
+						event.setLine(1, "Quest:");
+						event.setLine(2, "Random quest!");
+						event.setLine(3, "");
+						EpicSystem.getSignList().add(new EpicSign(-1, new Location(null, x, y, z)));
+						player.sendMessage("Set sign at "+ x + ":"+ y + ":"+ z + " with random quests.");
+					}else{
+						
+						//Specified quest!
+						int quest = Integer.parseInt(event.getLine(2));
+						event.setLine(0, "");
+						event.setLine(1, "Quest:");
+						event.setLine(2, EpicQuestDatabase.getQuestName(quest));
+						event.setLine(3, "");
+						EpicSystem.getSignList().add(new EpicSign(quest, new Location(null, x, y, z)));
+						player.sendMessage("Set sign at "+ x + ":"+ y + ":"+ z + " with quest " + quest + ".");
+					}
+				}
+				
+				if(event.getLine(1).equalsIgnoreCase("[Turnin]")){
+					event.setLine(0, "");
+					event.setLine(1, "Quest:");
+					event.setLine(2, "Turn in quests here!");
+					event.setLine(3, "");
+					EpicSystem.getSignList().add(new EpicSign(-2, new Location(null, x, y, z)));
+					player.sendMessage("Set sign at "+ x + ":"+ y + ":"+ z + " where quests are turned in.");
+				}
+			}
+		}
+	}
+}

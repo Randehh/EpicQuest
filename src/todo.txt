@@ -1,0 +1,12 @@
+Leaderboards
+
+Stats commands:
+/q stats				: show your own stats
+/q stats player			: show full stat list of one player
+/q stats player1 player2: compare highlights
+
+New features:
+	Toggleable chat function to show task progress, quest completition and task completition
+
+Bugs fixed:
+	Drop quest command doesn't give an error when you have no quests or pick an invalid quest
