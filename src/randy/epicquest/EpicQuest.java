@@ -78,7 +78,14 @@ public class EpicQuest {
 	public List<String> getQuestWorlds(){ return questWorlds; }
 	public int getQuestResetTime(){ return questResetTime; }
 	public int getQuestRewardMoney(){ return questRewardMoney; }
-	public ItemStack getQuestRewardItem() { return new ItemStack(questRewardItemID, questRewardItemAmount); }
+	public ItemStack getQuestRewardItem() { 
+		if(questRewardItemID >= 0 &&
+				questRewardItemAmount > 0){
+			return new ItemStack(questRewardItemID, questRewardItemAmount); 
+		}
+		return null;
+	}
+
 	public String getQuestRewardPermission() { return questRewardPermission; }
 	public void completeQuest(){
 		
