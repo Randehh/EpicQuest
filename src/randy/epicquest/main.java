@@ -210,23 +210,19 @@ public class main extends JavaPlugin{
 										player.sendMessage(ChatColor.RED + "There are no more quests available.");
 									}
 								}else{
-									if(player.hasPermission("epicquest.user.questlist")){
-										//Get quest
-										int quest = Integer.parseInt(args[1]);
+									//Get quest
+									int quest = Integer.parseInt(args[1]);
 
-										//Get all available quests
-										List<Integer> availableQuests = epicPlayer.getObtainableQuests();
+									//Get all available quests
+									List<Integer> availableQuests = epicPlayer.getObtainableQuests();
 
-										if(availableQuests.contains(quest)){
+									if(availableQuests.contains(quest)){
 
-											//Give quest
-											epicPlayer.addQuest(new EpicQuest(epicPlayer, quest));
+										//Give quest
+										epicPlayer.addQuest(new EpicQuest(epicPlayer, quest));
 
-										}else{
-											player.sendMessage(ChatColor.RED + "You can't get that quest.");
-										}
 									}else{
-										player.sendMessage(ChatColor.RED + "You may only get random quests.");
+										player.sendMessage(ChatColor.RED + "You can't get that quest.");
 									}
 								}
 							}else{
