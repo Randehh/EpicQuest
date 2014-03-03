@@ -24,8 +24,8 @@ public class EpicQuest {
 	private List<String> questWorlds;
 	private int questResetTime;
 	private int questRewardMoney;
-	private int questRewardItemID;
-	private int questRewardItemAmount;
+	private List<Integer> questRewardItemID;
+	private List<Integer> questRewardItemAmount;
 	private String questRewardPermission;
 	private List<String> taskType;
 	private List<String> taskID;
@@ -78,13 +78,19 @@ public class EpicQuest {
 	public List<String> getQuestWorlds(){ return questWorlds; }
 	public int getQuestResetTime(){ return questResetTime; }
 	public int getQuestRewardMoney(){ return questRewardMoney; }
-	public ItemStack getQuestRewardItem() { 
-		if( questRewardItemID >= 0 &&
-				questRewardItemAmount > 0){
-			return new ItemStack(questRewardItemID, questRewardItemAmount);
+	public List<ItemStack> getQuestRewardItem() {
+		List<ItemStack> itemList = new ArrayList<ItemStack>();
+
+		for(int i = 0; i < questRewardItemID.size(); i++){
+			int itemID = questRewardItemID.get(i);
+			int itemAmount = questRewardItemAmount.get(i);
+			if( itemID >= 0 &&
+					itemAmount > 0){
+				itemList.add(new ItemStack(itemID, itemAmount));
 			}
-		return null;
 		}
+		return itemList;
+	}
 	public String getQuestRewardPermission() { return questRewardPermission; }
 	public void completeQuest(){
 		
@@ -94,10 +100,13 @@ public class EpicQuest {
 		
 		//Generate item reward
 		PlayerInventory inventory = player.getInventory();
-		ItemStack itemStack = getQuestRewardItem();
-		if(itemStack != null){
-			inventory.addItem(itemStack);
-			player.sendMessage(ChatColor.GREEN + "You got " + itemStack.getAmount() + " " + Material.getMaterial(itemStack.getTypeId()).toString().toLowerCase().replace("_", " ") + ".");
+		List<ItemStack> itemList = getQuestRewardItem();
+		if(!itemList.isEmpty()){
+			for(int i = 0; i < itemList.size(); i++){
+				ItemStack itemStack = itemList.get(i);
+				inventory.addItem(itemStack);
+				player.sendMessage(ChatColor.GREEN + "You got " + itemStack.getAmount() + " " + Material.getMaterial(itemStack.getTypeId()).toString().toLowerCase().replace("_", " ") + ".");
+			}
 		}
 			
 		//Generate money reward
@@ -235,4 +244,12 @@ public class EpicQuest {
 	
 	}
 	
+	/*
+	 * 
+	 * Misc
+	 * 
+	 */
+	public void spawnMob(){
+		
+	}
 }

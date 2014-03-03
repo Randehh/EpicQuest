@@ -45,7 +45,7 @@ public class SaveLoader {
 	 */
 	public static void save() throws IOException, InvalidConfigurationException {
 
-		System.out.print("Saving..." + EpicSystem.getPlayerList());
+		System.out.print("Saving...");
 		
 		List<EpicPlayer> playersToSave = EpicSystem.getPlayerList();
 
@@ -58,7 +58,6 @@ public class SaveLoader {
 				// Get the file of the player which has to be saved
 				EpicPlayer epicPlayer = playersToSave.get(i);
 				savePlayer(epicPlayer);
-				System.out.print("Saved player: " + epicPlayer.getPlayerName());
 			}			
 
 			System.out.print("[EpicQuest]: saved " + playerlist.split(", ").length + " player(s).");
@@ -211,8 +210,6 @@ public class SaveLoader {
 
 		//Set daily limit
 		save.set("Daily_Left", epicPlayer.getQuestDailyLeft());
-		
-		System.out.print("Save " + playername + " file writeable: " + savefile.canWrite());
 
 		//Save file
 		try {			
@@ -291,11 +288,13 @@ public class SaveLoader {
 	}
 
 	public static void loadPlayer(String playername){
-		EpicPlayer epicPlayer = new EpicPlayer(playername, false);
+		EpicPlayer epicPlayer = null;
 
 		//Get the file
 		File savefile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "Players" + File.separator + playername + ".yml");
 		if(savefile.exists()){
+			
+			epicPlayer = new EpicPlayer(playername);
 
 			//Make the file editable
 			FileConfiguration save = YamlConfiguration.loadConfiguration(savefile);
@@ -358,11 +357,11 @@ public class SaveLoader {
 
 			//Load daily limit
 			epicPlayer.setQuestDailyLeft(save.getInt("Daily_Left"));
+			
+			EpicSystem.getPlayerList().add(epicPlayer);
 
 			//Add the player to the new save list
 			//addPlayerToSave(epicPlayer);
 		}
-
-		EpicSystem.getPlayerList().add(epicPlayer);
 	}
 }

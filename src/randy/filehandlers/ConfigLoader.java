@@ -44,6 +44,13 @@ public class ConfigLoader {
 			EpicSystem.setDailyLimit(configuration.getInt("Daily_Limit"));
 		}
 		
+		if(!configuration.contains("Max_Party_Size")){
+			configuration.set("Max_Party_Size", 5);
+			EpicSystem.setMaxPartySize(5);
+		}else{
+			EpicSystem.setMaxPartySize(configuration.getInt("Max_Party_Size"));
+		}
+		
 		try {
 			configuration.save(configfile);
 		} catch (IOException e) {

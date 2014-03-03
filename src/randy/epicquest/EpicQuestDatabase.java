@@ -2,6 +2,7 @@ package randy.epicquest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class EpicQuestDatabase {
 
@@ -29,8 +30,8 @@ public class EpicQuestDatabase {
 	
 	//Rewards
 	private static HashMap<Integer, Integer> questRewardMoney = new HashMap<Integer, Integer>();
-	private static HashMap<Integer, Integer> questRewardID = new HashMap<Integer, Integer>();
-	private static HashMap<Integer, Integer> questRewardAmount = new HashMap<Integer, Integer>();
+	private static HashMap<Integer, List<Integer>> questRewardID = new HashMap<Integer, List<Integer>>();
+	private static HashMap<Integer, List<Integer>> questRewardAmount = new HashMap<Integer, List<Integer>>();
 	private static HashMap<Integer, String> questRewardRank = new HashMap<Integer, String>();
 	
 	//Misc
@@ -91,11 +92,11 @@ public class EpicQuestDatabase {
 		return questRewardMoney.get(quest);
 	}
 	
-	public static Integer getRewardID(Integer quest){
+	public static List<Integer> getRewardID(Integer quest){
 		return questRewardID.get(quest);
 	}
 	
-	public static Integer getRewardAmount(Integer quest){
+	public static List<Integer> getRewardAmount(Integer quest){
 		return questRewardAmount.get(quest);
 	}
 	
@@ -168,11 +169,11 @@ public class EpicQuestDatabase {
 		questRewardMoney.put(quest, amount);
 	}
 	
-	public static void setRewardID(Integer quest, Integer ID){
+	public static void setRewardID(Integer quest, List<Integer> ID){
 		questRewardID.put(quest, ID);
 	}
 	
-	public static void setRewardAmount(Integer quest, Integer amount){
+	public static void setRewardAmount(Integer quest, List<Integer> amount){
 		questRewardAmount.put(quest, amount);
 	}
 	
@@ -188,9 +189,11 @@ public class EpicQuestDatabase {
 	}
 	
 	public static void setQuestLocked(Integer quest, String quests){
-		String[] questString = quests.split(", ");
+		
+		String[] questString = quests.split(",");
 		ArrayList<Integer> questList = new ArrayList<Integer>();
 		for(int i = 0; i < questString.length; i++){
+			System.out.print("Locked quests of " + quest + ": " + questString[i]);
 			questList.add(Integer.parseInt(questString[i]));
 		}
 		questLocked.put(quest, questList);

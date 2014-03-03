@@ -2,6 +2,7 @@ package randy.filehandlers;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -23,6 +24,7 @@ public class QuestLoader {
 		
 		Object[] questlist = QuestLoader.quests.getKeys(false).toArray();
 		for(int i = 0; i < questlist.length; i++){
+			System.out.print("Loading quest: " + questlist[i].toString());
 			//Get general info
 			EpicQuestDatabase.setQuestName(i, quests.getString("q"+i+".Name"));
 			EpicQuestDatabase.setQuestEndInfo(i, quests.getString("q"+i+".End_Info"));
@@ -32,8 +34,16 @@ public class QuestLoader {
 			
 			//Get reward info
 			EpicQuestDatabase.setRewardMoney(i, quests.getInt("q"+i+".Rewards.Money"));
-			EpicQuestDatabase.setRewardID(i, quests.getInt("q"+i+".Rewards.Item.id"));
-			EpicQuestDatabase.setRewardAmount(i, quests.getInt("q"+i+".Rewards.Item.Amount"));
+			
+			String[] idString = quests.getString("q"+i+".Rewards.Item.id").split(",");
+			List<Integer> idList = new ArrayList<Integer>();
+			for(int e = 0; e < idString.length; e++){ idList.add(Integer.parseInt(idString[e])); }
+			EpicQuestDatabase.setRewardID(i, idList);
+			
+			String[] amountString = quests.getString("q"+i+".Rewards.Item.Amount").split(",");
+			List<Integer> amountList = new ArrayList<Integer>();
+			for(int e = 0; e < amountString.length; e++){ amountList.add(Integer.parseInt(amountString[e])); }
+			EpicQuestDatabase.setRewardAmount(i, amountList);
 			
 			//Get tasks info
 			int taskamount = quests.getConfigurationSection("q"+i+".Tasks").getKeys(false).size();

@@ -20,6 +20,9 @@ public class EpicPlayer {
 	int statQuestDropped;
 	int statQuestGet;
 	int statTaskCompleted;
+	EpicParty currentParty;
+	public boolean partyChat = false;
+	EpicPlayer hasPartyInvitation = null;
 	
 	
 	public EpicPlayer(String playerName, List<EpicQuest> questList, List<Integer> questCompleted, int questDailyLeft, List<Integer> questTimer, float statMoneyEarned, int statQuestCompleted, int statQuestDropped, int statQuestGet, int statTaskCompleted){
@@ -37,7 +40,7 @@ public class EpicPlayer {
 		
 	}
 	
-	public EpicPlayer(String playerName, boolean addToSaveList){
+	public EpicPlayer(String playerName){
 		
 		this.playerName = playerName;
 		this.questList = new ArrayList<EpicQuest>();
@@ -73,6 +76,14 @@ public class EpicPlayer {
 	}
 	public String getPlayerName() { return playerName; }
 	
+	public EpicParty getParty(){
+		return currentParty;
+	}
+	
+	public void setParty(EpicParty party){
+		currentParty = party;
+	}
+	
 	/*
 	 * 
 	 * Quest methods
@@ -100,6 +111,7 @@ public class EpicPlayer {
 	public void addQuest(EpicQuest quest){
 		if(canGetQuest(quest.getQuestNo()) == true){
 			questList.add(quest);
+			modifyStatQuestGet(1);
 			
 			getPlayer().sendMessage(""+ChatColor.GOLD + quest.getQuestName());
 			getPlayer().sendMessage(""+ChatColor.GRAY + ChatColor.ITALIC + quest.getQuestStart());
@@ -120,6 +132,7 @@ public class EpicPlayer {
 		if(!completeableQuests.isEmpty()){
 			for(int i = 0; i < completeableQuests.size(); i++){
 				completeableQuests.get(i).completeQuest();
+				modifyStatQuestCompleted(1);
 			}
 		}else{
 			getPlayer().sendMessage(ChatColor.RED + "There are no quests to complete!");
@@ -192,8 +205,9 @@ public class EpicPlayer {
 	public boolean hasUnlockedQuest(int questNo){
 		List<Integer> questLockedList = EpicQuestDatabase.getQuestLocked(questNo);
 		
-		//System.out.print("Locked list: " + questLockedList);
-		//System.out.print("Completed list: " + questCompleted);
+		System.out.print("Questno: " + questNo);
+		System.out.print("Locked list: " + questLockedList);
+		System.out.print("Completed list: " + questCompleted);
 		
 		if(questCompleted.containsAll(questLockedList)){ return true; }
 		return false;
