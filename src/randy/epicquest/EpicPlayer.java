@@ -174,8 +174,6 @@ public class EpicPlayer {
 	}
 	public boolean canGetQuest(int questNo){
 		
-		//System.out.print("Has quest: " + hasQuest(questNo));
-		
 		if(!hasQuest(questNo) &&
 				hasUnlockedQuest(questNo) &&
 				hasDailyQuestLeft() &&
@@ -186,7 +184,6 @@ public class EpicPlayer {
 		return false;
 	}
 	public boolean canGetQuest(){
-		//System.out.print(getObtainableQuests().toString());
 		if(getObtainableQuests().isEmpty()) { return false; } else { return true; }
 	}
 	public boolean hasQuest(int questNo){

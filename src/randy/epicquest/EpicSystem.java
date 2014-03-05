@@ -2,6 +2,7 @@ package randy.epicquest;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Location;
@@ -14,6 +15,7 @@ public class EpicSystem {
 	public static List<EpicPlayer> playerList = new ArrayList<EpicPlayer>();
 	public static List<EpicSign> signList = new ArrayList<EpicSign>();
 	private static ArrayList<Location> blockedList = new ArrayList<Location>();
+	public static HashMap<Location, EpicPlayer> furnaceList = new HashMap<Location, EpicPlayer>();
 	
 	static int questLimit = 10;
 	static int time = 0;

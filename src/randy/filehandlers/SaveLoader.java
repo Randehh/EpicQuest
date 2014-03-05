@@ -359,9 +359,6 @@ public class SaveLoader {
 			epicPlayer.setQuestDailyLeft(save.getInt("Daily_Left"));
 			
 			EpicSystem.getPlayerList().add(epicPlayer);
-
-			//Add the player to the new save list
-			//addPlayerToSave(epicPlayer);
 		}
 	}
 }

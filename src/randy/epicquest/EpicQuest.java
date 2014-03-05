@@ -243,13 +243,4 @@ public class EpicQuest {
 		}
 	
 	}
-	
-	/*
-	 * 
-	 * Misc
-	 * 
-	 */
-	public void spawnMob(){
-		
-	}
 }

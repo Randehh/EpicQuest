@@ -25,6 +25,7 @@ import randy.filehandlers.QuestLoader;
 import randy.filehandlers.FileChecker;
 import randy.filehandlers.ConfigLoader;
 import randy.filehandlers.SaveLoader;
+import randy.listeners.InventoryDrag;
 import randy.listeners.PartyMessage;
 import randy.listeners.TypePlayerJoin;
 import randy.listeners.TypeDestroy;
@@ -34,13 +35,14 @@ import randy.listeners.TypeLevelUp;
 import randy.listeners.TypePlace;
 import randy.listeners.TypePlayerInteractEntity;
 import randy.listeners.TypeSignChange;
+import randy.listeners.TypeSmelt;
 import randy.listeners.TypeTame;
 
 public class main extends JavaPlugin{
 
 
 	//Set a few variables needed throughout the start-up
-	String pluginversion = "3.1";
+	String pluginversion = "3.2";
 	String pluginname = "EpicQuest";
 	static Plugin epicQuestPlugin = Bukkit.getPluginManager().getPlugin("EpicQuest");
 	public static Permission permission = null;
@@ -57,6 +59,8 @@ public class main extends JavaPlugin{
 	private final TypeSignChange signChangeListener = new TypeSignChange();
 	private final TypePlayerInteractEntity playerInteractEntityListener = new TypePlayerInteractEntity();
 	private final PartyMessage partyMessageListener = new PartyMessage();
+	private final TypeSmelt smeltListener = new TypeSmelt();
+	private final InventoryDrag inventoryDrag = new InventoryDrag();
 	
 	//Party timers
 	HashMap<EpicPlayer, Integer> invitationTimer = new HashMap<EpicPlayer, Integer>();
@@ -85,6 +89,8 @@ public class main extends JavaPlugin{
 		getServer().getPluginManager().registerEvents(signChangeListener, this);
 		getServer().getPluginManager().registerEvents(playerInteractEntityListener, this);
 		getServer().getPluginManager().registerEvents(partyMessageListener, this);
+		getServer().getPluginManager().registerEvents(smeltListener, this);
+		getServer().getPluginManager().registerEvents(inventoryDrag, this);
 
 		/*
 		 * Check all files before trying to load the plugin
@@ -728,8 +734,6 @@ public class main extends JavaPlugin{
 					for(int i = 0; i < playerList.length; i++){
 						EpicPlayer tempPlayer = (EpicPlayer)playerList[i];
 						invitationTimer.put(tempPlayer, invitationTimer.get(tempPlayer) - 1);
-						
-						System.out.print(tempPlayer.getPlayerName() + ": " + invitationTimer.get(tempPlayer));
 						
 						if(invitationTimer.get(tempPlayer) == 0){
 							tempPlayer.hasPartyInvitation.getPlayer().sendMessage(""+ChatColor.ITALIC + ChatColor.RED + tempPlayer.getPlayerName() + " declined your party invitation.");

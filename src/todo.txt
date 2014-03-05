@@ -10,3 +10,9 @@ New features:
 
 Bugs fixed:
 	Drop quest command doesn't give an error when you have no quests or pick an invalid quest
+	
+	
+NEW STUFF IN 8.2
+	Party functionality
+	Smelt quest type
+	Craft quest type
