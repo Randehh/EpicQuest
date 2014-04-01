@@ -21,7 +21,6 @@ public class TypePlayerJoin implements Listener {
 		if(EpicSystem.getEpicPlayer(event.getPlayer().getName()) != null){
 			EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(event.getPlayer().getName());
 			SaveLoader.savePlayer(epicPlayer);
-			//SaveLoader.addPlayerToSave(epicPlayer);
 		}
 	}
 }

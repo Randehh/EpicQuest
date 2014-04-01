@@ -3,17 +3,22 @@ package randy.filehandlers;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Villager;
 
 import randy.epicquest.EpicPlayer;
 import randy.epicquest.EpicQuest;
 import randy.epicquest.EpicSign;
 import randy.epicquest.EpicSystem;
+import randy.epicquest.VillagerHandler;
 
 public class SaveLoader {
 
@@ -32,6 +37,9 @@ public class SaveLoader {
 
 	static File blockfile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "block.yml");
 	static FileConfiguration block = YamlConfiguration.loadConfiguration(blockfile);
+	
+	static File villagerfile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "villager.yml");
+	static FileConfiguration villager = YamlConfiguration.loadConfiguration(villagerfile);
 
 
 	/*
@@ -43,9 +51,9 @@ public class SaveLoader {
 	/*
 	 * Save players
 	 */
-	public static void save() throws IOException, InvalidConfigurationException {
+	public static void save(boolean isShutDown) throws IOException, InvalidConfigurationException {
 
-		System.out.print("Saving..." + EpicSystem.getPlayerList());
+		System.out.print("Saving...");
 		
 		List<EpicPlayer> playersToSave = EpicSystem.getPlayerList();
 
@@ -58,7 +66,6 @@ public class SaveLoader {
 				// Get the file of the player which has to be saved
 				EpicPlayer epicPlayer = playersToSave.get(i);
 				savePlayer(epicPlayer);
-				System.out.print("Saved player: " + epicPlayer.getPlayerName());
 			}			
 
 			System.out.print("[EpicQuest]: saved " + playerlist.split(", ").length + " player(s).");
@@ -117,10 +124,42 @@ public class SaveLoader {
 			//Set the block in the file
 			for(int i = 0; i < blocklist.size(); i++){
 				Location loc = blocklist.get(i);
-				block.set("Blocked."+ loc.getBlockX() + "-" + loc.getBlockY() + "-" + loc.getBlockZ(), "");
+				block.set("Blocked."+ loc.getBlockX() + ":" + loc.getBlockY() + ":" + loc.getBlockZ(), "");
 			}
 			
 			block.save(blockfile);
+		}
+		
+		HashMap<Villager, List<Integer>> villagerMap = VillagerHandler.villagerList;
+		if(!villagerMap.isEmpty()){
+			
+			//Reset file
+			if(!villagerfile.exists()){
+				villagerfile.createNewFile();
+			}else{
+				villagerfile.delete();
+				villagerfile.createNewFile();
+			}
+			
+			Object[] villagerList = villagerMap.keySet().toArray();
+			for(int i = 0; i < villagerList.length; i++){
+				Villager tempVil = (Villager)villagerList[i];
+				String villagerName = tempVil.getCustomName();
+				
+				Location loc = tempVil.getLocation();
+				villager.set("Villager."+villagerName+".World", tempVil.getWorld().getName());
+				villager.set("Villager."+villagerName+".Location", loc.getBlockX()+":"+loc.getBlockY()+":"+loc.getBlockZ());
+				villager.set("Villager."+villagerName+".Quests", VillagerHandler.villagerList.get(tempVil).get(0));
+				
+				List<String> sentenceList = VillagerHandler.GetRandomSentenceList(tempVil);
+				for(int e = 0; e < sentenceList.size(); e++){
+					villager.set("Villager."+villagerName+".Sentences."+e, sentenceList.get(e));
+				}
+				
+				if(isShutDown) tempVil.remove();
+			}
+			
+			villager.save(villagerfile);
 		}
 	}
 
@@ -211,8 +250,6 @@ public class SaveLoader {
 
 		//Set daily limit
 		save.set("Daily_Left", epicPlayer.getQuestDailyLeft());
-		
-		System.out.print("Save " + playername + " file writeable: " + savefile.canWrite());
 
 		//Save file
 		try {			
@@ -280,22 +317,54 @@ public class SaveLoader {
 		if(block.contains("Blocked")){
 			Object[] blockarray = block.getConfigurationSection("Blocked").getKeys(false).toArray();
 			for(int i = 0; i < blockarray.length; i++){
-				String[] blockSplit = ((String) blockarray[i]).split("-");
+				String[] blockSplit = ((String) blockarray[i]).split(":");
 				Location loc = new Location(null, Integer.parseInt(blockSplit[0]), Integer.parseInt(blockSplit[1]), Integer.parseInt(blockSplit[2]));
 				blocklist.add(loc);
 			}
 		}
 		EpicSystem.setBlockList(blocklist);
+		
+		if(villager.contains("Villager")){
+			Object[] villagerarray = villager.getConfigurationSection("Villager").getKeys(false).toArray();
+			for(int i = 0; i < villagerarray.length; i++){
+				
+				//Name
+				String villagerName = (String)villagerarray[i];
+				
+				//Location
+				World world = Bukkit.getWorld(villager.getString("Villager."+villagerName+".World"));
+				String[] locationSplit = villager.getString("Villager."+villagerName+".Location").split(":");
+				Location loc = new Location(world, Integer.parseInt(locationSplit[0]), Integer.parseInt(locationSplit[1]), Integer.parseInt(locationSplit[2]));
+				
+				//Quests
+				List<Integer> questList = new ArrayList<Integer>();
+				questList.add(villager.getInt("Villager."+villagerName+".Quests"));
+				
+				//Create
+				VillagerHandler.RemoveLeftoverVillager(villagerName, world);
+				VillagerHandler.SpawnVillager(world, loc, villagerName, questList);
+				
+				//Set sentences
+				List<String> sentenceList = new ArrayList<String>();
+				Object[] sentences = villager.getConfigurationSection("Villager."+villagerName+".Sentences").getKeys(false).toArray();
+				for(int e = 0; e < sentences.length; e++){
+					sentenceList.add(villager.getString("Villager."+villagerName+".Sentences."+sentences[e]));
+				}
+				VillagerHandler.SetRandomSentences(VillagerHandler.GetVillager(world, villagerName), sentenceList);
+			}
+		}
 
 		System.out.print("[EpicQuest]: loaded the progress of " + playercount + " players.");
 	}
 
 	public static void loadPlayer(String playername){
-		EpicPlayer epicPlayer = new EpicPlayer(playername, false);
+		EpicPlayer epicPlayer = null;
 
 		//Get the file
 		File savefile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "Players" + File.separator + playername + ".yml");
 		if(savefile.exists()){
+			
+			epicPlayer = new EpicPlayer(playername);
 
 			//Make the file editable
 			FileConfiguration save = YamlConfiguration.loadConfiguration(savefile);
@@ -358,11 +427,8 @@ public class SaveLoader {
 
 			//Load daily limit
 			epicPlayer.setQuestDailyLeft(save.getInt("Daily_Left"));
-
-			//Add the player to the new save list
-			//addPlayerToSave(epicPlayer);
+			
+			EpicSystem.getPlayerList().add(epicPlayer);
 		}
-
-		EpicSystem.getPlayerList().add(epicPlayer);
 	}
 }

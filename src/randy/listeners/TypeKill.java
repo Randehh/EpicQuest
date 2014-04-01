@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -14,6 +16,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 
 import randy.epicquest.EpicQuest;
 import randy.epicquest.EpicSystem;
+import randy.epicquest.VillagerHandler;
 
 public class TypeKill extends TypeBase implements Listener{
 	
@@ -44,6 +47,12 @@ public class TypeKill extends TypeBase implements Listener{
 					tempnames.put(targetid, playername);
 				}
 			}			
+		}
+		
+		Entity ent = event.getEntity();
+		if(ent instanceof Villager){
+			Villager villager = (Villager)ent;
+			if(VillagerHandler.villagerList.containsKey(villager)) event.setCancelled(true);
 		}
 	}
 	

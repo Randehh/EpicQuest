@@ -2,6 +2,7 @@ package randy.listeners;
 
 import java.util.HashMap;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -32,9 +33,9 @@ public class TypeEnchant extends TypeBase implements Listener{
 					int taskNo = Integer.parseInt(tasks[e]);
 					
 					//Check if correct item was enchanted
-					int item = event.getItem().getTypeId();
-					int itemneeded = Integer.parseInt(quest.getTaskID(taskNo));
-					if(item == itemneeded){
+					Material item = event.getItem().getType();
+					String itemneeded = quest.getTaskID(taskNo);
+					if(item == Material.matchMaterial(itemneeded)){
 									
 						//Progress task stuff
 						quest.modifyTaskProgress(taskNo, 1, true);

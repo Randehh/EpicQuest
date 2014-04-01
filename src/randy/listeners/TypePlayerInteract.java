@@ -5,18 +5,22 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import randy.epicquest.EpicPlayer;
 import randy.epicquest.EpicQuest;
 import randy.epicquest.EpicSign;
 import randy.epicquest.EpicSystem;
+import randy.epicquest.VillagerHandler;
 
-public class TypePlayerInteractEntity implements Listener{
+public class TypePlayerInteract implements Listener{
 	
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event){
@@ -57,6 +61,32 @@ public class TypePlayerInteractEntity implements Listener{
 						}
 					}
 				}
+				
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerInteractEntity(PlayerInteractEntityEvent event){
+		Entity clickedEntity = event.getRightClicked();
+		if(clickedEntity instanceof Villager){
+			Villager villager = (Villager)clickedEntity;
+			if(VillagerHandler.villagerList.containsKey(villager)){
+				
+				EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(event.getPlayer());
+				List<Integer> questList = VillagerHandler.villagerList.get(villager);
+				
+				if(epicPlayer.hasQuest(questList.get(0))){
+					EpicQuest quest = epicPlayer.getQuest(questList.get(0));
+					if(quest.getPlayerQuestCompleted()){
+						quest.completeQuest();
+					}else{
+						event.getPlayer().sendMessage(ChatColor.RED + villager.getCustomName() + ": " + ChatColor.ITALIC + VillagerHandler.GetRandomSentence(villager));
+					}
+				}else{
+					epicPlayer.addQuest(new EpicQuest(epicPlayer, questList.get(0)));
+				}
+				event.setCancelled(true);
 			}
 		}
 	}

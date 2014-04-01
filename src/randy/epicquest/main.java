@@ -2,10 +2,10 @@ package randy.epicquest;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -25,21 +25,26 @@ import randy.filehandlers.QuestLoader;
 import randy.filehandlers.FileChecker;
 import randy.filehandlers.ConfigLoader;
 import randy.filehandlers.SaveLoader;
+import randy.listeners.InventoryDrag;
+import randy.listeners.OpenBook;
+import randy.listeners.PartyMessage;
+import randy.listeners.TypeCraftItem;
 import randy.listeners.TypePlayerJoin;
 import randy.listeners.TypeDestroy;
 import randy.listeners.TypeEnchant;
 import randy.listeners.TypeKill;
 import randy.listeners.TypeLevelUp;
 import randy.listeners.TypePlace;
-import randy.listeners.TypePlayerInteractEntity;
+import randy.listeners.TypePlayerInteract;
 import randy.listeners.TypeSignChange;
+import randy.listeners.TypeSmelt;
 import randy.listeners.TypeTame;
 
 public class main extends JavaPlugin{
 
 
 	//Set a few variables needed throughout the start-up
-	String pluginversion = "3.0.1";
+	String pluginversion = "3.2";
 	String pluginname = "EpicQuest";
 	static Plugin epicQuestPlugin = Bukkit.getPluginManager().getPlugin("EpicQuest");
 	public static Permission permission = null;
@@ -54,10 +59,18 @@ public class main extends JavaPlugin{
 	private final TypeEnchant enchantListener = new TypeEnchant();
 	private final TypeLevelUp levelupListener = new TypeLevelUp();
 	private final TypeSignChange signChangeListener = new TypeSignChange();
-	private final TypePlayerInteractEntity playerInteractEntityListener = new TypePlayerInteractEntity();
+	private final TypePlayerInteract playerInteractEntityListener = new TypePlayerInteract();
+	private final PartyMessage partyMessageListener = new PartyMessage();
+	private final OpenBook openBook = new OpenBook();
+	private final TypeSmelt smeltListener = new TypeSmelt();
+	private final InventoryDrag inventoryDrag = new InventoryDrag();
+	private final TypeCraftItem itemCraftListenever = new TypeCraftItem();
+	
+	//Party timers
+	HashMap<EpicPlayer, Integer> invitationTimer = new HashMap<EpicPlayer, Integer>();
 
 	public void onDisable() {
-		saveAll();
+		saveAll(true);
 		System.out.print(pluginname + " succesfully disabled.");
 	}
 
@@ -79,6 +92,11 @@ public class main extends JavaPlugin{
 		getServer().getPluginManager().registerEvents(levelupListener, this);
 		getServer().getPluginManager().registerEvents(signChangeListener, this);
 		getServer().getPluginManager().registerEvents(playerInteractEntityListener, this);
+		getServer().getPluginManager().registerEvents(partyMessageListener, this);
+		getServer().getPluginManager().registerEvents(smeltListener, this);
+		getServer().getPluginManager().registerEvents(inventoryDrag, this);
+		getServer().getPluginManager().registerEvents(openBook, this);
+		getServer().getPluginManager().registerEvents(itemCraftListenever, this);
 
 		/*
 		 * Check all files before trying to load the plugin
@@ -153,17 +171,18 @@ public class main extends JavaPlugin{
 				Player player = (Player) sender;
 				String playername = player.getName();
 				EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(playername);
-
+				
 				if(args.length > 0){
 
 					/*
 					 * Help command
 					 */
 					if(args[0].equalsIgnoreCase("help")){
-						if(args.length == 1){
-							if(player.hasPermission("epicquest.user.help")){
-								player.sendMessage(ChatColor.GOLD + "[=======  Help list  =======]");
-								player.sendMessage(ChatColor.GOLD + "/q help - Display this page.");
+						if(player.hasPermission("epicquest.user.help")){
+							if(args.length == 1 || (args.length == 2 && args[1] == ""+2)){
+							
+								player.sendMessage(ChatColor.GOLD + "[=======  Help list (1/2) =======]");
+								player.sendMessage(ChatColor.GOLD + "/q help <number> - Displays a help page.");
 								player.sendMessage(ChatColor.GOLD + "/q give <number> - Gives you a quest, quest number optional from questlist.");
 								player.sendMessage(ChatColor.GOLD + "/q questbook <page> - Displays all the quests you have.");
 								player.sendMessage(ChatColor.GOLD + "/q questlist <page> - Displays available to you.");
@@ -171,14 +190,187 @@ public class main extends JavaPlugin{
 								player.sendMessage(ChatColor.GOLD + "/q stats <playername> - Display stats on the player.");
 								player.sendMessage(ChatColor.GOLD + "/q turnin - Turn in your quests.");
 								player.sendMessage(ChatColor.GOLD + "[=======================]");
-								return true;
-							}else{
-								player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
+								
+							}else if(args.length == 2){
+								if(Integer.parseInt(args[1]) == 2){
+									
+									player.sendMessage(ChatColor.GOLD + "[=======  Help list (2/2) =======]");
+									player.sendMessage(ChatColor.GOLD + "/q party - Shows who is in your party.");
+									player.sendMessage(ChatColor.GOLD + "/q party questbook - Gets the party questbook.");
+									player.sendMessage(ChatColor.GOLD + "/q party invite <playername> - Invites a player to your party.");
+									player.sendMessage(ChatColor.GOLD + "/q party kick <playername> - Kicks player from group.");
+									player.sendMessage(ChatColor.GOLD + "/q party leader <playername> - Makes another player party leader.");
+									player.sendMessage(ChatColor.GOLD + "/q party leave - Leave the party.");
+									player.sendMessage(ChatColor.GOLD + "/q party chat - Toggle party chat.");
+									player.sendMessage(ChatColor.GOLD + "[=======================]");
+									
+								}
 							}
-							return true;
+						}else{
+							player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
 						}
+						return true;
 					}
-
+					
+					/*
+					 * Party commands
+					 */
+					if(args[0].equalsIgnoreCase("party")){
+						if(player.hasPermission("epicquest.user.party")){
+							
+							//If there are more arguments than only party
+							if(args.length >= 2){
+								
+								//Invite player
+								if(args[1].equalsIgnoreCase("invite")){
+									if(args.length == 3){
+										Player invitedPlayer = Bukkit.getPlayer(args[2]);
+										if(invitedPlayer != null){
+											if(invitedPlayer != player){
+												EpicPlayer invitedEpicPlayer = EpicSystem.getEpicPlayer(invitedPlayer);
+												if(invitedEpicPlayer.getParty() == null){
+													
+													//Count current party size, including invited members
+													int partySize = 1;
+													if(epicPlayer.getParty() != null){
+														partySize = epicPlayer.getParty().getSize();
+													
+														if(!invitationTimer.keySet().isEmpty()){
+															EpicPlayer[] playerList = (EpicPlayer[]) (invitationTimer.keySet().toArray());
+															for(int i = 0; i < playerList.length; i++){
+																if(playerList[i].hasPartyInvitation == epicPlayer){ partySize++; }
+															}
+														}
+													}
+													
+													if(partySize != EpicSystem.getMaxPartySize()){
+														invitedPlayer.sendMessage(ChatColor.GREEN + player.getName() + " invited you to his party (" + partySize + ").");
+														invitedPlayer.sendMessage(ChatColor.GREEN + "Type '/q party accept' to accept the invitation.");
+														invitedEpicPlayer.hasPartyInvitation = epicPlayer;
+														
+														invitationTimer.put(invitedEpicPlayer, 15);
+														
+														player.sendMessage("" + ChatColor.ITALIC + ChatColor.GREEN + "You invited " + invitedEpicPlayer.getPlayerName() + " to your party.");
+													}else{
+														player.sendMessage(ChatColor.RED + "Your party is already full!");
+													}
+												}else{
+													player.sendMessage(ChatColor.RED + "That player is already in a party.");
+												}
+											}else{
+												player.sendMessage(ChatColor.RED + "You can't invite yourself.");
+											}
+										}else{
+											player.sendMessage(ChatColor.RED + "That player can't be found.");
+										}
+									}else{
+										player.sendMessage("/q party invite <playername>");
+									}
+								}
+								
+								//Accept invitation
+								if(args[1].equalsIgnoreCase("accept")){
+									if(epicPlayer.hasPartyInvitation != null && invitationTimer.containsKey(epicPlayer)){
+										
+										EpicPlayer invitationPlayer = epicPlayer.hasPartyInvitation;
+										if(invitationPlayer.getParty() == null){
+											new EpicParty(invitationPlayer, epicPlayer);
+											epicPlayer.hasPartyInvitation = null;
+											
+											invitationPlayer.getPlayer().sendMessage(ChatColor.GREEN + player.getDisplayName() + " has joined your party!");
+											player.sendMessage(ChatColor.GREEN + "You have joined " + invitationPlayer.getPlayerName() + "'s party!");
+										}else{
+											epicPlayer.hasPartyInvitation.getParty().addPlayer(epicPlayer);
+											epicPlayer.hasPartyInvitation = null;
+										}
+										
+										//Remove player from timer
+										invitationTimer.remove(epicPlayer);
+									}else{
+										player.sendMessage(ChatColor.RED + "You don't have a party invitation.");
+									}
+								}
+								
+								//Kick player
+								if(args[1].equalsIgnoreCase("kick")){
+									if(args.length == 3){
+										EpicParty party = epicPlayer.getParty();
+										if(party != null){
+											if(party.partyLeader == epicPlayer){
+												EpicPlayer kickPlayer = EpicSystem.getEpicPlayer(Bukkit.getPlayer(args[2]));
+												if(party.getPartyMembers().contains(kickPlayer)){
+													party.removePlayer(kickPlayer, true);
+												}else{
+													player.sendMessage(ChatColor.RED + "That player is not in your party.");
+												}
+											}else{
+												player.sendMessage(ChatColor.RED + "You are not the party leader.");
+											}
+										}else{
+											player.sendMessage(ChatColor.RED + "You are not in a party.");
+										}
+									}else{
+										player.sendMessage("/q party kick <playername>");
+									}
+								}
+								
+								//Change party leader
+								if(args[1].equalsIgnoreCase("leader")){
+									if(args.length == 3){
+										EpicParty party = epicPlayer.getParty();
+										if(party != null){
+											if(party.partyLeader == epicPlayer){
+												EpicPlayer newLeader = EpicSystem.getEpicPlayer(Bukkit.getPlayer(args[2]));
+												if(party.getPartyMembers().contains(newLeader)){
+													party.setPartyLeader(newLeader);
+												}else{
+													player.sendMessage(ChatColor.RED + "That player is not in your party.");
+												}
+											}else{
+												player.sendMessage(ChatColor.RED + "You are not the party leader.");
+											}
+										}else{
+											player.sendMessage(ChatColor.RED + "You are not in a party.");
+										}
+									}else{
+										player.sendMessage("/q party leader <playername>");
+									}
+								}
+								
+								//Leave party
+								if(args[1].equalsIgnoreCase("leave")){
+									EpicParty party = epicPlayer.getParty();
+									if(party != null){
+										party.removePlayer(epicPlayer, false);
+									}else{
+										player.sendMessage(ChatColor.RED + "You are not in a party.");
+									}
+								}
+								
+								//Toggle party chat
+								if(args[1].equalsIgnoreCase("chat")){
+									if(epicPlayer.getParty() != null){
+										epicPlayer.partyChat = !epicPlayer.partyChat;
+									}else{
+										player.sendMessage(ChatColor.RED + "You are not in a party.");
+									}	
+								}
+							}else{
+								
+								//Show party formation
+								EpicParty party = epicPlayer.getParty();
+								if(party != null){
+									party.sendPartyMembers(epicPlayer);
+								}else{
+									player.sendMessage(ChatColor.RED + "You are not in a party.");
+								}
+							}
+						}else{
+							player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
+						}
+						return true;
+					}
+					
 					/*
 					 * Turn in quests command
 					 */
@@ -216,10 +408,10 @@ public class main extends JavaPlugin{
 									//Get all available quests
 									List<Integer> availableQuests = epicPlayer.getObtainableQuests();
 
-									if(availableQuests.contains(quest)){
+									if(quest <= availableQuests.size()){
 
 										//Give quest
-										epicPlayer.addQuest(new EpicQuest(epicPlayer, quest));
+										epicPlayer.addQuest(new EpicQuest(epicPlayer, availableQuests.get(quest)));
 
 									}else{
 										player.sendMessage(ChatColor.RED + "You can't get that quest.");
@@ -441,8 +633,10 @@ public class main extends JavaPlugin{
 				}*/
 
 					/*
-					 * Debug
+					 * Admin commmands
 					 */
+					
+					//Debug stuff
 					if(args[0].equalsIgnoreCase("debug")){
 						if(player.hasPermission("epicquest.admin.debug")){
 							if(args[1].equalsIgnoreCase("quests")){
@@ -458,22 +652,61 @@ public class main extends JavaPlugin{
 						}
 						return true;
 					}
-
-					/*
-					 * Admin commands
-					 */
+					
+					//Spawn villager
+					if(args[0].equalsIgnoreCase("villager")){
+						if(player.hasPermission("epicquest.admin.villager")){
+							if(args.length >= 4 && args[1].equalsIgnoreCase("spawn")){
+								
+								//Spawn
+								String name = "";
+								for(int i = 2; i < args.length - 1; i++){
+									if(i == args.length - 1)
+										name += args[i];
+									else
+										name += args[i] + " ";
+								}
+								
+								int quest = Integer.parseInt(args[args.length - 1]);
+								List<Integer> questList = new ArrayList<Integer>();
+								questList.add(quest);
+								if(VillagerHandler.SpawnVillager(player.getWorld(), player.getLocation(), name, questList)){
+									player.sendMessage(ChatColor.GREEN + "A villager with the name " + name + " has been spawned with quest " + quest +".");
+									List<String> sentenceList = new ArrayList<String>();
+									sentenceList.add("Come back to me when you are done.");
+									VillagerHandler.SetRandomSentences(VillagerHandler.GetVillager(player.getWorld(), name), sentenceList);
+								}else{
+									player.sendMessage(ChatColor.RED + "A villager with the name " + name +" has already been found in this world.");
+								}
+								
+							}else if(args.length == 3 && args[1].equalsIgnoreCase("remove")){
+								
+								//Remove
+								String name = args[2];
+								if(!VillagerHandler.RemoveVillager(player.getWorld(), name)){
+									player.sendMessage(ChatColor.RED + "A villager with the name " + name +" has not been found in this world.");
+								}else{
+									player.sendMessage(ChatColor.GREEN + "The villager with the name " + name + " has been removed.");
+								}
+								
+							}
+						}else{
+							player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
+						}
+						return true;
+					}
+					
+					//Save
 					if(args[0].equalsIgnoreCase("save")){
 						if(player.hasPermission("epicquest.admin.save")){
-							saveAll();
+							saveAll(false);
 						}else{
 							player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
 						}
 						return true;
 					}
 
-					/*
-					 * Create a questblock
-					 */
+					//Quest block
 					if(args[0].equalsIgnoreCase("questblock")){
 						if(player.hasPermission("epicquest.admin.questblock")){
 							if(args[1].equalsIgnoreCase("give")){
@@ -510,7 +743,7 @@ public class main extends JavaPlugin{
 
 		//Start timer, triggers every second
 		Timer timer = new Timer();
-		timer.scheduleAtFixedRate(new TimerTask() {
+		timer.schedule(new TimerTask() {
 			public void run() {
 
 				//Change time in the config
@@ -538,16 +771,36 @@ public class main extends JavaPlugin{
 
 				//If timer has run for 5 minutes, save all
 				if(EpicSystem.getSaveTime() >= 300){
-					saveAll();
+					saveAll(false);
 					EpicSystem.setSaveTime(0);
 				}
+				
+				//Count down the invitation timers
+				if(!invitationTimer.isEmpty()){
+					Object[] playerList = invitationTimer.keySet().toArray();
+					for(int i = 0; i < playerList.length; i++){
+						EpicPlayer tempPlayer = (EpicPlayer)playerList[i];
+						invitationTimer.put(tempPlayer, invitationTimer.get(tempPlayer) - 1);
+						
+						if(invitationTimer.get(tempPlayer) == 0){
+							tempPlayer.hasPartyInvitation.getPlayer().sendMessage(""+ChatColor.ITALIC + ChatColor.RED + tempPlayer.getPlayerName() + " declined your party invitation.");
+							tempPlayer.hasPartyInvitation = null;
+							
+							tempPlayer.getPlayer().sendMessage(""+ChatColor.ITALIC + ChatColor.RED + "You declined " + tempPlayer.hasPartyInvitation.getPlayerName() + "'s party invitation.");
+							invitationTimer.remove(tempPlayer);
+						}
+					}
+				}
+				
+				//Move villagers back
+				VillagerHandler.MoveVillagersBack();
 			}
 		}, 1000, 1000);
 	}
 
-	private void saveAll(){
+	private void saveAll(boolean isShutDown){
 		try {
-			SaveLoader.save();
+			SaveLoader.save(isShutDown);
 		} catch (IOException | InvalidConfigurationException e) {
 			e.printStackTrace();
 		}

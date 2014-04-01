@@ -24,8 +24,8 @@ public class EpicQuest {
 	private List<String> questWorlds;
 	private int questResetTime;
 	private int questRewardMoney;
-	private int questRewardItemID;
-	private int questRewardItemAmount;
+	private List<String> questRewardItemID;
+	private List<Integer> questRewardItemAmount;
 	private String questRewardPermission;
 	private List<String> taskType;
 	private List<String> taskID;
@@ -78,13 +78,19 @@ public class EpicQuest {
 	public List<String> getQuestWorlds(){ return questWorlds; }
 	public int getQuestResetTime(){ return questResetTime; }
 	public int getQuestRewardMoney(){ return questRewardMoney; }
-	public ItemStack getQuestRewardItem() { 
-		if( questRewardItemID >= 0 &&
-				questRewardItemAmount > 0){
-			return new ItemStack(questRewardItemID, questRewardItemAmount);
+	public List<ItemStack> getQuestRewardItem() {
+		List<ItemStack> itemList = new ArrayList<ItemStack>();
+
+		for(int i = 0; i < questRewardItemID.size(); i++){
+			String itemID = questRewardItemID.get(i);
+			int itemAmount = questRewardItemAmount.get(i);
+			if( itemID != null &&
+					itemAmount > 0){
+				itemList.add(new ItemStack(Material.matchMaterial(itemID), itemAmount));
 			}
-		return null;
 		}
+		return itemList;
+	}
 	public String getQuestRewardPermission() { return questRewardPermission; }
 	public void completeQuest(){
 		
@@ -94,16 +100,19 @@ public class EpicQuest {
 		
 		//Generate item reward
 		PlayerInventory inventory = player.getInventory();
-		ItemStack itemStack = getQuestRewardItem();
-		if(itemStack != null){
-			inventory.addItem(itemStack);
-			player.sendMessage(ChatColor.GREEN + "You got " + itemStack.getAmount() + " " + Material.getMaterial(itemStack.getTypeId()).toString().toLowerCase().replace("_", " ") + ".");
+		List<ItemStack> itemList = getQuestRewardItem();
+		if(!itemList.isEmpty()){
+			for(int i = 0; i < itemList.size(); i++){
+				ItemStack itemStack = itemList.get(i);
+				inventory.addItem(itemStack);
+				player.sendMessage(ChatColor.GREEN + "You got " + itemStack.getAmount() + " " + itemStack.getType().toString().toLowerCase().replace("_", " ") + ".");
+			}
 		}
 			
 		//Generate money reward
 		Economy economy = main.economy;
 		int money = getQuestRewardMoney();
-		if(economy.isEnabled()){
+		if(economy != null && economy.isEnabled()){
 			if(!economy.hasAccount(playerName)){ economy.createPlayerAccount(playerName); }
 			
 			//Add money if there's money to add
@@ -120,7 +129,7 @@ public class EpicQuest {
 		//Generate permission reward
 		Permission permission = main.permission;
 		String rank = getQuestRewardPermission();
-		if(permission.isEnabled()){
+		if(permission != null && permission.isEnabled()){
 			if(Arrays.asList(permission.getGroups()).contains(rank)){
 				permission.playerAddGroup(player, rank);
 				player.sendMessage(ChatColor.GREEN + "You got promoted to " + rank + ".");
@@ -167,14 +176,14 @@ public class EpicQuest {
 		if(questtype.equalsIgnoreCase("collect")||
 				questtype.equalsIgnoreCase("destroy")||
 				questtype.equalsIgnoreCase("place")||
-				questtype.equalsIgnoreCase("enchant")){ 
-			taskID = Material.getMaterial(Integer.parseInt(taskID)).name(); 
+				questtype.equalsIgnoreCase("enchant")||
+				questtype.equalsIgnoreCase("craft")||
+				questtype.equalsIgnoreCase("smelt")){  
 			taskID = taskID.toLowerCase().replace("_", " ");
 		}
 		
 		//Capitalize first letter (questtype)
 		questtype = WordUtils.capitalize(questtype);
-		
 		
 		//Change certain types around for grammatical purposes
 		if(getPlayerTaskCompleted(task)){
@@ -187,6 +196,8 @@ public class EpicQuest {
 			if(questtype.equalsIgnoreCase("levelup")){ questtype = "Leveled up"; }
 			if(questtype.equalsIgnoreCase("enchant")){ questtype = "Enchant"; }
 			if(questtype.equalsIgnoreCase("tame")){ questtype = "Tamed"; }
+			if(questtype.equalsIgnoreCase("craft")){ questtype = "Crafted"; }
+			if(questtype.equalsIgnoreCase("smelt")){ questtype = "Smelted"; }
 			
 			//Create the message if the task is finished
 			message = ChatColor.GREEN + questtype + " " + taskmax + " " + taskID + ".";
@@ -234,5 +245,4 @@ public class EpicQuest {
 		}
 	
 	}
-	
 }

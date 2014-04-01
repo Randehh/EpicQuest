@@ -3,6 +3,7 @@ package randy.listeners;
 import java.util.HashMap;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,7 +24,7 @@ public class TypePlace extends TypeBase implements Listener{
 
 		//Block information
 		Block block = event.getBlock();
-		int blockplaced = block.getTypeId();
+		Material blockplaced = block.getType();
 		int x = block.getX();
 		int y = block.getY();
 		int z = block.getZ();
@@ -42,8 +43,8 @@ public class TypePlace extends TypeBase implements Listener{
 
 					//Check if correct item was destroyed
 					int taskNo = Integer.parseInt(tasks[e]);
-					int blockneeded = Integer.parseInt(quest.getTaskID(taskNo));
-					if(blockplaced == blockneeded &&
+					String blockneeded = quest.getTaskID(taskNo);
+					if(blockplaced == Material.matchMaterial(blockneeded) &&
 							!EpicSystem.getBlockList().contains(loc)){
 
 						//Progress task stuff
