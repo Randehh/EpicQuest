@@ -2,7 +2,10 @@ package randy.listeners;
 
 import java.util.HashMap;
 
+<<<<<<< HEAD
 import org.bukkit.Material;
+=======
+>>>>>>> 8a82a9e34f4bbc9b0780432073f9ac9f1f8fe45e
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
@@ -28,9 +31,15 @@ public class TypeSmelt extends TypeBase implements Listener{
 
 				for(int e = 0; e < tasks.length; e++){
 					int taskNo = Integer.parseInt(tasks[e]);
+<<<<<<< HEAD
 					
 					Material itemID = event.getSource().getType();
 					Material itemNeeded = Material.matchMaterial(quest.getTaskID(taskNo));
+=======
+
+					int itemID = event.getSource().getType().getId();
+					int itemNeeded = Integer.parseInt(quest.getTaskID(taskNo));
+>>>>>>> 8a82a9e34f4bbc9b0780432073f9ac9f1f8fe45e
 					
 					if(itemID == itemNeeded){	
 

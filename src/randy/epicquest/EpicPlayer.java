@@ -203,7 +203,10 @@ public class EpicPlayer {
 		List<Integer> questLockedList = EpicQuestDatabase.getQuestLocked(questNo);
 		
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 8a82a9e34f4bbc9b0780432073f9ac9f1f8fe45e
 		System.out.print("Questno: " + questNo);
 		System.out.print("Locked list: " + questLockedList);
 		System.out.print("Completed list: " + questCompleted);

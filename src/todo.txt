@@ -7,6 +7,7 @@ Stats commands:
 
 New features:
 	Toggleable chat function to show task progress, quest completition and task completition
+<<<<<<< HEAD
 	
 NEW STUFF IN 8.2
 	Added Quest Book
@@ -15,3 +16,14 @@ NEW STUFF IN 8.2
 	Craft quest type
 	
 	Changed all block ID's to Strings
+=======
+
+Bugs fixed:
+	Drop quest command doesn't give an error when you have no quests or pick an invalid quest
+	
+	
+NEW STUFF IN 8.2
+	Party functionality
+	Smelt quest type
+	Craft quest type
+>>>>>>> 8a82a9e34f4bbc9b0780432073f9ac9f1f8fe45e

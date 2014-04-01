@@ -26,9 +26,13 @@ import randy.filehandlers.FileChecker;
 import randy.filehandlers.ConfigLoader;
 import randy.filehandlers.SaveLoader;
 import randy.listeners.InventoryDrag;
+<<<<<<< HEAD
 import randy.listeners.OpenBook;
 import randy.listeners.PartyMessage;
 import randy.listeners.TypeCraftItem;
+=======
+import randy.listeners.PartyMessage;
+>>>>>>> 8a82a9e34f4bbc9b0780432073f9ac9f1f8fe45e
 import randy.listeners.TypePlayerJoin;
 import randy.listeners.TypeDestroy;
 import randy.listeners.TypeEnchant;
@@ -59,12 +63,19 @@ public class main extends JavaPlugin{
 	private final TypeEnchant enchantListener = new TypeEnchant();
 	private final TypeLevelUp levelupListener = new TypeLevelUp();
 	private final TypeSignChange signChangeListener = new TypeSignChange();
+<<<<<<< HEAD
 	private final TypePlayerInteract playerInteractEntityListener = new TypePlayerInteract();
 	private final PartyMessage partyMessageListener = new PartyMessage();
 	private final OpenBook openBook = new OpenBook();
 	private final TypeSmelt smeltListener = new TypeSmelt();
 	private final InventoryDrag inventoryDrag = new InventoryDrag();
 	private final TypeCraftItem itemCraftListenever = new TypeCraftItem();
+=======
+	private final TypePlayerInteractEntity playerInteractEntityListener = new TypePlayerInteractEntity();
+	private final PartyMessage partyMessageListener = new PartyMessage();
+	private final TypeSmelt smeltListener = new TypeSmelt();
+	private final InventoryDrag inventoryDrag = new InventoryDrag();
+>>>>>>> 8a82a9e34f4bbc9b0780432073f9ac9f1f8fe45e
 	
 	//Party timers
 	HashMap<EpicPlayer, Integer> invitationTimer = new HashMap<EpicPlayer, Integer>();
@@ -95,8 +106,11 @@ public class main extends JavaPlugin{
 		getServer().getPluginManager().registerEvents(partyMessageListener, this);
 		getServer().getPluginManager().registerEvents(smeltListener, this);
 		getServer().getPluginManager().registerEvents(inventoryDrag, this);
+<<<<<<< HEAD
 		getServer().getPluginManager().registerEvents(openBook, this);
 		getServer().getPluginManager().registerEvents(itemCraftListenever, this);
+=======
+>>>>>>> 8a82a9e34f4bbc9b0780432073f9ac9f1f8fe45e
 
 		/*
 		 * Check all files before trying to load the plugin
@@ -791,9 +805,12 @@ public class main extends JavaPlugin{
 						}
 					}
 				}
+<<<<<<< HEAD
 				
 				//Move villagers back
 				VillagerHandler.MoveVillagersBack();
+=======
+>>>>>>> 8a82a9e34f4bbc9b0780432073f9ac9f1f8fe45e
 			}
 		}, 1000, 1000);
 	}
