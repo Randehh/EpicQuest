@@ -30,11 +30,7 @@ public class EpicQuestDatabase {
 	
 	//Rewards
 	private static HashMap<Integer, Integer> questRewardMoney = new HashMap<Integer, Integer>();
-<<<<<<< HEAD
 	private static HashMap<Integer, List<String>> questRewardID = new HashMap<Integer, List<String>>();
-=======
-	private static HashMap<Integer, List<Integer>> questRewardID = new HashMap<Integer, List<Integer>>();
->>>>>>> 8a82a9e34f4bbc9b0780432073f9ac9f1f8fe45e
 	private static HashMap<Integer, List<Integer>> questRewardAmount = new HashMap<Integer, List<Integer>>();
 	private static HashMap<Integer, String> questRewardRank = new HashMap<Integer, String>();
 	
@@ -96,11 +92,7 @@ public class EpicQuestDatabase {
 		return questRewardMoney.get(quest);
 	}
 	
-<<<<<<< HEAD
 	public static List<String> getRewardID(Integer quest){
-=======
-	public static List<Integer> getRewardID(Integer quest){
->>>>>>> 8a82a9e34f4bbc9b0780432073f9ac9f1f8fe45e
 		return questRewardID.get(quest);
 	}
 	
@@ -177,11 +169,7 @@ public class EpicQuestDatabase {
 		questRewardMoney.put(quest, amount);
 	}
 	
-<<<<<<< HEAD
 	public static void setRewardID(Integer quest, List<String> ID){
-=======
-	public static void setRewardID(Integer quest, List<Integer> ID){
->>>>>>> 8a82a9e34f4bbc9b0780432073f9ac9f1f8fe45e
 		questRewardID.put(quest, ID);
 	}
 	
@@ -205,7 +193,6 @@ public class EpicQuestDatabase {
 		String[] questString = quests.split(",");
 		ArrayList<Integer> questList = new ArrayList<Integer>();
 		for(int i = 0; i < questString.length; i++){
-			System.out.print("Locked quests of " + quest + ": " + questString[i]);
 			questList.add(Integer.parseInt(questString[i]));
 		}
 		questLocked.put(quest, questList);

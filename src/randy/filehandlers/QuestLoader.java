@@ -24,7 +24,6 @@ public class QuestLoader {
 		
 		Object[] questlist = QuestLoader.quests.getKeys(false).toArray();
 		for(int i = 0; i < questlist.length; i++){
-			System.out.print("Loading quest: " + questlist[i].toString());
 			//Get general info
 			EpicQuestDatabase.setQuestName(i, quests.getString("q"+i+".Name"));
 			EpicQuestDatabase.setQuestEndInfo(i, quests.getString("q"+i+".End_Info"));
@@ -36,13 +35,8 @@ public class QuestLoader {
 			EpicQuestDatabase.setRewardMoney(i, quests.getInt("q"+i+".Rewards.Money"));
 			
 			String[] idString = quests.getString("q"+i+".Rewards.Item.id").split(",");
-<<<<<<< HEAD
 			List<String> idList = new ArrayList<String>();
 			for(int e = 0; e < idString.length; e++){ idList.add(idString[e]); }
-=======
-			List<Integer> idList = new ArrayList<Integer>();
-			for(int e = 0; e < idString.length; e++){ idList.add(Integer.parseInt(idString[e])); }
->>>>>>> 8a82a9e34f4bbc9b0780432073f9ac9f1f8fe45e
 			EpicQuestDatabase.setRewardID(i, idList);
 			
 			String[] amountString = quests.getString("q"+i+".Rewards.Item.Amount").split(",");

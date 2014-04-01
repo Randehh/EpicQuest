@@ -24,11 +24,7 @@ public class EpicQuest {
 	private List<String> questWorlds;
 	private int questResetTime;
 	private int questRewardMoney;
-<<<<<<< HEAD
 	private List<String> questRewardItemID;
-=======
-	private List<Integer> questRewardItemID;
->>>>>>> 8a82a9e34f4bbc9b0780432073f9ac9f1f8fe45e
 	private List<Integer> questRewardItemAmount;
 	private String questRewardPermission;
 	private List<String> taskType;
@@ -86,19 +82,11 @@ public class EpicQuest {
 		List<ItemStack> itemList = new ArrayList<ItemStack>();
 
 		for(int i = 0; i < questRewardItemID.size(); i++){
-<<<<<<< HEAD
 			String itemID = questRewardItemID.get(i);
 			int itemAmount = questRewardItemAmount.get(i);
 			if( itemID != null &&
 					itemAmount > 0){
 				itemList.add(new ItemStack(Material.matchMaterial(itemID), itemAmount));
-=======
-			int itemID = questRewardItemID.get(i);
-			int itemAmount = questRewardItemAmount.get(i);
-			if( itemID >= 0 &&
-					itemAmount > 0){
-				itemList.add(new ItemStack(itemID, itemAmount));
->>>>>>> 8a82a9e34f4bbc9b0780432073f9ac9f1f8fe45e
 			}
 		}
 		return itemList;
@@ -117,11 +105,7 @@ public class EpicQuest {
 			for(int i = 0; i < itemList.size(); i++){
 				ItemStack itemStack = itemList.get(i);
 				inventory.addItem(itemStack);
-<<<<<<< HEAD
 				player.sendMessage(ChatColor.GREEN + "You got " + itemStack.getAmount() + " " + itemStack.getType().toString().toLowerCase().replace("_", " ") + ".");
-=======
-				player.sendMessage(ChatColor.GREEN + "You got " + itemStack.getAmount() + " " + Material.getMaterial(itemStack.getTypeId()).toString().toLowerCase().replace("_", " ") + ".");
->>>>>>> 8a82a9e34f4bbc9b0780432073f9ac9f1f8fe45e
 			}
 		}
 			

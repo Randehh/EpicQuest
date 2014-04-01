@@ -48,8 +48,6 @@ public class TypeBase {
 				}
 			}
 		}
-		
-		if(matchlist.isEmpty()) return null;
 		return matchlist;
 	}
 }
