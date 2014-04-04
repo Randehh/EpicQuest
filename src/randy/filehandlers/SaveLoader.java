@@ -18,6 +18,7 @@ import randy.epicquest.EpicPlayer;
 import randy.epicquest.EpicQuest;
 import randy.epicquest.EpicSign;
 import randy.epicquest.EpicSystem;
+import randy.epicquest.EpicVillager;
 import randy.epicquest.VillagerHandler;
 
 public class SaveLoader {
@@ -130,7 +131,7 @@ public class SaveLoader {
 			block.save(blockfile);
 		}
 		
-		HashMap<Villager, List<Integer>> villagerMap = VillagerHandler.villagerList;
+		HashMap<Villager, EpicVillager> villagerMap = VillagerHandler.villagerList;
 		if(!villagerMap.isEmpty()){
 			
 			//Reset file
@@ -144,17 +145,39 @@ public class SaveLoader {
 			Object[] villagerList = villagerMap.keySet().toArray();
 			for(int i = 0; i < villagerList.length; i++){
 				Villager tempVil = (Villager)villagerList[i];
+				EpicVillager epicVil = VillagerHandler.GetEpicVillager(tempVil);
 				String villagerName = tempVil.getCustomName();
 				
 				Location loc = tempVil.getLocation();
 				villager.set("Villager."+villagerName+".World", tempVil.getWorld().getName());
 				villager.set("Villager."+villagerName+".Location", loc.getBlockX()+":"+loc.getBlockY()+":"+loc.getBlockZ());
-				villager.set("Villager."+villagerName+".Quests", VillagerHandler.villagerList.get(tempVil).get(0));
 				
-				List<String> sentenceList = VillagerHandler.GetRandomSentenceList(tempVil);
-				for(int e = 0; e < sentenceList.size(); e++){
-					villager.set("Villager."+villagerName+".Sentences."+e, sentenceList.get(e));
+				List<Integer> questList = epicVil.questList;
+				String questString = "";
+				for(int q = 0; q < questList.size(); q++){
+					int actualQuest = questList.get(q);
+					if(q < questList.size() - 1){
+						questString += actualQuest + ",";
+					}else{
+						questString += actualQuest;
+					}
+					
+					List<String> openingSentences = epicVil.openingSentences.get(q);
+					for(int os = 0; os < openingSentences.size(); os++){
+						villager.set("Villager."+villagerName+".OpeningSentences."+actualQuest+"."+os, openingSentences.get(os));
+					}
+					
+					List<String> middleSentences = epicVil.middleSentences.get(q);
+					for(int ms = 0; ms < openingSentences.size(); ms++){
+						villager.set("Villager."+villagerName+".MiddleSentences."+actualQuest+"."+ms, middleSentences.get(ms));
+					}
+					
+					List<String> endingSentences = epicVil.endingSentences.get(q);
+					for(int es = 0; es < openingSentences.size(); es++){
+						villager.set("Villager."+villagerName+".EndingSentences."+actualQuest+"."+es, endingSentences.get(es));
+					}
 				}
+				villager.set("Villager."+villagerName+".Quests", questString);
 				
 				if(isShutDown) tempVil.remove();
 			}
@@ -337,20 +360,44 @@ public class SaveLoader {
 				Location loc = new Location(world, Integer.parseInt(locationSplit[0]), Integer.parseInt(locationSplit[1]), Integer.parseInt(locationSplit[2]));
 				
 				//Quests
+				List<String> openingSentences = new ArrayList<String>();
+				List<String> middleSentences = new ArrayList<String>();
+				List<String> endingSentences = new ArrayList<String>();
 				List<Integer> questList = new ArrayList<Integer>();
-				questList.add(villager.getInt("Villager."+villagerName+".Quests"));
 				
 				//Create
 				VillagerHandler.RemoveLeftoverVillager(villagerName, world);
-				VillagerHandler.SpawnVillager(world, loc, villagerName, questList);
+				VillagerHandler.SpawnVillager(world, loc, villagerName);
 				
-				//Set sentences
-				List<String> sentenceList = new ArrayList<String>();
-				Object[] sentences = villager.getConfigurationSection("Villager."+villagerName+".Sentences").getKeys(false).toArray();
-				for(int e = 0; e < sentences.length; e++){
-					sentenceList.add(villager.getString("Villager."+villagerName+".Sentences."+sentences[e]));
+				//Advanced villager stuff
+				EpicVillager epicVillager = VillagerHandler.GetEpicVillager(world, villagerName);
+				
+				Object[] quests = villager.getConfigurationSection("Villager."+villagerName+".Quests").getKeys(false).toArray();
+				for(int q = 0; q < quests.length; q++){
+					int questNo = Integer.parseInt((String)quests[q]);
+					questList.add(questNo);
+					
+					//Load sentences
+					Object[] osNo = villager.getConfigurationSection("Villager."+villagerName+".OpeningSentences."+questNo).getKeys(false).toArray();
+					for(int os = 0; os < osNo.length; os++){
+						openingSentences.add(villager.getString("Villager."+villagerName+".OpeningSentences."+questNo+"."+os));
+					}
+					
+					Object[] msNo = villager.getConfigurationSection("Villager."+villagerName+".MiddleSentences."+questNo).getKeys(false).toArray();
+					for(int ms = 0; ms < msNo.length; ms++){
+						middleSentences.add(villager.getString("Villager."+villagerName+".MiddleSentences."+questNo+"."+ms));
+					}
+					
+					Object[] esNo = villager.getConfigurationSection("Villager."+villagerName+".EndingSentences."+questNo).getKeys(false).toArray();
+					for(int es = 0; es < esNo.length; es++){
+						endingSentences.add(villager.getString("Villager."+villagerName+".EndingSentences."+questNo+"."+es));
+					}
+					
+					epicVillager.openingSentences.put(questNo, openingSentences);
+					epicVillager.middleSentences.put(questNo, middleSentences);
+					epicVillager.endingSentences.put(questNo, endingSentences);
 				}
-				VillagerHandler.SetRandomSentences(VillagerHandler.GetVillager(world, villagerName), sentenceList);
+				epicVillager.questList = questList;
 			}
 		}
 

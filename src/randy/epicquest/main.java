@@ -670,11 +670,16 @@ public class main extends JavaPlugin{
 								int quest = Integer.parseInt(args[args.length - 1]);
 								List<Integer> questList = new ArrayList<Integer>();
 								questList.add(quest);
-								if(VillagerHandler.SpawnVillager(player.getWorld(), player.getLocation(), name, questList)){
+								if(VillagerHandler.SpawnVillager(player.getWorld(), player.getLocation(), name)){
 									player.sendMessage(ChatColor.GREEN + "A villager with the name " + name + " has been spawned with quest " + quest +".");
 									List<String> sentenceList = new ArrayList<String>();
 									sentenceList.add("Come back to me when you are done.");
-									VillagerHandler.SetRandomSentences(VillagerHandler.GetVillager(player.getWorld(), name), sentenceList);
+									
+									EpicVillager villager = VillagerHandler.GetEpicVillager(VillagerHandler.GetVillager(player.getWorld(), name));
+									villager.openingSentences.put(questList.get(0), sentenceList);
+									villager.middleSentences.put(questList.get(0), sentenceList);
+									villager.endingSentences.put(questList.get(0), sentenceList);
+									villager.questList = questList;
 								}else{
 									player.sendMessage(ChatColor.RED + "A villager with the name " + name +" has already been found in this world.");
 								}

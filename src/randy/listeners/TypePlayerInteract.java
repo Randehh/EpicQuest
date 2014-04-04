@@ -72,20 +72,8 @@ public class TypePlayerInteract implements Listener{
 		if(clickedEntity instanceof Villager){
 			Villager villager = (Villager)clickedEntity;
 			if(VillagerHandler.villagerList.containsKey(villager)){
-				
 				EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(event.getPlayer());
-				List<Integer> questList = VillagerHandler.villagerList.get(villager);
-				
-				if(epicPlayer.hasQuest(questList.get(0))){
-					EpicQuest quest = epicPlayer.getQuest(questList.get(0));
-					if(quest.getPlayerQuestCompleted()){
-						quest.completeQuest();
-					}else{
-						event.getPlayer().sendMessage(ChatColor.RED + villager.getCustomName() + ": " + ChatColor.ITALIC + VillagerHandler.GetRandomSentence(villager));
-					}
-				}else{
-					epicPlayer.addQuest(new EpicQuest(epicPlayer, questList.get(0)));
-				}
+				VillagerHandler.NextInteraction(villager, epicPlayer);
 				event.setCancelled(true);
 			}
 		}
