@@ -116,8 +116,16 @@ public class VillagerHandler {
 				epicPlayer.getPlayer().sendMessage(GetNextEndingSentence(villager, currentQuest));
 				epicVillager.currentSentence.put(epicPlayer, nextSentence);
 			}else{
+				//Finish quest
 				epicVillager.startedQuest.put(epicPlayer, false);
 				epicVillager.currentSentence.put(epicPlayer, -1);
+				epicPlayer.getQuest(actualQuestNo).completeQuest();
+				currentQuest++;
+				if(currentQuest < epicVillager.questList.size()){
+					epicVillager.currentQuest.put(epicPlayer, currentQuest);
+				}else{
+					epicVillager.currentQuest.put(epicPlayer, 0);
+				}
 			}
 		}
 	}
