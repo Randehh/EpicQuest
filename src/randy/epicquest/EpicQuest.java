@@ -136,6 +136,7 @@ public class EpicQuest {
 			}
 		}
 		
+		epicPlayer.getQuestsCompleted().add(questNumber);
 		epicPlayer.getQuestList().remove(this);
 	}
 	
