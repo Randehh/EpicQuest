@@ -1,6 +1,6 @@
 name: EpicQuest
 main: randy.epicquest.main
-version: 3.0.1
+version: 3.2
 depend: [Vault]
 commands:
   quest:

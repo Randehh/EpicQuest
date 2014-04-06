@@ -82,8 +82,17 @@ public class EpicSystem {
 		
 		File savefile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "Players" + File.separator + playerName + ".yml");
 
-		if(savefile.exists()){ 
-			SaveLoader.loadPlayer(playerName); 
+		if(savefile.exists()){
+			List<EpicPlayer> playerlist = EpicSystem.playerList;
+			boolean playerfound = false;
+			for(int i = 0; i < playerlist.size(); i++){
+				if(playerlist.get(i).getPlayerName().equalsIgnoreCase(playerName)){
+					playerfound = true;
+					break;
+				}
+			}
+			if(!playerfound)
+				SaveLoader.loadPlayer(playerName); 
 		}else{
 			playerList.add(new EpicPlayer(playerName));
 		}

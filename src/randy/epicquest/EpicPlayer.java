@@ -119,7 +119,7 @@ public class EpicPlayer {
 				getPlayer().sendMessage(quest.getPlayerTaskProgressText(i));
 			}
 		}else{
-			System.out.print("Can't get quest?!!!" + quest.getQuestNo());
+			//System.out.print("Can't get quest?!!!" + quest.getQuestNo());
 		}
 	}
 	public void removeQuest(EpicQuest quest){

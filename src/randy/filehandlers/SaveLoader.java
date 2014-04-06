@@ -46,7 +46,7 @@ public class SaveLoader {
 	/*
 	 *  Create a object to save all players to whoms data has to be saved
 	 */
-	static String playerlist = null;
+	public static String playerlist = null;
 
 
 	/*
@@ -59,9 +59,9 @@ public class SaveLoader {
 		List<EpicPlayer> playersToSave = EpicSystem.getPlayerList();
 
 		if(!playersToSave.isEmpty()){
-
-			playerlist = null;
-
+			
+			//System.out.print("Players to save: " + playersToSave.size());
+			
 			for(int i = 0; i < playersToSave.size(); i++){
 
 				// Get the file of the player which has to be saved
@@ -302,7 +302,8 @@ public class SaveLoader {
 			//Cut the string into an array and go through all players
 			String playerlist = config.get("Save_List").toString();
 			String[] players = playerlist.split(", ");
-
+			
+			//System.out.print("Playerlist: " + playerlist);
 			for(int i = 0; i < players.length; i++){
 				String playername = players[i];
 
@@ -404,6 +405,8 @@ public class SaveLoader {
 	}
 
 	public static void loadPlayer(String playername){
+		
+		//System.out.print("Loading player - " + playername);
 		EpicPlayer epicPlayer = null;
 
 		//Get the file
