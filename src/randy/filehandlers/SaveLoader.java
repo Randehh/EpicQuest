@@ -79,8 +79,7 @@ public class SaveLoader {
 		config.set("Save_Time", EpicSystem.getSaveTime());
 
 		config.set("Save_List", playerlist);
-
-
+		config.save(configfile);
 
 		//Reset the file by recreating the file
 		if(!signfile.exists()){
@@ -298,7 +297,7 @@ public class SaveLoader {
 		int playercount = 0;
 
 		//Check if a player is saved
-		if(config.contains("Save_List")){
+		if(config.contains("Save_List") && config.get("Save_List").toString() != ""){
 
 			//Cut the string into an array and go through all players
 			String playerlist = config.get("Save_List").toString();
