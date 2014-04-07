@@ -33,6 +33,7 @@ public class EpicQuestDatabase {
 	private static HashMap<Integer, List<String>> questRewardID = new HashMap<Integer, List<String>>();
 	private static HashMap<Integer, List<Integer>> questRewardAmount = new HashMap<Integer, List<Integer>>();
 	private static HashMap<Integer, String> questRewardRank = new HashMap<Integer, String>();
+	private static HashMap<Integer, String> questRewardCommand = new HashMap<Integer, String>();
 	
 	//Misc
 	private static HashMap<Integer, Integer> questResetTime = new HashMap<Integer, Integer>();
@@ -102,6 +103,10 @@ public class EpicQuestDatabase {
 	
 	public static String getRewardRank(Integer quest){
 		return questRewardRank.get(quest);
+	}
+	
+	public static String getRewardCommand(Integer quest){
+		return questRewardCommand.get(quest);
 	}
 	
 	/*
@@ -179,6 +184,10 @@ public class EpicQuestDatabase {
 	
 	public static void setRewardRank(Integer quest, String rank){
 		questRewardRank.put(quest, rank);
+	}
+	
+	public static void setRewardCommand(Integer quest, String command){
+		questRewardCommand.put(quest, command);
 	}
 	
 	/*

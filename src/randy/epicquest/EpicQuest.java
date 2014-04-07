@@ -28,6 +28,7 @@ public class EpicQuest {
 	private List<String> questRewardItemID;
 	private List<Integer> questRewardItemAmount;
 	private String questRewardPermission;
+	private String questRewardCommand;
 	private List<String> taskType;
 	private List<String> taskID;
 	private List<Integer> taskAmount;
@@ -48,6 +49,7 @@ public class EpicQuest {
 		questRewardItemID = EpicQuestDatabase.getRewardID(questNo);
 		questRewardItemAmount = EpicQuestDatabase.getRewardAmount(questNo);
 		questRewardPermission = EpicQuestDatabase.getRewardRank(questNo);
+		questRewardCommand = EpicQuestDatabase.getRewardCommand(questNo);
 		playerProgress = new ArrayList<Integer>();
 		this.questNumber = questNo;
 		
@@ -93,6 +95,7 @@ public class EpicQuest {
 		return itemList;
 	}
 	public String getQuestRewardPermission() { return questRewardPermission; }
+	public String getQuestRewardCommand() { return questRewardCommand; }
 	public void completeQuest(){
 		
 		//Basics
@@ -137,7 +140,10 @@ public class EpicQuest {
 			}
 		}
 		
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "say hello");
+		String command = getQuestRewardCommand();
+		if(command != "-" && command != ""){
+			Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
+		}
 		
 		if(!epicPlayer.getQuestsCompleted().contains(questNumber))
 			epicPlayer.getQuestsCompleted().add(questNumber);
