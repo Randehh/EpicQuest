@@ -1,9 +1,11 @@
 package randy.listeners;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -20,7 +22,7 @@ import randy.epicquest.EpicSign;
 import randy.epicquest.EpicSystem;
 import randy.epicquest.VillagerHandler;
 
-public class TypePlayerInteract implements Listener{
+public class TypePlayerInteract extends TypeBase implements Listener{
 	
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event){
@@ -71,7 +73,29 @@ public class TypePlayerInteract implements Listener{
 		Entity clickedEntity = event.getRightClicked();
 		if(clickedEntity instanceof Villager){
 			Villager villager = (Villager)clickedEntity;
-			if(VillagerHandler.villagerList.containsKey(villager)){
+			EpicPlayer player = EpicSystem.getEpicPlayer(event.getPlayer());
+			
+			HashMap<EpicQuest, String> questlist = checkForType(player, "talktovillager");
+			
+			if(player != null && !questlist.isEmpty()){
+				for(int i = 0; i < questlist.size(); i++){
+
+					//Split quest and task
+					EpicQuest quest = (EpicQuest) questlist.keySet().toArray()[i];
+					String[] tasks = questlist.get(quest).split(",");
+
+					for(int e = 0; e < tasks.length; e++){
+						int taskNo = Integer.parseInt(tasks[e]);
+						String questID = quest.getTaskID(e);
+						String villagerName = villager.getCustomName();
+						if(questID.equalsIgnoreCase(villagerName)){
+
+							//Progress task stuff
+							quest.modifyTaskProgress(taskNo, 1, true);
+						}
+					}
+				}
+			}else if(VillagerHandler.villagerList.containsKey(villager)){
 				EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(event.getPlayer());
 				VillagerHandler.NextInteraction(villager, epicPlayer);
 				event.setCancelled(true);

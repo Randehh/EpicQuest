@@ -1,17 +1,2 @@
-Leaderboards
-
-Stats commands:
-/q stats				: show your own stats
-/q stats player			: show full stat list of one player
-/q stats player1 player2: compare highlights
-
-New features:
-	Toggleable chat function to show task progress, quest completition and task completition
-	
-NEW STUFF IN 8.2
-	Added Quest Book
-	Party functionality
-	Smelt quest type
-	Craft quest type
-	
-	Changed all block ID's to Strings
+Command reward
+Take item on receiving quest
