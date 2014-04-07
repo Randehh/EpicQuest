@@ -105,9 +105,13 @@ public class VillagerHandler {
 				epicPlayer.getPlayer().sendMessage(GetNextOpeningSentence(villager, currentQuest));
 				epicVillager.currentSentence.put(epicPlayer, nextSentence);
 			}else{																					//Give quest
-				epicPlayer.addQuest(new EpicQuest(epicPlayer, actualQuestNo));
-				epicVillager.startedQuest.put(epicPlayer, true);
-				epicVillager.currentSentence.put(epicPlayer, -1);
+				if(epicPlayer.addQuest(new EpicQuest(epicPlayer, actualQuestNo))){
+					epicVillager.startedQuest.put(epicPlayer, true);
+					epicVillager.currentSentence.put(epicPlayer, -1);
+				}else{
+					epicVillager.currentSentence.put(epicPlayer, 0);
+					epicPlayer.getPlayer().sendMessage(GetNextOpeningSentence(villager, currentQuest));
+				}
 			}
 		}else if(epicVillager.startedQuest.get(epicPlayer) && !epicPlayer.getQuest(actualQuestNo).getPlayerQuestCompleted()){
 			epicPlayer.getPlayer().sendMessage(GetRandomMiddleSentence(villager, currentQuest));

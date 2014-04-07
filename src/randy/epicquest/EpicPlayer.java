@@ -6,7 +6,9 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 public class EpicPlayer {
 	
@@ -108,7 +110,7 @@ public class EpicPlayer {
 	public void setQuestDailyLeft(int questsLeft){ questDailyLeft = questsLeft; }
 	
 	//Quest managing
-	public void addQuest(EpicQuest quest){
+	public boolean addQuest(EpicQuest quest){
 		if(canGetQuest(quest.getQuestNo()) == true){
 			questList.add(quest);
 			modifyStatQuestGet(1);
@@ -118,8 +120,15 @@ public class EpicPlayer {
 			for(int i = 0; i < quest.getTaskAmount(); i++){
 				getPlayer().sendMessage(quest.getPlayerTaskProgressText(i));
 			}
+			
+			return true;
 		}else{
-			//System.out.print("Can't get quest?!!!" + quest.getQuestNo());
+			
+			//If the reason was not having the required items
+			if(!hasItemRequirements(quest.getQuestNo())){
+				getPlayer().sendMessage(ChatColor.RED + "You do not have the required items for this quest!");
+			}
+			return false;
 		}
 	}
 	public void removeQuest(EpicQuest quest){
@@ -178,7 +187,8 @@ public class EpicPlayer {
 				hasUnlockedQuest(questNo) &&
 				hasDailyQuestLeft() &&
 				isTimeOut(questNo) &&
-				!isQuestListFull()){
+				!isQuestListFull() &&
+				hasItemRequirements(questNo)){
 			return true;
 		}
 		return false;
@@ -218,6 +228,22 @@ public class EpicPlayer {
 	}
 	public boolean isQuestListFull(){
 		if(questList.size() >= EpicSystem.getQuestLimit()){ return true; }
+		return false;
+	}
+	public boolean hasItemRequirements(int questNo){
+		List<Integer> amountList = EpicQuestDatabase.getQuestItemRequiredAmount(questNo);
+		List<String> idList = EpicQuestDatabase.getQuestItemRequiredID(questNo);
+		if(amountList.get(0) != -1 &&
+				idList.get(0) != ""){
+			Inventory inventory = getPlayer().getInventory();
+			
+			for(int i = 0; i < amountList.size(); i++){
+				if(!inventory.contains(Material.getMaterial(idList.get(i)), amountList.get(i))){
+					return false;
+				}
+			}
+			return true;
+		}
 		return false;
 	}
 	public void checkTimer(int questNo, boolean substractDifference){

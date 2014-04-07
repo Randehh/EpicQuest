@@ -29,7 +29,7 @@ public class QuestLoader {
 			EpicQuestDatabase.setQuestEndInfo(i, quests.getString("q"+i+".End_Info"));
 			EpicQuestDatabase.setQuestStartInfo(i, quests.getString("q"+i+".Start_Info"));
 			EpicQuestDatabase.setQuestResetTime(i, quests.getInt("q"+i+".Reset_Time"));
-			EpicQuestDatabase.setQuestLocked(i, quests.getString("q"+i+".Locked"));
+			EpicQuestDatabase.setQuestLocked(i, quests.getString("q"+i+".Requirements.QuestsCompleted"));
 			
 			//Get reward info
 			EpicQuestDatabase.setRewardMoney(i, quests.getInt("q"+i+".Rewards.Money"));
@@ -56,11 +56,15 @@ public class QuestLoader {
 			
 			//Get worlds
 			ArrayList<String> worldlist = new ArrayList<String>();
-			String[] worlds = quests.getString("q"+i+".Worlds").split(", ");
+			String[] worlds = quests.getString("q"+i+".Requirements.Worlds").split(", ");
 			for(int d = 0; d < worlds.length; d++){
 				worldlist.add(worlds[d]);
 			}
 			EpicQuestDatabase.setQuestWorlds(i, worldlist);
+			
+			//Get item requirement
+			EpicQuestDatabase.setQuestItemRequiredID(i, quests.getString("q"+i+".Requirements.Item.id"));
+			EpicQuestDatabase.setQuestItemRequiredAmount(i, quests.getString("q"+i+".Requirements.Item.Amount"));
 		}
 		
 		System.out.print("EpicQuest is done loading " + questlist.length + " quests.");

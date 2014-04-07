@@ -1,2 +1,1 @@
-Command reward
 Take item on receiving quest

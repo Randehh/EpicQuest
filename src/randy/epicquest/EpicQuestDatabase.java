@@ -37,7 +37,9 @@ public class EpicQuestDatabase {
 	
 	//Misc
 	private static HashMap<Integer, Integer> questResetTime = new HashMap<Integer, Integer>();
-	private static HashMap<Integer, ArrayList<Integer>> questLocked = new HashMap<Integer, ArrayList<Integer>>();
+	private static HashMap<Integer, List<Integer>> questLocked = new HashMap<Integer, List<Integer>>();
+	private static HashMap<Integer, List<String>> questItemRequiredID = new HashMap<Integer, List<String>>();
+	private static HashMap<Integer, List<Integer>> questItemRequiredAmount = new HashMap<Integer, List<Integer>>();
 	
 	/*
 	 * 
@@ -116,12 +118,20 @@ public class EpicQuestDatabase {
 		return questResetTime.get(quest);
 	}
 	
-	public static ArrayList<Integer> getQuestLocked(Integer quest){
+	public static List<Integer> getQuestLocked(Integer quest){
 		return questLocked.get(quest);
 	}
 	
 	public static Integer getTotalAmountQuests(){
 		return questName.size();
+	}
+	
+	public static List<String> getQuestItemRequiredID(Integer quest){
+		return questItemRequiredID.get(quest);
+	}
+	
+	public static List<Integer> getQuestItemRequiredAmount(Integer quest){
+		return questItemRequiredAmount.get(quest);
 	}
 	
 	/*
@@ -205,5 +215,23 @@ public class EpicQuestDatabase {
 			questList.add(Integer.parseInt(questString[i]));
 		}
 		questLocked.put(quest, questList);
+	}
+	
+	public static void setQuestItemRequiredID(Integer quest, String ids){
+		String[] idString = ids.split(",");
+		ArrayList<String> idList = new ArrayList<String>();
+		for(int i = 0; i < idString.length; i++){
+			idList.add(idString[i]);
+		}
+		questItemRequiredID.put(quest, idList);
+	}
+	
+	public static void setQuestItemRequiredAmount(Integer quest, String amounts){
+		String[] amountString = amounts.split(",");
+		ArrayList<Integer> amountList = new ArrayList<Integer>();
+		for(int i = 0; i < amountString.length; i++){
+			amountList.add(Integer.parseInt(amountString[i]));
+		}
+		questItemRequiredAmount.put(quest, amountList);
 	}
 }
