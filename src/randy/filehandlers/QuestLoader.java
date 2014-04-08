@@ -31,6 +31,7 @@ public class QuestLoader {
 			EpicQuestDatabase.setQuestStartInfo(i, quests.getString("q"+i+".Start_Info"));
 			EpicQuestDatabase.setQuestResetTime(i, quests.getInt("q"+i+".Reset_Time"));
 			EpicQuestDatabase.setQuestLocked(i, quests.getString("q"+i+".Requirements.QuestsCompleted"));
+			EpicQuestDatabase.setQuestLevel(i, quests.getInt("q"+i+".Requirements.Level"));
 			
 			//Get reward info
 			EpicQuestDatabase.setRewardMoney(i, quests.getInt("q"+i+".Rewards.Money"));

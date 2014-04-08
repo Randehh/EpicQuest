@@ -40,6 +40,7 @@ public class EpicQuestDatabase {
 	private static HashMap<Integer, List<Integer>> questLocked = new HashMap<Integer, List<Integer>>();
 	private static HashMap<Integer, List<String>> questItemRequiredID = new HashMap<Integer, List<String>>();
 	private static HashMap<Integer, List<Integer>> questItemRequiredAmount = new HashMap<Integer, List<Integer>>();
+	private static HashMap<Integer, Integer> questLevel = new HashMap<Integer, Integer>();
 	
 	/*
 	 * 
@@ -132,6 +133,10 @@ public class EpicQuestDatabase {
 	
 	public static List<Integer> getQuestItemRequiredAmount(Integer quest){
 		return questItemRequiredAmount.get(quest);
+	}
+	
+	public static Integer getQuestLevel(Integer quest){
+		return questLevel.get(quest);
 	}
 	
 	/*
@@ -233,5 +238,9 @@ public class EpicQuestDatabase {
 			amountList.add(Integer.parseInt(amountString[i]));
 		}
 		questItemRequiredAmount.put(quest, amountList);
+	}
+	
+	public static void setQuestLevel(Integer quest, Integer level){
+		questLevel.put(quest, level);
 	}
 }

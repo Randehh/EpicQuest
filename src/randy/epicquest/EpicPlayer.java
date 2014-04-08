@@ -226,7 +226,8 @@ public class EpicPlayer {
 				hasDailyQuestLeft() &&
 				isTimeOut(questNo) &&
 				!isQuestListFull() &&
-				hasItemRequirements(questNo)){
+				hasItemRequirements(questNo) &&
+				isHighEnoughLevel(questNo)){
 			return true;
 		}
 		return false;
@@ -285,6 +286,12 @@ public class EpicPlayer {
 			
 		}
 		return true;
+	}
+	public boolean isHighEnoughLevel(int questNo){
+		int requiredLevel = EpicQuestDatabase.getQuestLevel(questNo);
+		int playerLevel = getPlayer().getLevel();
+		if(playerLevel >= requiredLevel) return true;
+		return false;
 	}
 	public void checkTimer(int questNo, boolean substractDifference){
 		int timeDifference = EpicSystem.getTime() - EpicSystem.getStartTime();

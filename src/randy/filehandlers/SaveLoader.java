@@ -168,8 +168,6 @@ public class SaveLoader {
 			List<EpicPlayer> playersToSave = EpicSystem.getPlayerList();
 			if(!playersToSave.isEmpty()){
 				
-				//System.out.print("Players to save: " + playersToSave.size());
-				
 				for(int i = 0; i < playersToSave.size(); i++){
 
 					// Get the file of the player which has to be saved
@@ -177,7 +175,7 @@ public class SaveLoader {
 					savePlayer(epicPlayer);
 				}			
 
-				System.out.print("[EpicQuest]: saved " + playerlist.split(", ").length + " player(s).");
+				System.out.print("[EpicQuest]: saved "  + playerlist.split(", ").length + " player(s).");
 			}else{
 				System.out.print("There are no players to save");
 			}

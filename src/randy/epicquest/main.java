@@ -67,10 +67,12 @@ public class main extends JavaPlugin{
 	private final TypeCraftItem itemCraftListenever = new TypeCraftItem();
 	
 	//Party timers
+	Timer timer = new Timer();
 	HashMap<EpicPlayer, Integer> invitationTimer = new HashMap<EpicPlayer, Integer>();
 
 	public void onDisable() {
 		saveAll(true);
+		timer.cancel();
 		System.out.print(pluginname + " succesfully disabled.");
 	}
 
@@ -757,13 +759,14 @@ public class main extends JavaPlugin{
 	private void startTimer(){
 
 		//Start timer, triggers every second
-		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
 			public void run() {
 
 				//Change time in the config
 				EpicSystem.modifyTime(1);
 				EpicSystem.modifySaveTime(1);
+				
+				System.out.print("Save time: " + EpicSystem.getSaveTime());
 
 				//If timer has ran a full day, reset block list, timer and daily quest counters
 				if(EpicSystem.getTime() >= 86400){
@@ -785,7 +788,7 @@ public class main extends JavaPlugin{
 				}
 
 				//If timer has run for 5 minutes, save all
-				if(EpicSystem.getSaveTime() >= 300){
+				if(EpicSystem.getSaveTime() >= 100){
 					System.out.print("Timer save");
 					saveAll(false);
 					EpicSystem.setSaveTime(0);
