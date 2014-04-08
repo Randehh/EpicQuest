@@ -18,6 +18,7 @@ public class VillagerHandler {
 	
 	//List
 	public static HashMap<Villager, EpicVillager> villagerList = new HashMap<Villager, EpicVillager>();
+	public static List<EpicVillager> newVillagers = new ArrayList<EpicVillager>();
 	
 	public static boolean SpawnVillager(World world, Location loc, String name){
 		

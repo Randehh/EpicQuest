@@ -688,6 +688,8 @@ public class main extends JavaPlugin{
 										EpicPlayer ep = EpicSystem.getEpicPlayer(players[i]);
 										VillagerHandler.SetFirstInteraction(ep, villager);
 									}
+									
+									VillagerHandler.newVillagers.add(villager);
 								}else{
 									player.sendMessage(ChatColor.RED + "A villager with the name " + name +" has already been found in this world.");
 								}

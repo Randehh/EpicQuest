@@ -129,36 +129,38 @@ public class SaveLoader {
 				EpicVillager epicVil = VillagerHandler.GetEpicVillager(tempVil);
 				String villagerName = tempVil.getCustomName();
 				
-				Location loc = tempVil.getLocation();
-				villager.set("Villager."+villagerName+".World", tempVil.getWorld().getName());
-				villager.set("Villager."+villagerName+".Location", loc.getBlockX()+":"+loc.getBlockY()+":"+loc.getBlockZ());
-				
-				List<Integer> questList = epicVil.questList;
-				String questString = "";
-				for(int q = 0; q < questList.size(); q++){
-					int actualQuest = questList.get(q);
-					if(q < questList.size() - 1){
-						questString += actualQuest + ",";
-					}else{
-						questString += actualQuest;
-					}
+				if(VillagerHandler.newVillagers.contains(epicVil)){
+					Location loc = tempVil.getLocation();
+					villager.set("Villager."+villagerName+".World", tempVil.getWorld().getName());
+					villager.set("Villager."+villagerName+".Location", loc.getBlockX()+":"+loc.getBlockY()+":"+loc.getBlockZ());
 					
-					List<String> openingSentences = epicVil.openingSentences.get(actualQuest);
-					for(int os = 0; os < openingSentences.size(); os++){
-						villager.set("Villager."+villagerName+".OpeningSentences."+actualQuest+"."+os, openingSentences.get(os));
+					List<Integer> questList = epicVil.questList;
+					String questString = "";
+					for(int q = 0; q < questList.size(); q++){
+						int actualQuest = questList.get(q);
+						if(q < questList.size() - 1){
+							questString += actualQuest + ",";
+						}else{
+							questString += actualQuest;
+						}
+						
+						List<String> openingSentences = epicVil.openingSentences.get(actualQuest);
+						for(int os = 0; os < openingSentences.size(); os++){
+							villager.set("Villager."+villagerName+".OpeningSentences."+actualQuest+"."+os, openingSentences.get(os));
+						}
+						
+						List<String> middleSentences = epicVil.middleSentences.get(actualQuest);
+						for(int ms = 0; ms < middleSentences.size(); ms++){
+							villager.set("Villager."+villagerName+".MiddleSentences."+actualQuest+"."+ms, middleSentences.get(ms));
+						}
+						
+						List<String> endingSentences = epicVil.endingSentences.get(actualQuest);
+						for(int es = 0; es < endingSentences.size(); es++){
+							villager.set("Villager."+villagerName+".EndingSentences."+actualQuest+"."+es, endingSentences.get(es));
+						}
 					}
-					
-					List<String> middleSentences = epicVil.middleSentences.get(actualQuest);
-					for(int ms = 0; ms < middleSentences.size(); ms++){
-						villager.set("Villager."+villagerName+".MiddleSentences."+actualQuest+"."+ms, middleSentences.get(ms));
-					}
-					
-					List<String> endingSentences = epicVil.endingSentences.get(actualQuest);
-					for(int es = 0; es < endingSentences.size(); es++){
-						villager.set("Villager."+villagerName+".EndingSentences."+actualQuest+"."+es, endingSentences.get(es));
-					}
+					villager.set("Villager."+villagerName+".Quests", questString);
 				}
-				villager.set("Villager."+villagerName+".Quests", questString);
 				
 				if(isShutDown) tempVil.remove();
 			}
