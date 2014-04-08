@@ -110,7 +110,10 @@ public class VillagerHandler {
 		int actualQuestNo = epicVillager.questList.get(currentQuest);
 		int nextSentence = epicVillager.currentSentence.get(epicPlayer) + 1;
 		
-		if(!epicVillager.startedQuest.get(epicPlayer) && !epicPlayer.hasQuest(actualQuestNo)){		//Player talks for the first time
+		if(epicPlayer.hasQuest(actualQuestNo)){
+			epicVillager.startedQuest.put(epicPlayer, true);
+		}
+		if(!epicVillager.startedQuest.get(epicPlayer)){		//Player talks for the first time
 			if(epicVillager.openingSentences.get(actualQuestNo).size() != nextSentence){				//Next sentence
 				epicVillager.currentSentence.put(epicPlayer, nextSentence);
 				epicPlayer.getPlayer().sendMessage(ChatColor.ITALIC + villagerName + ": " + GetNextOpeningSentence(villager, actualQuestNo, epicPlayer));

@@ -217,14 +217,6 @@ public class EpicPlayer {
 	}
 	public boolean canGetQuest(int questNo){
 		
-		System.out.print("--------------");
-		System.out.print(hasQuest(questNo));
-		System.out.print(hasUnlockedQuest(questNo));
-		System.out.print(hasDailyQuestLeft());
-		System.out.print(isTimeOut(questNo));
-		System.out.print(isQuestListFull() );
-		System.out.print(hasItemRequirements(questNo));
-		
 		if(!hasQuest(questNo) &&
 				hasUnlockedQuest(questNo) &&
 				hasDailyQuestLeft() &&
