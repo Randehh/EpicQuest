@@ -666,6 +666,7 @@ public class main extends JavaPlugin{
 									else
 										name += args[i] + " ";
 								}
+								name.trim();
 								
 								int quest = Integer.parseInt(args[args.length - 1]);
 								List<Integer> questList = new ArrayList<Integer>();

@@ -233,18 +233,21 @@ public class EpicPlayer {
 	public boolean hasItemRequirements(int questNo){
 		List<Integer> amountList = EpicQuestDatabase.getQuestItemRequiredAmount(questNo);
 		List<String> idList = EpicQuestDatabase.getQuestItemRequiredID(questNo);
-		if(amountList.get(0) != -1 &&
-				idList.get(0) != ""){
-			Inventory inventory = getPlayer().getInventory();
+		
+		Inventory inventory = getPlayer().getInventory();
 			
-			for(int i = 0; i < amountList.size(); i++){
-				if(!inventory.contains(Material.getMaterial(idList.get(i)), amountList.get(i))){
+		for(int i = 0; i < idList.size(); i++){
+			if(amountList.get(i) >= 1 &&
+					idList.get(i) != null &&
+					idList.get(i) != ""){
+				Material material = Material.matchMaterial(idList.get(i));
+				if(material != null && !inventory.contains(material, amountList.get(i))){
 					return false;
 				}
 			}
-			return true;
+			
 		}
-		return false;
+		return true;
 	}
 	public void checkTimer(int questNo, boolean substractDifference){
 		int timeDifference = EpicSystem.getTime() - EpicSystem.getStartTime();
