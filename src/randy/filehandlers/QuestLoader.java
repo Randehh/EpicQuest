@@ -24,6 +24,7 @@ public class QuestLoader {
 		
 		Object[] questlist = QuestLoader.quests.getKeys(false).toArray();
 		for(int i = 0; i < questlist.length; i++){
+			
 			//Get general info
 			EpicQuestDatabase.setQuestName(i, quests.getString("q"+i+".Name"));
 			EpicQuestDatabase.setQuestEndInfo(i, quests.getString("q"+i+".End_Info"));
@@ -34,10 +35,16 @@ public class QuestLoader {
 			//Get reward info
 			EpicQuestDatabase.setRewardMoney(i, quests.getInt("q"+i+".Rewards.Money"));
 			
-			String[] idString = quests.getString("q"+i+".Rewards.Item.id").split(",");
-			List<String> idList = new ArrayList<String>();
-			for(int e = 0; e < idString.length; e++){ idList.add(idString[e]); }
-			EpicQuestDatabase.setRewardID(i, idList);
+			if(quests.getString("q"+i+".Rewards.Item.id") != null){
+				String[] idString = quests.getString("q"+i+".Rewards.Item.id").split(",");
+				List<String> idList = new ArrayList<String>();
+				for(int e = 0; e < idString.length; e++){ idList.add(idString[e]); }
+				EpicQuestDatabase.setRewardID(i, idList);
+			}else{
+				List<String> idList = new ArrayList<String>();
+				idList.add("");
+				EpicQuestDatabase.setRewardID(i, idList);
+			}
 			
 			String[] amountString = quests.getString("q"+i+".Rewards.Item.Amount").split(",");
 			List<Integer> amountList = new ArrayList<Integer>();
