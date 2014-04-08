@@ -161,18 +161,18 @@ public class SaveLoader {
 						questString += actualQuest;
 					}
 					
-					List<String> openingSentences = epicVil.openingSentences.get(q);
+					List<String> openingSentences = epicVil.openingSentences.get(actualQuest);
 					for(int os = 0; os < openingSentences.size(); os++){
 						villager.set("Villager."+villagerName+".OpeningSentences."+actualQuest+"."+os, openingSentences.get(os));
 					}
 					
-					List<String> middleSentences = epicVil.middleSentences.get(q);
-					for(int ms = 0; ms < openingSentences.size(); ms++){
+					List<String> middleSentences = epicVil.middleSentences.get(actualQuest);
+					for(int ms = 0; ms < middleSentences.size(); ms++){
 						villager.set("Villager."+villagerName+".MiddleSentences."+actualQuest+"."+ms, middleSentences.get(ms));
 					}
 					
-					List<String> endingSentences = epicVil.endingSentences.get(q);
-					for(int es = 0; es < openingSentences.size(); es++){
+					List<String> endingSentences = epicVil.endingSentences.get(actualQuest);
+					for(int es = 0; es < endingSentences.size(); es++){
 						villager.set("Villager."+villagerName+".EndingSentences."+actualQuest+"."+es, endingSentences.get(es));
 					}
 				}
@@ -372,7 +372,7 @@ public class SaveLoader {
 				//Advanced villager stuff
 				EpicVillager epicVillager = VillagerHandler.GetEpicVillager(world, villagerName);
 				
-				Object[] quests = villager.getConfigurationSection("Villager."+villagerName+".Quests").getKeys(false).toArray();
+				Object[] quests = villager.getConfigurationSection("Villager."+villagerName+".OpeningSentences").getKeys(false).toArray();
 				for(int q = 0; q < quests.length; q++){
 					int questNo = Integer.parseInt((String)quests[q]);
 					questList.add(questNo);
@@ -380,7 +380,7 @@ public class SaveLoader {
 					//Load sentences
 					Object[] osNo = villager.getConfigurationSection("Villager."+villagerName+".OpeningSentences."+questNo).getKeys(false).toArray();
 					for(int os = 0; os < osNo.length; os++){
-						openingSentences.add(villager.getString("Villager."+villagerName+".OpeningSentences."+questNo+"."+os));
+						openingSentences.add(villager.getString("Villager."+villagerName+".OpeningSentences."+questNo+"."+osNo[os]));
 					}
 					
 					Object[] msNo = villager.getConfigurationSection("Villager."+villagerName+".MiddleSentences."+questNo).getKeys(false).toArray();
