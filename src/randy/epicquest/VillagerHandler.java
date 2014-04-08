@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
@@ -75,10 +76,9 @@ public class VillagerHandler {
 		}
 	}
 	
-	public static String GetNextOpeningSentence(Villager villager, int quest){
-		Random randomGen = new Random();
+	public static String GetNextOpeningSentence(Villager villager, int quest, EpicPlayer epicPlayer){
 		List<String> openingSentences = GetEpicVillager(villager).openingSentences.get(quest);
-		return openingSentences.get(randomGen.nextInt(openingSentences.size()));
+		return openingSentences.get(GetEpicVillager(villager).currentSentence.get(epicPlayer));
 	}
 	
 	public static String GetRandomMiddleSentence(Villager villager, int quest){
@@ -87,38 +87,42 @@ public class VillagerHandler {
 		return middleSentences.get(randomGen.nextInt(middleSentences.size()));
 	}
 	
-	public static String GetNextEndingSentence(Villager villager, int quest){
-		Random randomGen = new Random();
+	public static String GetNextEndingSentence(Villager villager, int quest, EpicPlayer epicPlayer){
 		List<String> endingSentences = GetEpicVillager(villager).endingSentences.get(quest);
-		return endingSentences.get(randomGen.nextInt(endingSentences.size()));
+		return endingSentences.get(GetEpicVillager(villager).currentSentence.get(epicPlayer));
 	}
 	
 	public static void NextInteraction(Villager villager, EpicPlayer epicPlayer){
 		EpicVillager epicVillager = GetEpicVillager(villager);
+		String villagerName = villager.getCustomName();
+		
+		if(epicVillager.currentQuest.get(epicPlayer) == null) epicVillager.currentQuest.put(epicPlayer, 0);
+		if(epicVillager.currentSentence.get(epicPlayer) == null) epicVillager.currentSentence.put(epicPlayer, -1);
+		if(epicVillager.startedQuest.get(epicPlayer) == null) epicVillager.startedQuest.put(epicPlayer, false);
 		
 		int currentQuest = epicVillager.currentQuest.get(epicPlayer);
 		int actualQuestNo = epicVillager.questList.get(currentQuest);
 		int nextSentence = epicVillager.currentSentence.get(epicPlayer) + 1;
 		
 		if(!epicVillager.startedQuest.get(epicPlayer) && !epicPlayer.hasQuest(actualQuestNo)){		//Player talks for the first time
-			if(epicVillager.openingSentences.get(currentQuest).size() != nextSentence){				//Next sentence
-				epicPlayer.getPlayer().sendMessage(GetNextOpeningSentence(villager, currentQuest));
+			if(epicVillager.openingSentences.get(actualQuestNo).size() != nextSentence){				//Next sentence
 				epicVillager.currentSentence.put(epicPlayer, nextSentence);
+				epicPlayer.getPlayer().sendMessage(ChatColor.ITALIC + villagerName + ": " + GetNextOpeningSentence(villager, actualQuestNo, epicPlayer));
 			}else{																					//Give quest
 				if(epicPlayer.addQuest(new EpicQuest(epicPlayer, actualQuestNo))){
 					epicVillager.startedQuest.put(epicPlayer, true);
 					epicVillager.currentSentence.put(epicPlayer, -1);
 				}else{
 					epicVillager.currentSentence.put(epicPlayer, 0);
-					epicPlayer.getPlayer().sendMessage(GetNextOpeningSentence(villager, currentQuest));
+					epicPlayer.getPlayer().sendMessage(ChatColor.ITALIC + villagerName + ": " + GetNextOpeningSentence(villager, actualQuestNo, epicPlayer));
 				}
 			}
 		}else if(epicVillager.startedQuest.get(epicPlayer) && !epicPlayer.getQuest(actualQuestNo).getPlayerQuestCompleted()){
-			epicPlayer.getPlayer().sendMessage(GetRandomMiddleSentence(villager, currentQuest));
+			epicPlayer.getPlayer().sendMessage(ChatColor.ITALIC + villagerName + ": " + GetRandomMiddleSentence(villager, actualQuestNo));
 		} else {
-			if(epicVillager.endingSentences.get(currentQuest).size() != nextSentence){	
-				epicPlayer.getPlayer().sendMessage(GetNextEndingSentence(villager, currentQuest));
+			if(epicVillager.endingSentences.get(actualQuestNo).size() != nextSentence){	
 				epicVillager.currentSentence.put(epicPlayer, nextSentence);
+				epicPlayer.getPlayer().sendMessage(ChatColor.ITALIC + villagerName + ": " + GetNextEndingSentence(villager, actualQuestNo, epicPlayer));
 			}else{
 				//Finish quest
 				epicVillager.startedQuest.put(epicPlayer, false);
