@@ -56,24 +56,6 @@ public class SaveLoader {
 
 		System.out.print("Saving...");
 		
-		List<EpicPlayer> playersToSave = EpicSystem.getPlayerList();
-
-		if(!playersToSave.isEmpty()){
-			
-			//System.out.print("Players to save: " + playersToSave.size());
-			
-			for(int i = 0; i < playersToSave.size(); i++){
-
-				// Get the file of the player which has to be saved
-				EpicPlayer epicPlayer = playersToSave.get(i);
-				savePlayer(epicPlayer);
-			}			
-
-			System.out.print("[EpicQuest]: saved " + playerlist.split(", ").length + " player(s).");
-		}else{
-			System.out.print("There are no players to save");
-		}
-		
 		//Set time
 		config.set("Time", EpicSystem.getTime());
 		config.set("Save_Time", EpicSystem.getSaveTime());
@@ -181,6 +163,23 @@ public class SaveLoader {
 				if(isShutDown) tempVil.remove();
 			}
 			
+			List<EpicPlayer> playersToSave = EpicSystem.getPlayerList();
+			if(!playersToSave.isEmpty()){
+				
+				//System.out.print("Players to save: " + playersToSave.size());
+				
+				for(int i = 0; i < playersToSave.size(); i++){
+
+					// Get the file of the player which has to be saved
+					EpicPlayer epicPlayer = playersToSave.get(i);
+					savePlayer(epicPlayer);
+				}			
+
+				System.out.print("[EpicQuest]: saved " + playerlist.split(", ").length + " player(s).");
+			}else{
+				System.out.print("There are no players to save");
+			}
+			
 			villager.save(villagerfile);
 		}
 	}
@@ -272,6 +271,16 @@ public class SaveLoader {
 
 		//Set daily limit
 		save.set("Daily_Left", epicPlayer.getQuestDailyLeft());
+		
+		//Set villager stuff in villager file
+		List<EpicVillager> villagerList = VillagerHandler.GetEpicVillagerList();
+		for(int i = 0; i < villagerList.size(); i++){
+			EpicVillager vil = villagerList.get(i);
+			String villagerName = vil.villager.getCustomName();
+			villager.set("Villager."+villagerName+".Players."+playername+".CurrentQuest", vil.currentQuest.get(epicPlayer));
+			villager.set("Villager."+villagerName+".Players."+playername+".CurrentSentence", vil.currentSentence.get(epicPlayer));
+			villager.set("Villager."+villagerName+".Players."+playername+".StartedQuest", vil.startedQuest.get(epicPlayer));
+		}
 
 		//Save file
 		try {			
@@ -398,6 +407,16 @@ public class SaveLoader {
 					epicVillager.endingSentences.put(questNo, endingSentences);
 				}
 				epicVillager.questList = questList;
+				
+				//Set player stuff
+				Object[] players = villager.getConfigurationSection("Villager."+villagerName+".Players").getKeys(false).toArray();
+				for(int p = 0; p < players.length; p++){
+					String playername = (String)players[p];
+					EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(playername);
+					epicVillager.currentQuest.put(epicPlayer, villager.getInt("Villager."+villagerName+".Players."+playername+".CurrentQuest"));
+					epicVillager.currentSentence.put(epicPlayer, villager.getInt("Villager."+villagerName+".Players."+playername+".CurrentSentence"));
+					epicVillager.startedQuest.put(epicPlayer, villager.getBoolean("Villager."+villagerName+".Players."+playername+".StartedQuest"));
+				}
 			}
 		}
 

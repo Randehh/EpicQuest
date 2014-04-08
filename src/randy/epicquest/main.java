@@ -681,6 +681,13 @@ public class main extends JavaPlugin{
 									villager.middleSentences.put(questList.get(0), sentenceList);
 									villager.endingSentences.put(questList.get(0), sentenceList);
 									villager.questList = questList;
+									
+									//Set basic vars for every online player
+									Player[] players = Bukkit.getOnlinePlayers();
+									for(int i = 0; i < players.length; i++){
+										EpicPlayer ep = EpicSystem.getEpicPlayer(players[i]);
+										VillagerHandler.SetFirstInteraction(ep, villager);
+									}
 								}else{
 									player.sendMessage(ChatColor.RED + "A villager with the name " + name +" has already been found in this world.");
 								}
@@ -777,6 +784,7 @@ public class main extends JavaPlugin{
 
 				//If timer has run for 5 minutes, save all
 				if(EpicSystem.getSaveTime() >= 300){
+					System.out.print("Timer save");
 					saveAll(false);
 					EpicSystem.setSaveTime(0);
 				}

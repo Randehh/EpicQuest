@@ -9,7 +9,7 @@ import org.bukkit.entity.Villager;
 
 public class EpicVillager {
 	
-	Villager villager;
+	public Villager villager;
 	public HashMap<Integer, List<String>> openingSentences = new HashMap<Integer, List<String>>();
 	public HashMap<Integer, List<String>> middleSentences = new HashMap<Integer, List<String>>();
 	public HashMap<Integer, List<String>> endingSentences = new HashMap<Integer, List<String>>();

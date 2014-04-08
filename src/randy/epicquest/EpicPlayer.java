@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 public class EpicPlayer {
 	
@@ -112,6 +113,39 @@ public class EpicPlayer {
 	//Quest managing
 	public boolean addQuest(EpicQuest quest){
 		if(canGetQuest(quest.getQuestNo()) == true){
+			
+			//Take items first
+			if(hasItemRequirements(quest.getQuestNo())){
+				List<Integer> amountList = EpicQuestDatabase.getQuestItemRequiredAmount(quest.getQuestNo());
+				List<String> idList = EpicQuestDatabase.getQuestItemRequiredID(quest.getQuestNo());
+				Inventory inventory = getPlayer().getInventory();
+					
+				for(int i = 0; i < idList.size(); i++){
+					int amountLeft = amountList.get(i);
+					Material material = Material.matchMaterial(idList.get(i));
+					while(amountLeft >= 1){						
+						ItemStack[] inventoryStacks = inventory.getContents();
+						for(int e = 0; e < inventoryStacks.length; e++){
+							ItemStack currentStack = inventoryStacks[e];
+							if(currentStack != null && currentStack.getType() == material){
+								int currentStackAmount = currentStack.getAmount();
+								if(currentStackAmount >= amountLeft){
+									currentStackAmount -= amountLeft;
+									amountLeft = 0;
+									if(currentStackAmount == 0) inventory.remove(currentStack);
+									else currentStack.setAmount(currentStackAmount);
+									break;
+								}else{
+									amountLeft -= currentStackAmount;
+									inventory.remove(currentStack);
+								}
+								break;
+							}
+						}
+					}
+				}
+			}
+			
 			questList.add(quest);
 			modifyStatQuestGet(1);
 			
@@ -183,6 +217,14 @@ public class EpicPlayer {
 	}
 	public boolean canGetQuest(int questNo){
 		
+		System.out.print("--------------");
+		System.out.print(hasQuest(questNo));
+		System.out.print(hasUnlockedQuest(questNo));
+		System.out.print(hasDailyQuestLeft());
+		System.out.print(isTimeOut(questNo));
+		System.out.print(isQuestListFull() );
+		System.out.print(hasItemRequirements(questNo));
+		
 		if(!hasQuest(questNo) &&
 				hasUnlockedQuest(questNo) &&
 				hasDailyQuestLeft() &&
@@ -241,9 +283,8 @@ public class EpicPlayer {
 					idList.get(i) != null &&
 					idList.get(i) != ""){
 				Material material = Material.matchMaterial(idList.get(i));
-				if(material != null && !inventory.contains(material, amountList.get(i))){
-					return false;
-				}
+				if(material == null) return true;
+				if(!inventory.contains(material, amountList.get(i))) return false;
 			}
 			
 		}
