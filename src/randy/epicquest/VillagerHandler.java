@@ -120,7 +120,7 @@ public class VillagerHandler {
 			}else{																				//Give quest
 				if(epicPlayer.addQuest(new EpicQuest(epicPlayer, actualQuestNo))){
 					epicVillager.startedQuest.put(epicPlayer, true);
-					epicVillager.currentSentence.put(epicPlayer, -1);
+					epicVillager.currentSentence.put(epicPlayer, 0);
 				}else{
 					epicVillager.currentSentence.put(epicPlayer, 0);
 					epicPlayer.getPlayer().sendMessage(ChatColor.ITALIC + villagerName + ": " + GetNextOpeningSentence(villager, actualQuestNo, epicPlayer));
@@ -134,7 +134,7 @@ public class VillagerHandler {
 				epicVillager.currentSentence.put(epicPlayer, 0);
 				epicPlayer.getPlayer().sendMessage(ChatColor.ITALIC + villagerName + ": " + GetNextOpeningSentence(villager, actualQuestNo, epicPlayer));
 			}else{
-				if(!epicPlayer.getQuest(actualQuestNo).getPlayerQuestCompleted()){
+				if(!epicPlayer.getQuestByNumber(actualQuestNo).getPlayerQuestCompleted()){
 					epicPlayer.getPlayer().sendMessage(ChatColor.ITALIC + villagerName + ": " + GetRandomMiddleSentence(villager, actualQuestNo));
 				}else if(epicVillager.endingSentences.get(actualQuestNo).size() != nextSentence){
 					epicPlayer.getPlayer().sendMessage(ChatColor.ITALIC + villagerName + ": " + GetNextEndingSentence(villager, actualQuestNo, epicPlayer));
@@ -143,7 +143,7 @@ public class VillagerHandler {
 					//Finish quest
 					epicVillager.startedQuest.put(epicPlayer, false);
 					epicVillager.currentSentence.put(epicPlayer, -1);
-					epicPlayer.getQuest(actualQuestNo).completeQuest();
+					epicPlayer.getQuestByNumber(actualQuestNo).completeQuest();
 					currentQuest++;
 					if(currentQuest < epicVillager.questList.size()){
 						epicVillager.currentQuest.put(epicPlayer, currentQuest);

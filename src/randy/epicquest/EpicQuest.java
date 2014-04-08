@@ -141,7 +141,10 @@ public class EpicQuest {
 		}
 		
 		String command = getQuestRewardCommand();
-		if(command != "-" && command != ""){
+		if(command != null && !command.equals("no command")){
+			if(command.contains("<player>"))
+				command = command.replaceAll("<player>", player.getName());
+		
 			Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
 		}
 		

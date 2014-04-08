@@ -50,7 +50,6 @@ public class QuestLoader {
 			List<Integer> amountList = new ArrayList<Integer>();
 			for(int e = 0; e < amountString.length; e++){ amountList.add(Integer.parseInt(amountString[e])); }
 			EpicQuestDatabase.setRewardAmount(i, amountList);
-			
 			EpicQuestDatabase.setRewardCommand(i, quests.getString("q"+i+".Rewards.Command"));
 			
 			//Get tasks info

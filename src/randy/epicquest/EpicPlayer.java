@@ -101,6 +101,10 @@ public class EpicPlayer {
 		return questNumbers;
 	}
 	public EpicQuest getQuest(int questNo){ return questList.get(questNo); }
+	public EpicQuest getQuestByNumber(int questNo){
+		for(int i = 0; i < questList.size(); i++) if(getQuest(i).getQuestNo() == questNo) return getQuest(i);
+		return null;
+	}
 	public List<Integer> getQuestsCompleted(){ return questCompleted; }
 	public int getQuestDailyLeft() { return questDailyLeft; }
 	public List<Integer> getQuestTimerList() { return questTimer; }
