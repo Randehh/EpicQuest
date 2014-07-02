@@ -22,6 +22,7 @@ public class TypeBase {
 
 				if(quest.getQuestWorlds().contains(epicPlayer.getPlayer().getWorld().getName()) ||
 						quest.getQuestWorlds().get(0).equalsIgnoreCase("any")){
+					
 					//Scan the tasks
 					String taskString = null;
 					int taskamount = quest.getTaskAmount();

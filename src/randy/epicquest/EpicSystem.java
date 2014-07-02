@@ -65,17 +65,7 @@ public class EpicSystem {
 		
 		String name = player.getName();
 		
-		//Search list for the player
-		for(int i = 0; i < playerList.size(); i++){
-			if(playerList.get(i).getPlayerName().equals(name)){ return playerList.get(i); }
-		}
-				
-		//Player is not yet loaded or doesn't exist
-		SaveLoader.loadPlayer(name);
-		if(playerList.get(playerList.size() - 1).getPlayerName().equals(name)){ return playerList.get(playerList.size() - 1); }
-				
-				//Player doesn't exist
-		return null;
+		return getEpicPlayer(name);
 	}
 	
 	public static void addFirstStart(String playerName){

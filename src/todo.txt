@@ -1,1 +1,12 @@
-Take item on receiving quest
+Todo:
+	Refactor a lot of internal stuff
+		- Easier method of getting quest types instead of going through a list all the time
+		- Stringbuilder on config loaders and messages
+		- Ability for quest sections
+	Quest sections (sub-quests)
+	RPG Items support
+	Citizens support
+
+DONE:
+	Quest reloading
+	GoTo quest type

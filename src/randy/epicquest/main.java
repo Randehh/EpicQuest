@@ -44,7 +44,7 @@ public class main extends JavaPlugin{
 
 
 	//Set a few variables needed throughout the start-up
-	String pluginversion = "3.2";
+	String pluginversion = "3.2.1";
 	String pluginname = "EpicQuest";
 	static Plugin epicQuestPlugin = Bukkit.getPluginManager().getPlugin("EpicQuest");
 	public static Permission permission = null;
@@ -722,6 +722,15 @@ public class main extends JavaPlugin{
 						}
 						return true;
 					}
+					
+					//Reload quests
+					if(args[0].equalsIgnoreCase("reload")){
+						if(player.hasPermission("epicquest.admin.reload")){
+							QuestLoader.loadQuests();
+						}else{
+							player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
+						}
+					}
 
 					//Quest block
 					if(args[0].equalsIgnoreCase("questblock")){
@@ -765,8 +774,6 @@ public class main extends JavaPlugin{
 				//Change time in the config
 				EpicSystem.modifyTime(1);
 				EpicSystem.modifySaveTime(1);
-				
-				System.out.print("Save time: " + EpicSystem.getSaveTime());
 
 				//If timer has ran a full day, reset block list, timer and daily quest counters
 				if(EpicSystem.getTime() >= 86400){
@@ -789,7 +796,6 @@ public class main extends JavaPlugin{
 
 				//If timer has run for 5 minutes, save all
 				if(EpicSystem.getSaveTime() >= 100){
-					System.out.print("Timer save");
 					saveAll(false);
 					EpicSystem.setSaveTime(0);
 				}

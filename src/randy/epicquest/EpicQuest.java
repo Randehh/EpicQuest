@@ -181,12 +181,14 @@ public class EpicQuest {
 		String message = null;
 		
 		//Convert stuff to task specifics
-		//Quest types: Collect, Kill, Killplayer, Killanyplayer, Destroy, Place, Levelup, Enchant, Tame
+		//Quest types: Collect, Kill, Killplayer, Killanyplayer, Destroy, Place, Levelup, Enchant, Tame, Goto
 		if(questtype.equalsIgnoreCase("killplayer")){ questtype = "Kill"; }
 		if(questtype.equalsIgnoreCase("killanyplayer")){ questtype = "Kill"; }
 		if(questtype.equalsIgnoreCase("levelup")){ questtype = "Level up"; }
+		if(questtype.equalsIgnoreCase("goto")){ questtype = "Go to"; }
 		
 		if(questtype.equalsIgnoreCase("level up")){ taskID = "times"; }
+		if(questtype.equalsIgnoreCase("Go to")){ taskID = getTaskID(task).split("=")[2]; }
 		if(questtype.equalsIgnoreCase("collect")||
 				questtype.equalsIgnoreCase("destroy")||
 				questtype.equalsIgnoreCase("place")||
@@ -212,11 +214,20 @@ public class EpicQuest {
 			if(questtype.equalsIgnoreCase("tame")){ questtype = "Tamed"; }
 			if(questtype.equalsIgnoreCase("craft")){ questtype = "Crafted"; }
 			if(questtype.equalsIgnoreCase("smelt")){ questtype = "Smelted"; }
+			if(questtype.equalsIgnoreCase("goto")){ questtype = "Went to"; }
 			
 			//Create the message if the task is finished
-			message = ChatColor.GREEN + questtype + " " + taskmax + " " + taskID + ".";
+			if(!questtype.equalsIgnoreCase("go to")){
+				message = ChatColor.GREEN + questtype + " " + taskmax + " " + taskID + ".";
+			} else {
+				message = ChatColor.GREEN + questtype + " " + taskID + ".";
+			}
 		}else{
-			message = ChatColor.RED + questtype + " " + taskprogress + "/" + taskmax + " " + taskID + ".";
+			if(!questtype.equalsIgnoreCase("go to")){
+				message = ChatColor.RED + questtype + " " + taskprogress + "/" + taskmax + " " + taskID + ".";
+			}else{
+				message = ChatColor.RED + questtype + " " + taskID + ".";
+			}
 		}
 		
 		//Return message

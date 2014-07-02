@@ -1,0 +1,19 @@
+Citizens support
+Phases
+Editing quests in-game
+Events
+RPG Item support
+
+Quest type:
+	GoTo
+	ClickBlock
+	KillMobByName
+
+
+
+First:
+Citizens
+GoTo
+Fix collect
+RPG Item
+Reload quests and shit

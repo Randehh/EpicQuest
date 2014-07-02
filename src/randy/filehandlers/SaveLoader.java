@@ -497,6 +497,8 @@ public class SaveLoader {
 			epicPlayer.setQuestDailyLeft(save.getInt("Daily_Left"));
 			
 			EpicSystem.getPlayerList().add(epicPlayer);
+		}else{
+			EpicSystem.addFirstStart(playername);
 		}
 	}
 }
