@@ -44,7 +44,7 @@ public class main extends JavaPlugin{
 
 
 	//Set a few variables needed throughout the start-up
-	String pluginversion = "3.2.1";
+	String pluginversion = "3.2.2";
 	String pluginname = "EpicQuest";
 	static Plugin epicQuestPlugin = Bukkit.getPluginManager().getPlugin("EpicQuest");
 	public static Permission permission = null;
@@ -668,7 +668,7 @@ public class main extends JavaPlugin{
 									else
 										name += args[i] + " ";
 								}
-								name.trim();
+								name = name.trim();
 								
 								int quest = Integer.parseInt(args[args.length - 1]);
 								List<Integer> questList = new ArrayList<Integer>();
@@ -700,6 +700,7 @@ public class main extends JavaPlugin{
 								
 								//Remove
 								String name = args[2];
+								name = name.trim();
 								if(!VillagerHandler.RemoveVillager(player.getWorld(), name)){
 									player.sendMessage(ChatColor.RED + "A villager with the name " + name +" has not been found in this world.");
 								}else{

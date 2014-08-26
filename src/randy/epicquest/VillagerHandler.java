@@ -8,6 +8,7 @@ import java.util.Random;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Villager;
@@ -23,7 +24,9 @@ public class VillagerHandler {
 	public static boolean SpawnVillager(World world, Location loc, String name){
 		
 		//Check if villager exists
-		if(GetVillager(world, name) != null) return false;
+		if(GetVillager(world, name) != null){
+			RemoveVillager(world, name);
+		}
 		
 		//Set properties
 		Villager villager = (Villager) world.spawnEntity(loc, EntityType.VILLAGER);
@@ -42,10 +45,10 @@ public class VillagerHandler {
 	}
 	
 	public static boolean RemoveVillager(World world, String name){
-		
 		Villager vil = GetVillager(world, name);
 		if(vil != null){
 			villagerList.remove(vil);
+			vil.remove();
 			return true;
 		}
 		return false;
@@ -57,6 +60,16 @@ public class VillagerHandler {
 			Villager tempVil = (Villager)villagerArray[i];
 			if(tempVil.getWorld().equals(world) && tempVil.getCustomName().equalsIgnoreCase(name)){
 				return tempVil;
+			}
+		}
+		
+		List<Entity> entityList = world.getEntities();
+		for(Entity entity : entityList){
+			if(entity instanceof Villager){
+				Villager tempVil = (Villager)entity;
+				if(tempVil.getCustomName().equalsIgnoreCase(name)){
+					return tempVil;
+				}
 			}
 		}
 		return null;

@@ -84,7 +84,7 @@ public class SaveLoader {
 				EpicSign sign = questsignlist.get(i);
 				Location loc = sign.getLocation();
 				int quest = sign.getQuest();
-				signFile.set("Signs." + loc.getBlockX() + "-" + loc.getBlockY() + "-" + loc.getBlockZ(), quest);
+				signFile.set("Signs." + loc.getBlockX() + ":" + loc.getBlockY() + ":" + loc.getBlockZ(), quest);
 			}
 		}
 		signFile.save(signfile);
@@ -335,7 +335,7 @@ public class SaveLoader {
 
 				//Get coords
 				String coords = coordslist[i].toString();
-				String[] coordarray = coords.split("-");
+				String[] coordarray = coords.split(":");
 				Location loc = new Location(null, Integer.parseInt(coordarray[0]), Integer.parseInt(coordarray[1]), Integer.parseInt(coordarray[2]));
 
 				//Get quest
@@ -406,6 +406,7 @@ public class SaveLoader {
 					epicVillager.middleSentences.put(questNo, middleSentences);
 					epicVillager.endingSentences.put(questNo, endingSentences);
 				}
+				
 				epicVillager.questList = questList;
 				
 				//Set player stuff
