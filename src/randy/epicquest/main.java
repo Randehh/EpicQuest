@@ -835,8 +835,11 @@ public class main extends JavaPlugin{
 	private void saveAll(boolean isShutDown){
 		try {
 			SaveLoader.save(isShutDown);
-			EpicSystem.playerList.clear();
-			SaveLoader.playerlist = null;
+			
+			if(isShutDown){
+				EpicSystem.playerList.clear();
+				SaveLoader.playerlist = null;
+			}
 		} catch (IOException | InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
