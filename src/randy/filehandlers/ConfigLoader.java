@@ -51,6 +51,13 @@ public class ConfigLoader {
 			EpicSystem.setMaxPartySize(configuration.getInt("Max_Party_Size"));
 		}
 		
+		if(!configuration.contains("Use_Permissions")){
+			configuration.set("Use_Permissions", true);
+			EpicSystem.setUsePermissions(true);
+		}else{
+			EpicSystem.setUsePermissions(configuration.getBoolean("Use_Permissions"));
+		}
+		
 		try {
 			configuration.save(configfile);
 		} catch (IOException e) {

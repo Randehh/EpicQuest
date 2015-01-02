@@ -183,7 +183,7 @@ public class main extends JavaPlugin{
 					 * Help command
 					 */
 					if(args[0].equalsIgnoreCase("help")){
-						if(player.hasPermission("epicquest.user.help")){
+						if(epicPlayer.hasPermission("epicquest.user.help")){
 							if(args.length == 1 || (args.length == 2 && args[1] == ""+2)){
 							
 								player.sendMessage(ChatColor.GOLD + "[=======  Help list (1/2) =======]");
@@ -221,7 +221,7 @@ public class main extends JavaPlugin{
 					 * Party commands
 					 */
 					if(args[0].equalsIgnoreCase("party")){
-						if(player.hasPermission("epicquest.user.party")){
+						if(epicPlayer.hasPermission("epicquest.user.party")){
 							
 							//If there are more arguments than only party
 							if(args.length >= 2){
@@ -380,7 +380,7 @@ public class main extends JavaPlugin{
 					 * Turn in quests command
 					 */
 					if(args[0].equalsIgnoreCase("turnin")){
-						if(player.hasPermission("epicquest.user.turnin")){
+						if(epicPlayer.hasPermission("epicquest.user.turnin")){
 							if(!epicPlayer.getCompleteableQuest().isEmpty()){
 								epicPlayer.completeAllQuests();
 							}else{
@@ -397,7 +397,7 @@ public class main extends JavaPlugin{
 					 */
 					if(args[0].equalsIgnoreCase("give")){
 						if(args.length == 1 || args.length == 2){
-							if(player.hasPermission("epicquest.user.give")){
+							if(epicPlayer.hasPermission("epicquest.user.give")){
 								if(args.length == 1){
 
 									//Give random quest							
@@ -434,7 +434,7 @@ public class main extends JavaPlugin{
 					 */
 					if(args[0].equalsIgnoreCase("drop") || args[0].equalsIgnoreCase("d")){
 						if(args.length == 2){
-							if(player.hasPermission("epicquest.user.drop")){
+							if(epicPlayer.hasPermission("epicquest.user.drop")){
 
 								//Get quest list
 								List<EpicQuest> questlist = epicPlayer.getQuestList();
@@ -464,7 +464,7 @@ public class main extends JavaPlugin{
 					 */
 					if(args[0].equalsIgnoreCase("questbook") || args[0].equalsIgnoreCase("qb")){
 						if(args.length == 1 || args.length == 2){
-							if(player.hasPermission("epicquest.user.questbook")){
+							if(epicPlayer.hasPermission("epicquest.user.questbook")){
 
 								//Get quest list
 								List<EpicQuest> list = epicPlayer.getQuestList();
@@ -522,7 +522,7 @@ public class main extends JavaPlugin{
 					 * Get quest info
 					 */
 					if(args[0].equalsIgnoreCase("info")){
-						if(player.hasPermission("epicquest.user.info")){
+						if(epicPlayer.hasPermission("epicquest.user.info")){
 							if(args.length == 2){
 								int number = Integer.parseInt(args[1]);
 
@@ -553,7 +553,7 @@ public class main extends JavaPlugin{
 					 */
 					if(args[0].equalsIgnoreCase("questlist") || args[0].equalsIgnoreCase("ql")){
 						if(args.length == 1 || args.length == 2){
-							if(player.hasPermission("epicquest.user.questlist")){
+							if(epicPlayer.hasPermission("epicquest.user.questlist")){
 
 								//Get all available quests
 								List<Integer> availableQuests = epicPlayer.getObtainableQuests();
@@ -595,7 +595,7 @@ public class main extends JavaPlugin{
 					 * Get stats command
 					 */
 					if(args[0].equalsIgnoreCase("stats")){
-						if(player.hasPermission("epicquest.user.stats")){
+						if(epicPlayer.hasPermission("epicquest.user.stats")){
 							if(args.length == 2){
 								Player player2 = Bukkit.getPlayer(args[1]);
 								String player2name = player2.getName();
@@ -629,7 +629,7 @@ public class main extends JavaPlugin{
 					 * Leaderboards
 					 */
 					/*if(args[0].equalsIgnoreCase("leaderboard")){
-					if(player.hasPermission("epicquest.user.leaderboard")){
+					if(epicPlayer.hasPermission("epicquest.user.leaderboard")){
 						Collections.sort(playerprogress.getQuestList(playername));
 					}else{
 						player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
@@ -643,7 +643,7 @@ public class main extends JavaPlugin{
 					
 					//Debug stuff
 					if(args[0].equalsIgnoreCase("debug")){
-						if(player.hasPermission("epicquest.admin.debug")){
+						if(epicPlayer.hasPermission("epicquest.admin.debug")){
 							if(args[1].equalsIgnoreCase("quests")){
 								player.sendMessage("Current quests: " + epicPlayer.getQuestList().toString());
 								player.sendMessage("Completed quests: " + epicPlayer.getQuestsCompleted().toString());
@@ -660,7 +660,7 @@ public class main extends JavaPlugin{
 					
 					//Spawn villager
 					if(args[0].equalsIgnoreCase("villager")){
-						if(player.hasPermission("epicquest.admin.villager")){
+						if(epicPlayer.hasPermission("epicquest.admin.villager")){
 							if(args.length >= 4 && args[1].equalsIgnoreCase("spawn")){
 								
 								//Spawn
@@ -724,7 +724,7 @@ public class main extends JavaPlugin{
 					
 					//Save
 					if(args[0].equalsIgnoreCase("save")){
-						if(player.hasPermission("epicquest.admin.save")){
+						if(epicPlayer.hasPermission("epicquest.admin.save")){
 							saveAll(false);
 						}else{
 							player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
@@ -734,7 +734,7 @@ public class main extends JavaPlugin{
 					
 					//Reload quests
 					if(args[0].equalsIgnoreCase("reload")){
-						if(player.hasPermission("epicquest.admin.reload")){
+						if(epicPlayer.hasPermission("epicquest.admin.reload")){
 							QuestLoader.loadQuests();
 						}else{
 							player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
@@ -743,7 +743,7 @@ public class main extends JavaPlugin{
 
 					//Quest block
 					if(args[0].equalsIgnoreCase("questblock")){
-						if(player.hasPermission("epicquest.admin.questblock")){
+						if(epicPlayer.hasPermission("epicquest.admin.questblock")){
 							if(args[1].equalsIgnoreCase("give")){
 								if(args[2].equalsIgnoreCase("random")){
 									Location loc = player.getTargetBlock(null, 25).getLocation();
