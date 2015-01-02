@@ -1,4 +1,4 @@
-package randy.listeners;
+package randy.questtypes;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +19,7 @@ import randy.epicquest.EpicPlayer;
 import randy.epicquest.EpicQuest;
 import randy.epicquest.EpicSign;
 import randy.epicquest.EpicSystem;
-import randy.epicquest.VillagerHandler;
+import randy.villagers.VillagerHandler;
 
 public class TypePlayerInteract extends TypeBase implements Listener{
 	
@@ -96,7 +96,7 @@ public class TypePlayerInteract extends TypeBase implements Listener{
 				}
 			}else if(VillagerHandler.villagerList.containsKey(villager)){
 				EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(event.getPlayer());
-				VillagerHandler.NextInteraction(villager, epicPlayer);
+				VillagerHandler.GetEpicVillager(villager).NextInteraction(epicPlayer);
 				event.setCancelled(true);
 			}
 		}

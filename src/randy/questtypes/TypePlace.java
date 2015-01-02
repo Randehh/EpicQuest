@@ -1,4 +1,4 @@
-package randy.listeners;
+package randy.questtypes;
 
 import java.util.HashMap;
 

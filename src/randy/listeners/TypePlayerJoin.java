@@ -9,9 +9,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import randy.epicquest.EpicPlayer;
 import randy.epicquest.EpicSystem;
-import randy.epicquest.EpicVillager;
-import randy.epicquest.VillagerHandler;
 import randy.filehandlers.SaveLoader;
+import randy.villagers.EpicVillager;
+import randy.villagers.VillagerHandler;
 
 public class TypePlayerJoin implements Listener {
 	
@@ -22,7 +22,7 @@ public class TypePlayerJoin implements Listener {
 		//Set basic stuff for villager
 		List<EpicVillager> villagerList = VillagerHandler.GetEpicVillagerList();
 		for(int i = 0; i < villagerList.size(); i++){
-			VillagerHandler.SetFirstInteraction(EpicSystem.getEpicPlayer(event.getPlayer()), villagerList.get(i));
+			villagerList.get(i).SetFirstInteraction(EpicSystem.getEpicPlayer(event.getPlayer()));
 		}
 	}
 	

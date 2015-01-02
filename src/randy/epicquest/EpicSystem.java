@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -11,6 +12,8 @@ import org.bukkit.entity.Player;
 import randy.filehandlers.SaveLoader;
 
 public class EpicSystem {
+	
+	public static Random random = new Random();
 	
 	public static List<EpicPlayer> playerList = new ArrayList<EpicPlayer>();
 	public static List<EpicSign> signList = new ArrayList<EpicSign>();

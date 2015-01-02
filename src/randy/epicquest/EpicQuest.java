@@ -19,16 +19,6 @@ public class EpicQuest {
 	
 	private EpicPlayer epicPlayer;
 	
-	private String questName;
-	private String questStart;
-	private String questEnd;
-	private List<String> questWorlds;
-	private int questResetTime;
-	private int questRewardMoney;
-	private List<String> questRewardItemID;
-	private List<Integer> questRewardItemAmount;
-	private String questRewardPermission;
-	private String questRewardCommand;
 	private List<String> taskType;
 	private List<String> taskID;
 	private List<Integer> taskAmount;
@@ -38,20 +28,9 @@ public class EpicQuest {
 	public EpicQuest(EpicPlayer epicPlayer, int questNo){
 		
 		this.epicPlayer = epicPlayer;
-		
-		//Retrieve quest info from the database
-		questName = EpicQuestDatabase.getQuestName(questNo);
-		questStart = EpicQuestDatabase.getQuestStartInfo(questNo);
-		questEnd = EpicQuestDatabase.getQuestEndInfo(questNo);
-		questWorlds = EpicQuestDatabase.getQuestWorlds(questNo);
-		questResetTime = EpicQuestDatabase.getQuestResetTime(questNo);
-		questRewardMoney = EpicQuestDatabase.getRewardMoney(questNo);
-		questRewardItemID = EpicQuestDatabase.getRewardID(questNo);
-		questRewardItemAmount = EpicQuestDatabase.getRewardAmount(questNo);
-		questRewardPermission = EpicQuestDatabase.getRewardRank(questNo);
-		questRewardCommand = EpicQuestDatabase.getRewardCommand(questNo);
-		playerProgress = new ArrayList<Integer>();
 		this.questNumber = questNo;
+		
+		playerProgress = new ArrayList<Integer>();
 		
 		List<String> tempTaskType =  new ArrayList<String>();
 		List<String> tempTaskID = new ArrayList<String>();
@@ -75,18 +54,18 @@ public class EpicQuest {
 	 */
 	public EpicPlayer getEpicPlayer(){ return epicPlayer; }
 	public int getQuestNo(){ return questNumber; }
-	public String getQuestName(){ return questName; }
-	public String getQuestStart(){ return questStart; }
-	public String getQuestEnd(){ return questEnd; }
-	public List<String> getQuestWorlds(){ return questWorlds; }
-	public int getQuestResetTime(){ return questResetTime; }
-	public int getQuestRewardMoney(){ return questRewardMoney; }
+	public String getQuestName(){ return EpicQuestDatabase.getQuestName(questNumber); }
+	public String getQuestStart(){ return EpicQuestDatabase.getQuestStartInfo(questNumber); }
+	public String getQuestEnd(){ return EpicQuestDatabase.getQuestEndInfo(questNumber); }
+	public List<String> getQuestWorlds(){ return EpicQuestDatabase.getQuestWorlds(questNumber); }
+	public int getQuestResetTime(){ return EpicQuestDatabase.getQuestResetTime(questNumber); }
+	public int getQuestRewardMoney(){ return EpicQuestDatabase.getRewardMoney(questNumber); }
 	public List<ItemStack> getQuestRewardItem() {
 		List<ItemStack> itemList = new ArrayList<ItemStack>();
 
-		for(int i = 0; i < questRewardItemID.size(); i++){
-			String itemID = questRewardItemID.get(i);
-			int itemAmount = questRewardItemAmount.get(i);
+		for(int i = 0; i < EpicQuestDatabase.getRewardID(questNumber).size(); i++){
+			String itemID = EpicQuestDatabase.getRewardID(questNumber).get(i);
+			int itemAmount = EpicQuestDatabase.getRewardAmount(questNumber).get(i);
 			if( itemID != null &&
 					itemAmount > 0){
 				itemList.add(new ItemStack(Material.matchMaterial(itemID), itemAmount));
@@ -94,8 +73,8 @@ public class EpicQuest {
 		}
 		return itemList;
 	}
-	public String getQuestRewardPermission() { return questRewardPermission; }
-	public String getQuestRewardCommand() { return questRewardCommand; }
+	public String getQuestRewardPermission() { return EpicQuestDatabase.getRewardRank(questNumber); }
+	public String getQuestRewardCommand() { return EpicQuestDatabase.getRewardCommand(questNumber); }
 	public void completeQuest(){
 		
 		//Basics

@@ -18,8 +18,10 @@ import randy.epicquest.EpicPlayer;
 import randy.epicquest.EpicQuest;
 import randy.epicquest.EpicSign;
 import randy.epicquest.EpicSystem;
-import randy.epicquest.EpicVillager;
-import randy.epicquest.VillagerHandler;
+import randy.villagers.EpicVillager;
+import randy.villagers.EpicVillager.QuestPhase;
+import randy.villagers.SentenceBatch;
+import randy.villagers.VillagerHandler;
 
 public class SaveLoader {
 
@@ -144,20 +146,9 @@ public class SaveLoader {
 							questString += actualQuest;
 						}
 						
-						List<String> openingSentences = epicVil.openingSentences.get(actualQuest);
-						for(int os = 0; os < openingSentences.size(); os++){
-							villager.set("Villager."+villagerName+".OpeningSentences."+actualQuest+"."+os, openingSentences.get(os));
-						}
-						
-						List<String> middleSentences = epicVil.middleSentences.get(actualQuest);
-						for(int ms = 0; ms < middleSentences.size(); ms++){
-							villager.set("Villager."+villagerName+".MiddleSentences."+actualQuest+"."+ms, middleSentences.get(ms));
-						}
-						
-						List<String> endingSentences = epicVil.endingSentences.get(actualQuest);
-						for(int es = 0; es < endingSentences.size(); es++){
-							villager.set("Villager."+villagerName+".EndingSentences."+actualQuest+"."+es, endingSentences.get(es));
-						}
+						villager.set("Villager."+villagerName+".OpeningSentences."+actualQuest, epicVil.openingSentences.get(actualQuest).getSentences());
+						villager.set("Villager."+villagerName+".MiddleSentences."+actualQuest, epicVil.middleSentences.get(actualQuest).getSentences());
+						villager.set("Villager."+villagerName+".EndingSentences."+actualQuest, epicVil.endingSentences.get(actualQuest).getSentences());
 					}
 					villager.set("Villager."+villagerName+".Quests", questString);
 				}
@@ -278,8 +269,7 @@ public class SaveLoader {
 			EpicVillager vil = villagerList.get(i);
 			String villagerName = vil.villager.getCustomName();
 			villager.set("Villager."+villagerName+".Players."+playername+".CurrentQuest", vil.currentQuest.get(epicPlayer));
-			villager.set("Villager."+villagerName+".Players."+playername+".CurrentSentence", vil.currentSentence.get(epicPlayer));
-			villager.set("Villager."+villagerName+".Players."+playername+".StartedQuest", vil.startedQuest.get(epicPlayer));
+			villager.set("Villager."+villagerName+".Players."+playername+".QuestPhase", vil.questPhases.get(epicPlayer).toString());
 		}
 
 		//Save file
@@ -356,6 +346,8 @@ public class SaveLoader {
 		}
 		EpicSystem.setBlockList(blocklist);
 		
+		
+		//Villagers
 		if(villager.contains("Villager")){
 			Object[] villagerarray = villager.getConfigurationSection("Villager").getKeys(false).toArray();
 			for(int i = 0; i < villagerarray.length; i++){
@@ -369,9 +361,6 @@ public class SaveLoader {
 				Location loc = new Location(world, Integer.parseInt(locationSplit[0]), Integer.parseInt(locationSplit[1]), Integer.parseInt(locationSplit[2]));
 				
 				//Quests
-				List<String> openingSentences = new ArrayList<String>();
-				List<String> middleSentences = new ArrayList<String>();
-				List<String> endingSentences = new ArrayList<String>();
 				List<Integer> questList = new ArrayList<Integer>();
 				
 				//Create
@@ -386,25 +375,10 @@ public class SaveLoader {
 					int questNo = Integer.parseInt((String)quests[q]);
 					questList.add(questNo);
 					
-					//Load sentences
-					Object[] osNo = villager.getConfigurationSection("Villager."+villagerName+".OpeningSentences."+questNo).getKeys(false).toArray();
-					for(int os = 0; os < osNo.length; os++){
-						openingSentences.add(villager.getString("Villager."+villagerName+".OpeningSentences."+questNo+"."+osNo[os]));
-					}
-					
-					Object[] msNo = villager.getConfigurationSection("Villager."+villagerName+".MiddleSentences."+questNo).getKeys(false).toArray();
-					for(int ms = 0; ms < msNo.length; ms++){
-						middleSentences.add(villager.getString("Villager."+villagerName+".MiddleSentences."+questNo+"."+ms));
-					}
-					
-					Object[] esNo = villager.getConfigurationSection("Villager."+villagerName+".EndingSentences."+questNo).getKeys(false).toArray();
-					for(int es = 0; es < esNo.length; es++){
-						endingSentences.add(villager.getString("Villager."+villagerName+".EndingSentences."+questNo+"."+es));
-					}
-					
-					epicVillager.openingSentences.put(questNo, openingSentences);
-					epicVillager.middleSentences.put(questNo, middleSentences);
-					epicVillager.endingSentences.put(questNo, endingSentences);
+					//Load sentences					
+					epicVillager.openingSentences.put(questNo, new SentenceBatch(villager.getStringList("Villager."+villagerName+".OpeningSentences."+questNo)));
+					epicVillager.middleSentences.put(questNo, new SentenceBatch(villager.getStringList("Villager."+villagerName+".MiddleSentences."+questNo)));
+					epicVillager.endingSentences.put(questNo, new SentenceBatch(villager.getStringList("Villager."+villagerName+".EndingSentences."+questNo)));
 				}
 				
 				epicVillager.questList = questList;
@@ -415,8 +389,7 @@ public class SaveLoader {
 					String playername = (String)players[p];
 					EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(playername);
 					epicVillager.currentQuest.put(epicPlayer, villager.getInt("Villager."+villagerName+".Players."+playername+".CurrentQuest"));
-					epicVillager.currentSentence.put(epicPlayer, villager.getInt("Villager."+villagerName+".Players."+playername+".CurrentSentence"));
-					epicVillager.startedQuest.put(epicPlayer, villager.getBoolean("Villager."+villagerName+".Players."+playername+".StartedQuest"));
+					epicVillager.questPhases.put(epicPlayer, QuestPhase.valueOf(villager.getString("Villager."+villagerName+".Players."+playername+".QuestPhase")));
 				}
 			}
 		}
@@ -488,14 +461,14 @@ public class SaveLoader {
 
 
 			//Load stats
-			epicPlayer.modifyStatMoneyEarned(save.getInt("Stats.Money_Earned"));
-			epicPlayer.modifyStatQuestCompleted(save.getInt("Stats.Quests_Completed"));
-			epicPlayer.modifyStatQuestDropped(save.getInt("Stats.Dropped"));
-			epicPlayer.modifyStatQuestGet(save.getInt("Stats.Quests_Get"));
-			epicPlayer.modifyStatTaskCompleted(save.getInt("Stats.Tasks_Completed"));
+			epicPlayer.modifyStatMoneyEarned(save.getInt("Stats.Money_Earned", 0));
+			epicPlayer.modifyStatQuestCompleted(save.getInt("Stats.Quests_Completed", 0));
+			epicPlayer.modifyStatQuestDropped(save.getInt("Stats.Dropped", 0));
+			epicPlayer.modifyStatQuestGet(save.getInt("Stats.Quests_Get", 0));
+			epicPlayer.modifyStatTaskCompleted(save.getInt("Stats.Tasks_Completed", 0));
 
 			//Load daily limit
-			epicPlayer.setQuestDailyLeft(save.getInt("Daily_Left"));
+			epicPlayer.setQuestDailyLeft(save.getInt("Daily_Left", EpicSystem.getDailyLimit()));
 			
 			EpicSystem.getPlayerList().add(epicPlayer);
 		}else{

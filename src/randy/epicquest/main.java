@@ -28,17 +28,20 @@ import randy.filehandlers.SaveLoader;
 import randy.listeners.InventoryDrag;
 import randy.listeners.OpenBook;
 import randy.listeners.PartyMessage;
-import randy.listeners.TypeCraftItem;
 import randy.listeners.TypePlayerJoin;
-import randy.listeners.TypeDestroy;
-import randy.listeners.TypeEnchant;
-import randy.listeners.TypeKill;
-import randy.listeners.TypeLevelUp;
-import randy.listeners.TypePlace;
-import randy.listeners.TypePlayerInteract;
 import randy.listeners.TypeSignChange;
-import randy.listeners.TypeSmelt;
-import randy.listeners.TypeTame;
+import randy.questtypes.TypeCraftItem;
+import randy.questtypes.TypeDestroy;
+import randy.questtypes.TypeEnchant;
+import randy.questtypes.TypeKill;
+import randy.questtypes.TypeLevelUp;
+import randy.questtypes.TypePlace;
+import randy.questtypes.TypePlayerInteract;
+import randy.questtypes.TypeSmelt;
+import randy.questtypes.TypeTame;
+import randy.villagers.EpicVillager;
+import randy.villagers.SentenceBatch;
+import randy.villagers.VillagerHandler;
 
 public class main extends JavaPlugin{
 
@@ -675,20 +678,25 @@ public class main extends JavaPlugin{
 								questList.add(quest);
 								if(VillagerHandler.SpawnVillager(player.getWorld(), player.getLocation(), name)){
 									player.sendMessage(ChatColor.GREEN + "A villager with the name " + name + " has been spawned with quest " + quest +".");
-									List<String> sentenceList = new ArrayList<String>();
-									sentenceList.add("Come back to me when you are done.");
+									
+									List<String> openingList = new ArrayList<String>();
+									openingList.add("Hey there, could you help me out?");
+									List<String> middleList = new ArrayList<String>();
+									middleList.add("Come back to me when you are done.");
+									List<String> endingList = new ArrayList<String>();
+									endingList.add("Awesome, thanks a bunch!");
 									
 									EpicVillager villager = VillagerHandler.GetEpicVillager(VillagerHandler.GetVillager(player.getWorld(), name));
-									villager.openingSentences.put(questList.get(0), sentenceList);
-									villager.middleSentences.put(questList.get(0), sentenceList);
-									villager.endingSentences.put(questList.get(0), sentenceList);
+									villager.openingSentences.put(questList.get(0), new SentenceBatch(openingList));
+									villager.middleSentences.put(questList.get(0), new SentenceBatch(middleList));
+									villager.endingSentences.put(questList.get(0), new SentenceBatch(endingList));
 									villager.questList = questList;
 									
 									//Set basic vars for every online player
 									Player[] players = Bukkit.getOnlinePlayers();
 									for(int i = 0; i < players.length; i++){
 										EpicPlayer ep = EpicSystem.getEpicPlayer(players[i]);
-										VillagerHandler.SetFirstInteraction(ep, villager);
+										villager.SetFirstInteraction(ep);
 									}
 									
 									VillagerHandler.newVillagers.add(villager);

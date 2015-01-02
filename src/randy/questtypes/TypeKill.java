@@ -1,4 +1,4 @@
-package randy.listeners;
+package randy.questtypes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +16,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 
 import randy.epicquest.EpicQuest;
 import randy.epicquest.EpicSystem;
-import randy.epicquest.VillagerHandler;
+import randy.villagers.VillagerHandler;
 
 public class TypeKill extends TypeBase implements Listener{
 	
