@@ -838,7 +838,6 @@ public class main extends JavaPlugin{
 			
 			if(isShutDown){
 				EpicSystem.playerList.clear();
-				SaveLoader.playerlist = null;
 			}
 		} catch (IOException | InvalidConfigurationException e) {
 			e.printStackTrace();

@@ -44,13 +44,6 @@ public class SaveLoader {
 	static File villagerfile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "villager.yml");
 	static FileConfiguration villager = YamlConfiguration.loadConfiguration(villagerfile);
 
-
-	/*
-	 *  Create a object to save all players to whoms data has to be saved
-	 */
-	public static String playerlist = null;
-
-
 	/*
 	 * Save players
 	 */
@@ -62,7 +55,6 @@ public class SaveLoader {
 		config.set("Time", EpicSystem.getTime());
 		config.set("Save_Time", EpicSystem.getSaveTime());
 
-		config.set("Save_List", playerlist);
 		config.save(configfile);
 
 		//Reset the file by recreating the file
@@ -166,7 +158,7 @@ public class SaveLoader {
 					savePlayer(epicPlayer);
 				}			
 
-				System.out.print("[EpicQuest]: saved "  + playerlist.split(", ").length + " player(s).");
+				System.out.print("[EpicQuest]: saved "  + playersToSave.size() + " player(s).");
 			}else{
 				System.out.print("There are no players to save");
 			}
@@ -278,40 +270,22 @@ public class SaveLoader {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		//Put name in playerlist
-		if(playerlist == null){
-			playerlist = playername;
-		}else{
-			playerlist = playerlist + ", " + playername;
-		}
 	}
 
 	/*
 	 * Load players
 	 */
 	public static void load() {
-
-		//Count amount of players
-		int playercount = 0;
-
-		//Check if a player is saved
-		if(config.contains("Save_List") && config.get("Save_List").toString() != ""){
-
-			//Cut the string into an array and go through all players
-			String playerlist = config.get("Save_List").toString();
-			String[] players = playerlist.split(", ");
-			
-			//System.out.print("Playerlist: " + playerlist);
-			for(int i = 0; i < players.length; i++){
-				String playername = players[i];
-
-				loadPlayer(playername);
-
-				//Add one to playercount
-				playercount++;
-			}
-		}
+		
+		//Load all players
+		File folder = new File("plugins" + File.separator + "EpicQuest" + File.separator + "Players");
+        String[] fileNames = folder.list();
+        if(fileNames.length > 0){
+        	for(String playerName : fileNames){
+        		System.out.print("Loading player " + playerName);
+        		loadPlayer(playerName.replace(".yml", ""));
+        	}
+        }
 
 		EpicSystem.setTime(config.getInt("Time"));
 		EpicSystem.setSaveTime(config.getInt("Save_Time"));
@@ -394,7 +368,7 @@ public class SaveLoader {
 			}
 		}
 
-		System.out.print("[EpicQuest]: loaded the progress of " + playercount + " players.");
+		System.out.print("[EpicQuest]: loaded the progress of " + fileNames.length + " players.");
 	}
 
 	public static void loadPlayer(String playername){
