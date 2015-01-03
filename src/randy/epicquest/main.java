@@ -30,6 +30,8 @@ import randy.listeners.OpenBook;
 import randy.listeners.PartyMessage;
 import randy.listeners.TypePlayerJoin;
 import randy.listeners.TypeSignChange;
+import randy.quests.EpicQuest;
+import randy.quests.EpicQuestDatabase;
 import randy.questtypes.TypeCraftItem;
 import randy.questtypes.TypeDestroy;
 import randy.questtypes.TypeEnchant;
@@ -47,11 +49,12 @@ public class main extends JavaPlugin{
 
 
 	//Set a few variables needed throughout the start-up
-	String pluginversion = "3.2.2";
+	String pluginversion = "3.2.3";
 	String pluginname = "EpicQuest";
 	static Plugin epicQuestPlugin = Bukkit.getPluginManager().getPlugin("EpicQuest");
 	public static Permission permission = null;
 	public static Economy economy = null;
+	private static main instance;
 
 	//Set the event classes
 	private final TypePlayerJoin joinListener = new TypePlayerJoin();
@@ -71,15 +74,18 @@ public class main extends JavaPlugin{
 	
 	//Party timers
 	Timer timer = new Timer();
+	TimerTask timerTask;
 	HashMap<EpicPlayer, Integer> invitationTimer = new HashMap<EpicPlayer, Integer>();
 
 	public void onDisable() {
 		saveAll(true);
+		timerTask.cancel();
 		timer.cancel();
 		System.out.print(pluginname + " succesfully disabled.");
 	}
 
 	public void onEnable() {
+		instance = this;
 
 		/*
 		 * Set events
@@ -128,7 +134,7 @@ public class main extends JavaPlugin{
 		Player[] players = getServer().getOnlinePlayers();
 		if(players.length > 0){
 			for(int i = 0; i < players.length; i++){
-				EpicSystem.addFirstStart(players[i].getName());
+				SaveLoader.loadPlayer(players[i].getName());
 			}
 		}
 
@@ -538,9 +544,8 @@ public class main extends JavaPlugin{
 									player.sendMessage(""+ChatColor.GRAY + ChatColor.ITALIC + quest.getQuestStart());
 
 									//Get tasks
-									int maxTasks = quest.getTaskAmount();
-									for(int task = 0; task < maxTasks; task++){
-										player.sendMessage(quest.getPlayerTaskProgressText(task));
+									for(int task = 0; task < quest.getTasks().size(); task++){
+										player.sendMessage(quest.getTasks().get(task).getPlayerTaskProgressText());
 									}
 								}
 							}
@@ -777,7 +782,7 @@ public class main extends JavaPlugin{
 	private void startTimer(){
 
 		//Start timer, triggers every second
-		timer.schedule(new TimerTask() {
+		timerTask = new TimerTask() {
 			public void run() {
 
 				//Change time in the config
@@ -804,7 +809,7 @@ public class main extends JavaPlugin{
 				}
 
 				//If timer has run for 5 minutes, save all
-				if(EpicSystem.getSaveTime() >= 100){
+				if(EpicSystem.getSaveTime() >= 300){
 					saveAll(false);
 					EpicSystem.setSaveTime(0);
 				}
@@ -829,7 +834,8 @@ public class main extends JavaPlugin{
 				//Move villagers back
 				VillagerHandler.MoveVillagersBack();
 			}
-		}, 1000, 1000);
+		};
+		timer.schedule(timerTask, 1000, 1000);
 	}
 
 	private void saveAll(boolean isShutDown){
@@ -837,10 +843,14 @@ public class main extends JavaPlugin{
 			SaveLoader.save(isShutDown);
 			
 			if(isShutDown){
-				EpicSystem.playerList.clear();
+				EpicSystem.getPlayerList().clear();
 			}
 		} catch (IOException | InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static main getInstance(){
+		return instance;
 	}
 }

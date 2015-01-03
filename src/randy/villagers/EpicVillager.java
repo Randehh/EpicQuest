@@ -9,7 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Villager;
 
 import randy.epicquest.EpicPlayer;
-import randy.epicquest.EpicQuest;
+import randy.quests.EpicQuest;
 
 public class EpicVillager {
 	

@@ -17,7 +17,7 @@ public class TypePlayerJoin implements Listener {
 	
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event){
-		EpicSystem.addFirstStart(event.getPlayer().getName());
+		SaveLoader.loadPlayer(event.getPlayer().getName());
 		
 		//Set basic stuff for villager
 		List<EpicVillager> villagerList = VillagerHandler.GetEpicVillagerList();

@@ -1,6 +1,5 @@
 package randy.questtypes;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.ChatColor;
@@ -16,9 +15,11 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import randy.epicquest.EpicPlayer;
-import randy.epicquest.EpicQuest;
 import randy.epicquest.EpicSign;
 import randy.epicquest.EpicSystem;
+import randy.quests.EpicQuest;
+import randy.quests.EpicQuestTask;
+import randy.quests.EpicQuestTask.TaskTypes;
 import randy.villagers.VillagerHandler;
 
 public class TypePlayerInteract extends TypeBase implements Listener{
@@ -71,31 +72,25 @@ public class TypePlayerInteract extends TypeBase implements Listener{
 	public void onPlayerInteractEntity(PlayerInteractEntityEvent event){
 		Entity clickedEntity = event.getRightClicked();
 		if(clickedEntity instanceof Villager){
+			
+			Player player = event.getPlayer();
+			EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getName());
+			List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.TALK_TO_VILLAGER);
 			Villager villager = (Villager)clickedEntity;
-			EpicPlayer player = EpicSystem.getEpicPlayer(event.getPlayer());
 			
-			HashMap<EpicQuest, String> questlist = checkForType(player, "talktovillager");
-			
-			if(player != null && !questlist.isEmpty()){
-				for(int i = 0; i < questlist.size(); i++){
-
-					//Split quest and task
-					EpicQuest quest = (EpicQuest) questlist.keySet().toArray()[i];
-					String[] tasks = questlist.get(quest).split(",");
-
-					for(int e = 0; e < tasks.length; e++){
-						int taskNo = Integer.parseInt(tasks[e]);
-						String questID = quest.getTaskID(e);
-						String villagerName = villager.getCustomName();
-						if(questID.equalsIgnoreCase(villagerName)){
-
-							//Progress task stuff
-							quest.modifyTaskProgress(taskNo, 1, true);
-						}
-					}
+			boolean progressMade = false;
+			for(EpicQuestTask task : taskList){
+				String villagerName = villager.getCustomName();
+				String villagerNeeded = task.getTaskID();
+				
+				if(villagerName.equalsIgnoreCase(villagerNeeded)){
+					task.ProgressTask(1, epicPlayer);
+					progressMade = true;
 				}
-			}else if(VillagerHandler.villagerList.containsKey(villager)){
-				EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(event.getPlayer());
+				if(progressMade) return;
+			}
+			
+			if(VillagerHandler.villagerList.containsKey(villager)){
 				VillagerHandler.GetEpicVillager(villager).NextInteraction(epicPlayer);
 				event.setCancelled(true);
 			}

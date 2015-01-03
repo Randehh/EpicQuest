@@ -1,6 +1,7 @@
 package randy.epicquest;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -10,6 +11,12 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
+
+import randy.quests.EpicQuest;
+import randy.quests.EpicQuestDatabase;
+import randy.quests.EpicQuestTask;
+import randy.quests.EpicQuestTask.TaskTypes;
 
 public class EpicPlayer {
 	
@@ -26,7 +33,7 @@ public class EpicPlayer {
 	EpicParty currentParty;
 	public boolean partyChat = false;
 	EpicPlayer hasPartyInvitation = null;
-	
+	HashMap<TaskTypes, List<EpicQuestTask>> questTasks = new HashMap<TaskTypes, List<EpicQuestTask>>();
 	
 	public EpicPlayer(String playerName, List<EpicQuest> questList, List<Integer> questCompleted, int questDailyLeft, List<Integer> questTimer, float statMoneyEarned, int statQuestCompleted, int statQuestDropped, int statQuestGet, int statTaskCompleted){
 		
@@ -60,7 +67,6 @@ public class EpicPlayer {
 		this.statQuestDropped = 0;
 		this.statQuestGet = 0;
 		this.statTaskCompleted = 0;
-		
 	}
 
 	/*
@@ -94,6 +100,23 @@ public class EpicPlayer {
 		return false;
 	}
 	
+	public void giveQuestBook(){
+		Inventory inventory = getPlayer().getInventory();
+		if(inventory.contains(Material.WRITTEN_BOOK)){
+			for(ItemStack item : inventory.getContents()){
+				if(item.getType() != Material.WRITTEN_BOOK) continue;
+				BookMeta bookMeta = (BookMeta)item.getItemMeta();
+				if(bookMeta.getTitle().equals("Quest Book")) return;
+			}
+		}
+		
+		ItemStack book = new ItemStack(Material.WRITTEN_BOOK, 1);
+		BookMeta bookMeta = (BookMeta)book.getItemMeta();
+		bookMeta.setTitle("Quest Book");
+		book.setItemMeta(bookMeta);
+		getPlayer().getInventory().addItem(book);
+	}
+	
 	/*
 	 * 
 	 * Quest methods
@@ -115,6 +138,10 @@ public class EpicPlayer {
 	public List<Integer> getQuestsCompleted(){ return questCompleted; }
 	public int getQuestDailyLeft() { return questDailyLeft; }
 	public List<Integer> getQuestTimerList() { return questTimer; }
+	public List<EpicQuestTask> getTasksByType(TaskTypes type){
+		if(questTasks.containsKey(type)) return questTasks.get(type);
+		return new ArrayList<EpicQuestTask>();
+	}
 	
 	public void setQuestsCompleted(List<Integer> newList){ questCompleted = newList; }
 	public void setQuestTimerList(List<Integer> newList){ questTimer = newList; }
@@ -162,8 +189,8 @@ public class EpicPlayer {
 			
 			getPlayer().sendMessage(""+ChatColor.GOLD + quest.getQuestName());
 			getPlayer().sendMessage(""+ChatColor.GRAY + ChatColor.ITALIC + quest.getQuestStart());
-			for(int i = 0; i < quest.getTaskAmount(); i++){
-				getPlayer().sendMessage(quest.getPlayerTaskProgressText(i));
+			for(int i = 0; i < quest.getTasks().size(); i++){
+				getPlayer().sendMessage(quest.getTasks().get(i).getPlayerTaskProgressText());
 			}
 			
 			return true;
@@ -212,6 +239,11 @@ public class EpicPlayer {
 			}
 		}
 		return tempList;
+	}
+	public void addTask(EpicQuestTask task){
+		TaskTypes type = task.getType();
+		if(!questTasks.containsKey(type)) questTasks.put(type, (List)new ArrayList<EpicQuestTask>());
+		if(!questTasks.get(type).contains(task)) questTasks.get(type).add(task);
 	}
 	
 	//Quest checking

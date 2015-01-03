@@ -1,8 +1,10 @@
-package randy.epicquest;
+package randy.quests;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import randy.quests.EpicQuestTask.TaskTypes;
 
 public class EpicQuestDatabase {
 
@@ -24,7 +26,7 @@ public class EpicQuestDatabase {
 	private static HashMap<Integer, ArrayList<String>> questWorlds = new HashMap<Integer, ArrayList<String>>();
 	
 	//Tasks
-	private static HashMap<String, String> questTaskType = new HashMap<String, String>();
+	private static HashMap<String, TaskTypes> questTaskType = new HashMap<String, TaskTypes>();
 	private static HashMap<String, String> questTaskID = new HashMap<String, String>();
 	private static HashMap<String, Integer> questTaskAmount = new HashMap<String, Integer>();
 	
@@ -71,7 +73,7 @@ public class EpicQuestDatabase {
 	/*
 	 * Tasks functions
 	 */
-	public static String getTaskType(Integer quest, Integer task){
+	public static TaskTypes getTaskType(Integer quest, Integer task){
 		return questTaskType.get(quest+"."+task);
 	}
 	
@@ -171,7 +173,7 @@ public class EpicQuestDatabase {
 	 * Tasks functions
 	 */
 	public static void setTaskType(Integer quest, Integer task, String type){
-		questTaskType.put(quest+"."+task, type);
+		questTaskType.put(quest+"."+task, EpicQuestTask.getTaskTypeFromText(type));
 	}
 	
 	public static void setTaskID(Integer quest, Integer task, String id){

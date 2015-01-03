@@ -1,7 +1,7 @@
 package randy.questtypes;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.entity.Entity;
@@ -14,15 +14,16 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
-import randy.epicquest.EpicQuest;
+import randy.epicquest.EpicPlayer;
 import randy.epicquest.EpicSystem;
+import randy.quests.EpicQuestTask;
+import randy.quests.EpicQuestTask.TaskTypes;
 import randy.villagers.VillagerHandler;
 
 public class TypeKill extends TypeBase implements Listener{
 	
-	//Create objects to hold tagged entities and temporary player name
-	HashMap<String, ArrayList<UUID>> tags = new HashMap<String, ArrayList<UUID>>();
-	HashMap<UUID, String> tempnames = new HashMap<UUID, String>();
+	//Create objects to hold tagged entities
+	HashMap<UUID, DamageTag> tagList = new HashMap<UUID, DamageTag>();
 	
 	/*
 	 * Entity damaged
@@ -35,18 +36,11 @@ public class TypeKill extends TypeBase implements Listener{
 				
 				//Get information on player and target
 				Player player = (Player)entEvent.getDamager();
-				String playername = player.getName();
-				
-				//Check if player has a tag list, and add the tagged entity to the list
 				UUID targetid = event.getEntity().getUniqueId();
-				if(!tags.containsKey(playername)){
-					tags.put(playername, new ArrayList<UUID>());
-				}
-				if(!tags.get(playername).contains(targetid)){
-					tags.get(playername).add(targetid);
-					tempnames.put(targetid, playername);
-				}
-			}			
+
+				DamageTag tag = getDamageTag(targetid);
+				tag.addPlayer(EpicSystem.getEpicPlayer(player));
+			}
 		}
 		
 		Entity ent = event.getEntity();
@@ -54,6 +48,11 @@ public class TypeKill extends TypeBase implements Listener{
 			Villager villager = (Villager)ent;
 			if(VillagerHandler.villagerList.containsKey(villager)) event.setCancelled(true);
 		}
+	}
+	
+	private DamageTag getDamageTag(UUID id){
+		if(!tagList.containsKey(id)) tagList.put(id, new DamageTag());
+		return tagList.get(id);
 	}
 	
 	/*
@@ -65,82 +64,35 @@ public class TypeKill extends TypeBase implements Listener{
 		UUID targetid = entity.getUniqueId();
 		String entityname = entity.getType().toString();
 		
-		//Check if target is tagged and the the player if true
-		if(tempnames.containsKey(targetid)){
-			String playername = tempnames.get(targetid);
+		if(!tagList.containsKey(targetid)) return;
+		
+		for(EpicPlayer player : tagList.get(targetid).getPlayerList()){
 			
-			//Check if player has a kill task
-			HashMap<EpicQuest, String> questlist = checkForType(EpicSystem.getEpicPlayer(playername), "kill");
-			if(!questlist.isEmpty()){
-				for(int i = 0; i < questlist.size(); i++){
-							
-					//Split quest and task
-					EpicQuest quest = (EpicQuest) questlist.keySet().toArray()[i];
-					String[] tasks = questlist.get(quest).split(",");
-
-					for(int e = 0; e < tasks.length; e++){
-						int taskNo = Integer.parseInt(tasks[e]);
-
-						//Check if correct entity was killed
-						if(quest.getTaskID(taskNo).equalsIgnoreCase(entityname)){
-
-							//Progress task stuff
-							quest.modifyTaskProgress(taskNo, 1, true);
-						}
-					}
-				}
-			}
-			
-			//Player kill
-			//Check if player has a kill task
-			questlist = checkForType(EpicSystem.getEpicPlayer(playername), "killplayer");
-			if(!questlist.isEmpty()){
-				for(int i = 0; i < questlist.size(); i++){
-							
-					//Split quest and task
-					EpicQuest quest = (EpicQuest) questlist.keySet().toArray()[i];
-					String[] tasks = questlist.get(i).split(",");
-
-					for(int e = 0; e < tasks.length; e++){
-						int taskNo = Integer.parseInt(tasks[e]);
-
-						//Check if correct entity was killed
-						if(entity instanceof Player){
-							Player enemyplayer = (Player) entity;
-							String enemyplayername = enemyplayer.getName();
-							
-							if(quest.getTaskID(taskNo).equalsIgnoreCase(enemyplayername)){
-							
-								//Progress task stuff
-								quest.modifyTaskProgress(taskNo, 1, true);
-							}
-						}
-					}
+			//Kill mob
+			List<EpicQuestTask> taskList = player.getTasksByType(TaskTypes.KILL_MOB);
+			for(EpicQuestTask task : taskList){				
+				if(entityname.equalsIgnoreCase(task.getTaskID())){
+					task.ProgressTask(1, player);
 				}
 			}
 			
 			//Kill any player
-			questlist = checkForType(EpicSystem.getEpicPlayer(playername), "killanyplayer");
-			if(!questlist.isEmpty()){
-				for(int i = 0; i < questlist.size(); i++){
-							
-					//Split quest and task
-					EpicQuest quest = (EpicQuest) questlist.keySet().toArray()[i];
-					String[] tasks = questlist.get(i).split(",");
-
-					for(int e = 0; e < tasks.length; e++){
-						int taskNo = Integer.parseInt(tasks[e]);
-
-						//Check if correct entity was killed
-						if(entity instanceof Player){	
-							
-							//Progress task stuff
-							quest.modifyTaskProgress(taskNo, 1, true);
-							
-						}
-					}
+			taskList = player.getTasksByType(TaskTypes.KILL_ANY_PLAYER);
+			for(EpicQuestTask task : taskList){				
+				if(entity instanceof Player){
+					task.ProgressTask(1, player);
+				}
+			}
+			
+			//Kill specific player
+			taskList = player.getTasksByType(TaskTypes.KILL_PLAYER);
+			for(EpicQuestTask task : taskList){				
+				if(entity instanceof Player && ((Player)entity).getName().equalsIgnoreCase(task.getTaskID())){
+					task.ProgressTask(1, player);
 				}
 			}
 		}
+		
+		tagList.remove(tagList.get(targetid));
 	}
 }

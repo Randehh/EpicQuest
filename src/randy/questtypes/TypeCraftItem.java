@@ -1,6 +1,6 @@
 package randy.questtypes;
 
-import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -8,8 +8,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 
-import randy.epicquest.EpicQuest;
+import randy.epicquest.EpicPlayer;
 import randy.epicquest.EpicSystem;
+import randy.quests.EpicQuestTask;
+import randy.quests.EpicQuestTask.TaskTypes;
 
 public class TypeCraftItem extends TypeBase implements Listener{
 	
@@ -17,29 +19,15 @@ public class TypeCraftItem extends TypeBase implements Listener{
 	public void onCraftItem(CraftItemEvent event){
 		
 		Player player = (Player)event.getInventory().getHolder();
-		HashMap<EpicQuest, String> questlist = checkForType(EpicSystem.getEpicPlayer(player.getName()), "craft");
+		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getName());
+		List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.CRAFT_ITEM);
 		
-		if(!questlist.isEmpty()){
+		for(EpicQuestTask task : taskList){
+			Material itemID = event.getRecipe().getResult().getType();
+			String itemNeeded = task.getTaskID();
 			
-			for(int i = 0; i < questlist.size(); i++){
-
-				//Split quest and task
-				EpicQuest quest = (EpicQuest) questlist.keySet().toArray()[i];
-				String[] tasks = questlist.get(quest).split(",");
-
-				for(int e = 0; e < tasks.length; e++){
-					int taskNo = Integer.parseInt(tasks[e]);
-					
-					Material itemID = event.getRecipe().getResult().getType();
-					String itemNeeded = quest.getTaskID(taskNo);
-					
-					if(itemID == Material.matchMaterial(itemNeeded)){	
-						
-						//Progress task stuff
-						quest.modifyTaskProgress(taskNo, 1, true);
-						
-					}
-				}
+			if(itemID == Material.matchMaterial(itemNeeded)){
+				task.ProgressTask(1, epicPlayer);
 			}
 		}
 	}

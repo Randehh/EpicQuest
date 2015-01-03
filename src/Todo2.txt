@@ -5,9 +5,11 @@ Events
 RPG Item support
 
 Quest type:
-	GoTo
 	ClickBlock
 	KillMobByName
+	Kill any mob
+	Repair object
+	On command
 
 
 
@@ -17,3 +19,6 @@ GoTo
 Fix collect
 RPG Item
 Reload quests and shit
+BarAPI for progress tracking
+Heroes support
+CustomMob support

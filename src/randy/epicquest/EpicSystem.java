@@ -15,7 +15,7 @@ public class EpicSystem {
 	
 	public static Random random = new Random();
 	
-	public static List<EpicPlayer> playerList = new ArrayList<EpicPlayer>();
+	private static List<EpicPlayer> playerList = new ArrayList<EpicPlayer>();
 	public static List<EpicSign> signList = new ArrayList<EpicSign>();
 	private static ArrayList<Location> blockedList = new ArrayList<Location>();
 	public static HashMap<Location, EpicPlayer> furnaceList = new HashMap<Location, EpicPlayer>();
@@ -27,6 +27,7 @@ public class EpicSystem {
 	static int saveTime = 0;
 	static int maxPartySize = 5;
 	static boolean usePermissions = true;
+	static boolean useBook = true;
 	
 	public static void setQuestLimit(int limit){ questLimit = limit; }
 	public static void setTime(int newTime){ time = newTime; startTime = newTime; }
@@ -35,8 +36,9 @@ public class EpicSystem {
 	public static void setSignList(List<EpicSign> newSignList) { signList = newSignList; }
 	public static void setSaveTime(int time){ saveTime = time; }
 	public static void setBlockList(ArrayList<Location> newBlockList) { blockedList = newBlockList; }
-	public static void setMaxPartySize(int size){ maxPartySize = size; }
-	public static void setUsePermissions(boolean use){ usePermissions = use; }
+	public static void setMaxPartySize(int size) { maxPartySize = size; }
+	public static void setUsePermissions(boolean use) { usePermissions = use; }
+	public static void setUseBook(boolean use) { useBook = use; }
 	
 	public static int getQuestLimit(){ return questLimit; }
 	public static int getTime() { return time; }
@@ -47,7 +49,8 @@ public class EpicSystem {
 	public static int getStartTime() { return startTime; }
 	public static ArrayList<Location> getBlockList(){ return blockedList; }
 	public static int getMaxPartySize() { return maxPartySize; }
-	public static boolean usePermissions(){ return usePermissions; }
+	public static boolean usePermissions() { return usePermissions; }
+	public static boolean useBook( ){ return useBook; }
 	
 	public static void modifyTime(int newTime) { time += newTime; }
 	public static void modifySaveTime(int newSaveTime) { saveTime += newSaveTime; }
@@ -74,23 +77,17 @@ public class EpicSystem {
 		return getEpicPlayer(name);
 	}
 	
+	public static void addPlayer(EpicPlayer player){
+		if(!playerList.contains(player)) playerList.add(player);
+	}
+	
 	public static void addFirstStart(String playerName){
 		
 		File savefile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "Players" + File.separator + playerName + ".yml");
 
-		if(savefile.exists()){
-			List<EpicPlayer> playerlist = EpicSystem.playerList;
-			boolean playerfound = false;
-			for(int i = 0; i < playerlist.size(); i++){
-				if(playerlist.get(i).getPlayerName().equalsIgnoreCase(playerName)){
-					playerfound = true;
-					break;
-				}
-			}
-			if(!playerfound)
-				SaveLoader.loadPlayer(playerName); 
-		}else{
-			playerList.add(new EpicPlayer(playerName));
+		if(!savefile.exists()){
+			EpicPlayer epicPlayer = new EpicPlayer(playerName);
+			EpicSystem.addPlayer(epicPlayer);
 		}
 	}
 }

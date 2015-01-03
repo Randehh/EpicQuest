@@ -58,6 +58,13 @@ public class ConfigLoader {
 			EpicSystem.setUsePermissions(configuration.getBoolean("Use_Permissions"));
 		}
 		
+		if(!configuration.contains("Use_Book")){
+			configuration.set("Use_Book", true);
+			EpicSystem.setUseBook(true);
+		}else{
+			EpicSystem.setUseBook(configuration.getBoolean("Use_Book"));
+		}
+		
 		try {
 			configuration.save(configfile);
 		} catch (IOException e) {

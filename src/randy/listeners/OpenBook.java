@@ -13,8 +13,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
 import randy.epicquest.EpicPlayer;
-import randy.epicquest.EpicQuest;
 import randy.epicquest.EpicSystem;
+import randy.quests.EpicQuest;
 
 public class OpenBook implements Listener{
 
@@ -50,7 +50,7 @@ public class OpenBook implements Listener{
 		/*
 		 * QUEST INDEX
 		 */
-		String pageText = "";
+		StringBuilder pageText = new StringBuilder();
 		for(int questNo = 0; questNo < questList.size(); questNo++){
 			
 			EpicQuest quest = questList.get(questNo);
@@ -60,11 +60,14 @@ public class OpenBook implements Listener{
 				questName = quest.getQuestName().substring(0, 15) + "...";
 			}
 			
-			pageText += ""+ (questNo + 3) + ": " + questName + "\n";
+			pageText.append((questNo + 3));
+			pageText.append(": ");
+			pageText.append(questName);
+			pageText.append("\n");
 			
 			if(questNo == 12 || questNo == (questList.size() - 1)){
-				book.addPage(pageText);				
-				pageText = "";
+				book.addPage(pageText.toString());				
+				pageText = new StringBuilder();
 			}
 		}
 		
@@ -73,27 +76,36 @@ public class OpenBook implements Listener{
 		 */
 		for(int questNo = 0; questNo < questList.size(); questNo++){
 			
-			pageText = "";
+			pageText = new StringBuilder();
 			
 			EpicQuest quest = questList.get(questNo);
 			String questName = quest.getQuestName();
 			
 			//Title
-			pageText += ChatColor.GOLD + questName + "\n\n" + ChatColor.BLACK;
+			pageText.append(ChatColor.GOLD);
+			pageText.append(questName);
+			pageText.append("\n\n");
+			pageText.append(ChatColor.BLACK);
 			
 			//Description
 			String questStart = quest.getQuestStart();
-			pageText += questStart + "\n\n";
+			pageText.append(questStart);
+			pageText.append("\n\n");
 			
 			//Objectives
-			String taskInfo = "";
-			int maxTasks = quest.getTaskAmount();
-			for(int task = 0; task < maxTasks; task++){
-				taskInfo += quest.getPlayerTaskProgressText(task) + "\n";
+			StringBuilder taskInfo = new StringBuilder();
+			for(int i = 0; i < quest.getTasks().size(); i++){
+				taskInfo.append(quest.getTasks().get(i).getPlayerTaskProgressText());
+				taskInfo.append("\n");
 			}
-			pageText += taskInfo;
 			
-			book.addPage(pageText);
+			for(int task = 0; task < quest.getTasks().size(); task++){
+				taskInfo.append(quest.getTasks().get(task).getPlayerTaskProgressText());
+				taskInfo.append("\n");
+			}
+			pageText.append(taskInfo.toString());
+			
+			book.addPage(pageText.toString());
 		}
 		
 		book.setAuthor("The Almighty One");

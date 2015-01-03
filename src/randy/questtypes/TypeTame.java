@@ -1,45 +1,33 @@
 package randy.questtypes;
 
-import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTameEvent;
 
-import randy.epicquest.EpicQuest;
+import randy.epicquest.EpicPlayer;
 import randy.epicquest.EpicSystem;
+import randy.quests.EpicQuestTask;
+import randy.quests.EpicQuestTask.TaskTypes;
 
 public class TypeTame extends TypeBase implements Listener{
 
 	@EventHandler
 	public void onEntityTame(EntityTameEvent event){
 
-		//Get player and questlist
-		Player player = (Player) event.getOwner();
-		String playername = player.getName();
-
-		//Check if player has a tame task
-		HashMap<EpicQuest, String> questlist = checkForType(EpicSystem.getEpicPlayer(playername), "tame");
-		if(!questlist.isEmpty()){
-			for(int i = 0; i < questlist.size(); i++){
-
-				//Split quest and task
-				EpicQuest quest = (EpicQuest) questlist.keySet().toArray()[i];
-				String[] tasks = questlist.get(quest).split(",");
-
-				for(int e = 0; e < tasks.length; e++){
-					int taskNo = Integer.parseInt(tasks[e]);
-
-					//Check if correct entity was tamed
-					String entitytamed = event.getEntityType().name();
-					String entityneeded = quest.getTaskID(taskNo);
-					if(entitytamed.equalsIgnoreCase(entityneeded)){	
-
-						//Progress task stuff
-						quest.modifyTaskProgress(taskNo, 1, true);
-					}
-				}
+		Player player = (Player)event.getOwner();
+		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getName());
+		List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.TAME_MOB);
+		
+		for(EpicQuestTask task : taskList){
+			//Check if correct entity was tamed
+			String entitytamed = event.getEntityType().name();
+			String entityneeded = task.getTaskID();
+			
+			if(entitytamed.equalsIgnoreCase(entityneeded)){	
+				task.ProgressTask(1, epicPlayer);
 			}
 		}
 	}

@@ -1,45 +1,31 @@
 package randy.questtypes;
 
-import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
 
-import randy.epicquest.EpicQuest;
+import randy.epicquest.EpicPlayer;
 import randy.epicquest.EpicSystem;
+import randy.quests.EpicQuestTask;
+import randy.quests.EpicQuestTask.TaskTypes;
 
 public class TypeLevelUp extends TypeBase implements Listener{
 
 	@EventHandler
 	public void onPlayerLevelChange(PlayerLevelChangeEvent event){
 
-		//Get player and questlist
 		Player player = event.getPlayer();
-		String playername = player.getName();
-
-		//Check if player has a levelup task
-		HashMap<EpicQuest, String> questlist = checkForType(EpicSystem.getEpicPlayer(playername), "levelup");
-		if(!questlist.isEmpty()){
-			for(int i = 0; i < questlist.size(); i++){
-
-				//Split quest and task
-				EpicQuest quest = (EpicQuest) questlist.keySet().toArray()[i];
-				String[] tasks = questlist.get(quest).split(",");
-
-				for(int e = 0; e < tasks.length; e++){
-					int taskNo = Integer.parseInt(tasks[e]);
-
-					//Check if player leveled UP
-					int oldlevel = event.getOldLevel();
-					int newlevel = event.getNewLevel();
-					if(newlevel > oldlevel){
-
-						//Progress task stuff
-						quest.modifyTaskProgress(taskNo, newlevel - oldlevel, true);
-					}
-				}
+		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getName());
+		List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.LEVEL_UP);
+		
+		for(EpicQuestTask task : taskList){
+			int oldlevel = event.getOldLevel();
+			int newlevel = event.getNewLevel();
+			if(newlevel > oldlevel){
+				task.ProgressTask(1, epicPlayer);
 			}
 		}
 	}

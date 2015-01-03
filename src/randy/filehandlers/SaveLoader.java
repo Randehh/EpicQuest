@@ -15,9 +15,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Villager;
 
 import randy.epicquest.EpicPlayer;
-import randy.epicquest.EpicQuest;
 import randy.epicquest.EpicSign;
 import randy.epicquest.EpicSystem;
+import randy.quests.EpicQuest;
+import randy.quests.EpicQuestTask;
 import randy.villagers.EpicVillager;
 import randy.villagers.EpicVillager.QuestPhase;
 import randy.villagers.SentenceBatch;
@@ -147,28 +148,27 @@ public class SaveLoader {
 				
 				if(isShutDown) tempVil.remove();
 			}
-			
-			List<EpicPlayer> playersToSave = EpicSystem.getPlayerList();
-			if(!playersToSave.isEmpty()){
-				
-				for(int i = 0; i < playersToSave.size(); i++){
-
-					// Get the file of the player which has to be saved
-					EpicPlayer epicPlayer = playersToSave.get(i);
-					savePlayer(epicPlayer);
-				}			
-
-				System.out.print("[EpicQuest]: saved "  + playersToSave.size() + " player(s).");
-			}else{
-				System.out.print("There are no players to save");
-			}
-			
-			villager.save(villagerfile);
 		}
+		
+		List<EpicPlayer> playersToSave = EpicSystem.getPlayerList();
+		if(!playersToSave.isEmpty()){
+			
+			for(int i = 0; i < playersToSave.size(); i++){
+
+				// Get the file of the player which has to be saved
+				EpicPlayer epicPlayer = playersToSave.get(i);
+				savePlayer(epicPlayer);
+			}			
+
+			System.out.print("[EpicQuest]: saved "  + playersToSave.size() + " player(s).");
+		}else{
+			System.out.print("There are no players to save");
+		}
+		
+		villager.save(villagerfile);
 	}
 
-	public static void savePlayer(EpicPlayer epicPlayer){
-		
+	public static void savePlayer(EpicPlayer epicPlayer){		
 		String playername = epicPlayer.getPlayerName();
 		File savefile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "Players" + File.separator + playername + ".yml");
 
@@ -190,14 +190,14 @@ public class SaveLoader {
 		//Save task progress
 		List<EpicQuest> questlist = epicPlayer.getQuestList();
 		String queststring = null;
-
+		
 		if(!questlist.isEmpty()){
 			for(int e = 0; e < questlist.size(); e++){
 				EpicQuest epicQuest = questlist.get(e);
 				int quest = epicQuest.getQuestNo();
-				int taskamount = epicQuest.getTaskAmount();
-				for(int task = 0; task < taskamount; task++){
-					save.set("Quest."+quest+"."+task, epicQuest.getPlayerTaskProgress(task));
+				List<EpicQuestTask> taskList = epicQuest.getTasks();
+				for(int taskNumber = 0; taskNumber < taskList.size(); taskNumber++){
+					save.set("Quest."+quest+"."+taskNumber, taskList.get(taskNumber).getTaskProgress());
 				}
 
 				//Save the list of quests the player has
@@ -242,8 +242,8 @@ public class SaveLoader {
 
 			//Save the timer for the quests
 			save.set("Quest."+quest+".timer", timerquestlist.get(e));
-			save.set("Timed_Quests", timerqueststring);
 		}
+		save.set("Timed_Quests", timerqueststring);
 
 		//Save stats
 		save.set("Stats.Money_Earned", epicPlayer.getStatMoneyEarned());
@@ -283,7 +283,6 @@ public class SaveLoader {
         if(fileNames.length > 0){
         	for(String playerName : fileNames){
         		System.out.print("Loading player " + playerName);
-        		loadPlayer(playerName.replace(".yml", ""));
         	}
         }
 
@@ -397,10 +396,10 @@ public class SaveLoader {
 					EpicQuest epicQuest = new EpicQuest(epicPlayer, quest);
 
 					//Load task progress
-					int taskamount = epicQuest.getTaskAmount();
-					for(int task = 0; task < taskamount; task++){
-						int amount = save.getInt("Quest."+quest+"."+task);
-						epicQuest.modifyTaskProgress(task, amount, false);
+					List<EpicQuestTask> taskList = epicQuest.getTasks();
+					for(int taskNumber = 0; taskNumber < taskList.size(); taskNumber++){
+						int amount = save.getInt("Quest."+quest+"."+taskNumber);
+						taskList.get(taskNumber).ProgressTask(amount, null);
 					}	
 					epicPlayer.getQuestList().add(epicQuest);
 				}		
@@ -444,9 +443,12 @@ public class SaveLoader {
 			//Load daily limit
 			epicPlayer.setQuestDailyLeft(save.getInt("Daily_Left", EpicSystem.getDailyLimit()));
 			
-			EpicSystem.getPlayerList().add(epicPlayer);
+			EpicSystem.addPlayer(epicPlayer);
 		}else{
 			EpicSystem.addFirstStart(playername);
 		}
+		
+		EpicPlayer p = EpicSystem.getEpicPlayer(playername);
+		if(EpicSystem.useBook()) p.giveQuestBook();
 	}
 }

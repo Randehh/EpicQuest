@@ -7,7 +7,7 @@ import java.util.List;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import randy.epicquest.EpicQuestDatabase;
+import randy.quests.EpicQuestDatabase;
 
 public class QuestLoader {
 	

@@ -1,6 +1,5 @@
 package randy.questtypes;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Location;
@@ -11,9 +10,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
-import randy.epicquest.EpicQuest;
+import randy.epicquest.EpicPlayer;
 import randy.epicquest.EpicSign;
 import randy.epicquest.EpicSystem;
+import randy.quests.EpicQuestTask;
+import randy.quests.EpicQuestTask.TaskTypes;
 
 public class TypeDestroy extends TypeBase implements Listener{
 
@@ -22,7 +23,8 @@ public class TypeDestroy extends TypeBase implements Listener{
 		
 		//Get player and questlist
 		Player player = event.getPlayer();
-		String playername = player.getName();
+		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getName());
+		List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.DESTROY_BLOCK);
 		
 		//Block information
 		Block block = event.getBlock();
@@ -32,43 +34,26 @@ public class TypeDestroy extends TypeBase implements Listener{
 		int z = block.getZ();
 		Location loc = new Location(null, x, y, z);
 		
-		//Check if player has a destroy task
-		HashMap<EpicQuest, String> questlist = checkForType(EpicSystem.getEpicPlayer(playername), "destroy");
-		if(!questlist.isEmpty()){
-			for(int i = 0; i < questlist.size(); i++){
-						
-				//Split quest and task
-				EpicQuest quest = (EpicQuest) questlist.keySet().toArray()[i];
-				String[] tasks = questlist.get(quest).split(",");
-				
-				for(int e = 0; e < tasks.length; e++){
-
-					//Check if correct item was destroyed
-					int taskNo = Integer.parseInt(tasks[e]);
-					String blockneeded = quest.getTaskID(taskNo);
-					if(blockdestroyed == Material.matchMaterial(blockneeded) &&
-							!EpicSystem.getBlockList().contains(loc)){
-
-						//Progress task stuff
-						quest.modifyTaskProgress(taskNo, 1, true);
-
-						//Add block to the blocklist
-						EpicSystem.getBlockList().add(loc);
-					}
-				}
+		for(EpicQuestTask task : taskList){
+			String blockneeded = task.getTaskID();
+			
+			if(blockdestroyed == Material.matchMaterial(blockneeded)){
+				task.ProgressTask(1, epicPlayer);
+				EpicSystem.getBlockList().add(loc);
 			}
 		}
 		
-		/*
-		 * Get sign
-		 * 
-		 * Sign ID = 63, 68, 232
-		 */
+		//Check for sign		
 		List<EpicSign> signList = EpicSystem.getSignList();
 		for(int i = 0; i < signList.size(); i++ ){
 			EpicSign sign = signList.get(i);
 			if(sign.getLocation().equals(loc)){
-				signList.remove(sign);
+				if(epicPlayer.hasPermission("epicquest.admin.sign")){
+					signList.remove(sign);
+					return;
+				}else{
+					event.setCancelled(true);
+				}
 			}
 		}
 	}
