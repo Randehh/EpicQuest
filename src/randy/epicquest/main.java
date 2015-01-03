@@ -25,22 +25,28 @@ import randy.filehandlers.QuestLoader;
 import randy.filehandlers.FileChecker;
 import randy.filehandlers.ConfigLoader;
 import randy.filehandlers.SaveLoader;
-import randy.listeners.InventoryDrag;
+import randy.listeners.InventoryDragListener;
 import randy.listeners.ItemDropListener;
-import randy.listeners.OpenBook;
-import randy.listeners.PartyMessage;
-import randy.listeners.TypePlayerJoin;
-import randy.listeners.TypeSignChange;
+import randy.listeners.OpenBookListener;
+import randy.listeners.ChatListener;
+import randy.listeners.PlayerInteractListener;
+import randy.listeners.PlayerJoinListener;
+import randy.listeners.SignListener;
 import randy.quests.EpicQuest;
 import randy.quests.EpicQuestDatabase;
+import randy.quests.EpicQuestTask;
+import randy.quests.EpicQuestTask.TaskTypes;
+import randy.questtypes.TypeClickBlock;
 import randy.questtypes.TypeCraftItem;
 import randy.questtypes.TypeDestroy;
 import randy.questtypes.TypeEnchant;
+import randy.questtypes.TypeGoTo;
 import randy.questtypes.TypeKill;
 import randy.questtypes.TypeLevelUp;
 import randy.questtypes.TypePlace;
-import randy.questtypes.TypePlayerInteract;
+import randy.questtypes.TypeRepair;
 import randy.questtypes.TypeSmelt;
+import randy.questtypes.TypeTalkToVillager;
 import randy.questtypes.TypeTame;
 import randy.villagers.EpicVillager;
 import randy.villagers.SentenceBatch;
@@ -58,21 +64,25 @@ public class main extends JavaPlugin{
 	private static main instance;
 
 	//Set the event classes
-	private final TypePlayerJoin joinListener = new TypePlayerJoin();
+	private final PlayerJoinListener joinListener = new PlayerJoinListener();
 	private final TypeKill killListener = new TypeKill();
 	private final TypeTame tameListener = new TypeTame();
 	private final TypeDestroy destroyListener = new TypeDestroy();
 	private final TypePlace placeListener = new TypePlace();
 	private final TypeEnchant enchantListener = new TypeEnchant();
 	private final TypeLevelUp levelupListener = new TypeLevelUp();
-	private final TypeSignChange signChangeListener = new TypeSignChange();
-	private final TypePlayerInteract playerInteractEntityListener = new TypePlayerInteract();
-	private final PartyMessage partyMessageListener = new PartyMessage();
-	private final OpenBook openBook = new OpenBook();
+	private final SignListener signChangeListener = new SignListener();
+	private final PlayerInteractListener playerInteractEntityListener = new PlayerInteractListener();
+	private final ChatListener partyMessageListener = new ChatListener();
+	private final OpenBookListener openBook = new OpenBookListener();
 	private final TypeSmelt smeltListener = new TypeSmelt();
-	private final InventoryDrag inventoryDrag = new InventoryDrag();
+	private final InventoryDragListener inventoryDrag = new InventoryDragListener();
 	private final TypeCraftItem itemCraftListener = new TypeCraftItem();
 	private final ItemDropListener itemDropListener = new ItemDropListener();
+	private final TypeRepair repairListener = new TypeRepair();
+	private final TypeTalkToVillager talkToVillagerListener = new TypeTalkToVillager();
+	private final TypeGoTo goToListener = new TypeGoTo();
+	private final TypeClickBlock clickBlockListener = new TypeClickBlock();
 	
 	//Party timers
 	Timer timer = new Timer();
@@ -112,6 +122,10 @@ public class main extends JavaPlugin{
 		getServer().getPluginManager().registerEvents(openBook, this);
 		getServer().getPluginManager().registerEvents(itemCraftListener, this);
 		getServer().getPluginManager().registerEvents(itemDropListener, this);
+		getServer().getPluginManager().registerEvents(repairListener, this);
+		getServer().getPluginManager().registerEvents(talkToVillagerListener, this);
+		getServer().getPluginManager().registerEvents(goToListener, this);
+		getServer().getPluginManager().registerEvents(clickBlockListener, this);
 		
 		/*
 		 * Check all files before trying to load the plugin
@@ -186,6 +200,24 @@ public class main extends JavaPlugin{
 				Player player = (Player) sender;
 				String playername = player.getName();
 				EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(playername);
+				
+				List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.EXECUTE_COMMAND);
+				
+				if(!taskList.isEmpty()){
+					StringBuilder fullCommand = new StringBuilder();
+					fullCommand.append(commandName);
+					for(String arg : args){
+						fullCommand.append(" ");
+						fullCommand.append(arg);
+					}
+					
+					
+					for(EpicQuestTask task : taskList){
+						if(task.getTaskID().equalsIgnoreCase(fullCommand.toString())){
+							task.ProgressTask(1, epicPlayer);
+						}
+					}
+				}
 				
 				if(args.length > 0){
 

@@ -13,7 +13,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
-import randy.listeners.OpenBook;
+import randy.listeners.OpenBookListener;
 import randy.quests.EpicQuest;
 import randy.quests.EpicQuestDatabase;
 import randy.quests.EpicQuestTask;
@@ -199,7 +199,7 @@ public class EpicPlayer {
 				getPlayer().sendMessage(quest.getTasks().get(i).getPlayerTaskProgressText());
 			}
 			
-			OpenBook.UpdateBook(this);
+			OpenBookListener.UpdateBook(this);
 			return true;
 		}else{
 			
@@ -226,7 +226,7 @@ public class EpicPlayer {
 				}
 			}
 			
-			OpenBook.UpdateBook(this);
+			OpenBookListener.UpdateBook(this);
 		}
 	}
 	public void completeAllQuests(){

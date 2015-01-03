@@ -8,7 +8,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import randy.epicquest.EpicPlayer;
 import randy.epicquest.EpicSystem;
 
-public class PartyMessage implements Listener {
+public class ChatListener implements Listener {
 
 	@EventHandler
 	public void onAsyncPlayerChat(AsyncPlayerChatEvent event){

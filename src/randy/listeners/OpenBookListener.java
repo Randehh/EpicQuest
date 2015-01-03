@@ -17,7 +17,7 @@ import randy.epicquest.EpicPlayer;
 import randy.epicquest.EpicSystem;
 import randy.quests.EpicQuest;
 
-public class OpenBook implements Listener{
+public class OpenBookListener implements Listener{
 
 	@EventHandler
 	public void onEditBook(PlayerItemHeldEvent event){

@@ -13,7 +13,7 @@ import randy.filehandlers.SaveLoader;
 import randy.villagers.EpicVillager;
 import randy.villagers.VillagerHandler;
 
-public class TypePlayerJoin implements Listener {
+public class PlayerJoinListener implements Listener {
 	
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event){

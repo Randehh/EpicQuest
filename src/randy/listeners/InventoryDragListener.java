@@ -9,7 +9,7 @@ import org.bukkit.inventory.FurnaceInventory;
 
 import randy.epicquest.EpicSystem;
 
-public class InventoryDrag implements Listener{	
+public class InventoryDragListener implements Listener{	
 	@EventHandler
 	public void onInventoryMoveItem(InventoryClickEvent event){
 		if(event.getInventory().getType().equals(InventoryType.FURNACE) && event.getRawSlot() == 0){

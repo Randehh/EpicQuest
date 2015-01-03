@@ -1,4 +1,4 @@
-package randy.questtypes;
+package randy.listeners;
 
 import java.util.List;
 
@@ -18,11 +18,9 @@ import randy.epicquest.EpicPlayer;
 import randy.epicquest.EpicSign;
 import randy.epicquest.EpicSystem;
 import randy.quests.EpicQuest;
-import randy.quests.EpicQuestTask;
-import randy.quests.EpicQuestTask.TaskTypes;
 import randy.villagers.VillagerHandler;
 
-public class TypePlayerInteract extends TypeBase implements Listener{
+public class PlayerInteractListener implements Listener{
 	
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event){
@@ -63,7 +61,6 @@ public class TypePlayerInteract extends TypeBase implements Listener{
 						}
 					}
 				}
-				
 			}
 		}
 	}
@@ -75,20 +72,7 @@ public class TypePlayerInteract extends TypeBase implements Listener{
 			
 			Player player = event.getPlayer();
 			EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getName());
-			List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.TALK_TO_VILLAGER);
 			Villager villager = (Villager)clickedEntity;
-			
-			boolean progressMade = false;
-			for(EpicQuestTask task : taskList){
-				String villagerName = villager.getCustomName();
-				String villagerNeeded = task.getTaskID();
-				
-				if(villagerName.equalsIgnoreCase(villagerNeeded)){
-					task.ProgressTask(1, epicPlayer);
-					progressMade = true;
-				}
-				if(progressMade) return;
-			}
 			
 			if(VillagerHandler.villagerList.containsKey(villager)){
 				VillagerHandler.GetEpicVillager(villager).NextInteraction(epicPlayer);

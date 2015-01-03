@@ -12,7 +12,7 @@ import randy.epicquest.EpicSign;
 import randy.epicquest.EpicSystem;
 import randy.quests.EpicQuestDatabase;
 
-public class TypeSignChange implements Listener {
+public class SignListener implements Listener {
 	
 	@EventHandler
 	public void onSignChange(SignChangeEvent event){
@@ -24,7 +24,7 @@ public class TypeSignChange implements Listener {
 		int y = sign.getY();
 		int z = sign.getZ();
 		
-		if(player.hasPermission("epicquest.admin.sign")){
+		if(EpicSystem.getEpicPlayer(player).hasPermission("epicquest.admin.sign")){
 			
 			//Check which options were written down
 			if(event.getLine(0).equalsIgnoreCase("[EpicQuest]")){

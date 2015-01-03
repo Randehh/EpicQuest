@@ -13,11 +13,16 @@ public class EpicQuestTask {
 		KILL_MOB,
 		KILL_PLAYER,
 		KILL_ANY_PLAYER,
+		KILL_ANY_MOB,
+		KILL_MOB_BY_NAME,
 		LEVEL_UP,
 		PLACE_BLOCK,
 		SMELT_ITEM,
 		TAME_MOB,
-		TALK_TO_VILLAGER
+		TALK_TO_VILLAGER,
+		REPAIR_ITEM,
+		CLICK_BLOCK,
+		EXECUTE_COMMAND
 	}
 	
 	private TaskTypes taskType;
@@ -114,6 +119,16 @@ public class EpicQuestTask {
 				return ChatColor.GREEN + "Talked to " + taskID.toLowerCase().replace("_", " ");
 			case TAME_MOB:
 				return ChatColor.GREEN + "Tamed " + taskmax + " " + taskID.toLowerCase().replace("_", " ");
+			case KILL_ANY_MOB:
+				return ChatColor.GREEN + "Killed " + taskmax + " mobs";
+			case KILL_MOB_BY_NAME:
+				return ChatColor.GREEN + "Killed " + taskmax + " " + taskID;
+			case REPAIR_ITEM:
+				return ChatColor.GREEN + "Repaired " + taskmax + " " + taskID.toLowerCase().replace("_", " ");
+			case CLICK_BLOCK:
+				return ChatColor.GREEN + "Clicked " + taskID;
+			case EXECUTE_COMMAND:
+				return ChatColor.GREEN + "Executed command  " + taskID;
 			default:
 				return null;
 			}
@@ -144,6 +159,16 @@ public class EpicQuestTask {
 				return ChatColor.RED + "Talk to " + taskID.toLowerCase().replace("_", " ");
 			case TAME_MOB:
 				return ChatColor.RED + "Tame " + taskprogress + "/" + taskmax + " " + taskID.toLowerCase().replace("_", " ");
+			case KILL_ANY_MOB:
+				return ChatColor.RED + "Kill " + taskprogress + "/" + taskmax + " mobs";
+			case KILL_MOB_BY_NAME:
+				return ChatColor.RED + "Kill " + taskprogress + "/" + taskmax + " " + taskID;
+			case REPAIR_ITEM:
+				return ChatColor.RED + "Repair " + taskprogress + "/" + taskmax + " " + taskID.toLowerCase().replace("_", " ");
+			case CLICK_BLOCK:
+				return ChatColor.RED + "Click " + taskID;
+			case EXECUTE_COMMAND:
+				return ChatColor.RED + "Execute command  " + taskID;
 			default:
 				return null;
 			}
@@ -163,6 +188,12 @@ public class EpicQuestTask {
 		if(text.equalsIgnoreCase("tame")) return TaskTypes.TAME_MOB;
 		if(text.equalsIgnoreCase("smelt")) return TaskTypes.SMELT_ITEM;
 		if(text.equalsIgnoreCase("talktovillager")) return TaskTypes.TALK_TO_VILLAGER;
+		if(text.equalsIgnoreCase("killanymob")) return TaskTypes.KILL_ANY_MOB;
+		if(text.equalsIgnoreCase("killmobbyname")) return TaskTypes.KILL_MOB_BY_NAME;
+		if(text.equalsIgnoreCase("repair")) return TaskTypes.REPAIR_ITEM;
+		if(text.equalsIgnoreCase("clickblock")) return TaskTypes.CLICK_BLOCK;
+		if(text.equalsIgnoreCase("executecommand")) return TaskTypes.EXECUTE_COMMAND;
+		if(text.equalsIgnoreCase("goto")) return TaskTypes.GO_TO;
 		return null;
 	}
 }

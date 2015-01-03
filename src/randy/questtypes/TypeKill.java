@@ -91,6 +91,26 @@ public class TypeKill extends TypeBase implements Listener{
 					task.ProgressTask(1, player);
 				}
 			}
+			
+			//Kill any mob
+			taskList = player.getTasksByType(TaskTypes.KILL_ANY_MOB);
+			for(EpicQuestTask task : taskList){				
+				if(!(entity instanceof Player)){
+					task.ProgressTask(1, player);
+				}
+			}
+			
+			//Kill mob by name
+			taskList = player.getTasksByType(TaskTypes.KILL_MOB_BY_NAME);
+			for(EpicQuestTask task : taskList){				
+				if(!(entity instanceof Player)){
+					String name = entity.getType().toString();
+					if(entity.getCustomName() != null) name = entity.getCustomName();
+					if(name.equalsIgnoreCase(task.getTaskID())){
+						task.ProgressTask(1, player);
+					}
+				}
+			}
 		}
 		
 		tagList.remove(tagList.get(targetid));

@@ -5,17 +5,10 @@ Events
 RPG Item support
 
 Quest type:
-	ClickBlock
-	KillMobByName
-	Kill any mob
-	Repair object
 	On command
-
-
 
 First:
 Citizens
-GoTo
 Fix collect
 RPG Item
 Reload quests and shit

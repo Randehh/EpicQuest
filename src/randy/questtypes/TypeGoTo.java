@@ -23,15 +23,11 @@ public class TypeGoTo extends TypeBase implements Listener {
 		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getName());
 		List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.GO_TO);
 		
-		for(EpicQuestTask task : taskList){			
-			String[] locations = task.getTaskID().split("=");
-			String[] loc1 = locations[0].split(":");
-			String[] loc2 = locations[2].split(":");
+		for(EpicQuestTask task : taskList){
+			String[] locationArray = task.getTaskID().split("=");
+			Vector location = new Vector(Integer.parseInt(locationArray[0]), Integer.parseInt(locationArray[1]), Integer.parseInt(locationArray[2]));
 			
-			Vector pos1 = new Vector(Integer.parseInt(loc1[0]), Integer.parseInt(loc1[1]), Integer.parseInt(loc1[2]));
-			Vector pos2 = new Vector(Integer.parseInt(loc2[0]), Integer.parseInt(loc2[1]), Integer.parseInt(loc2[2]));;
-			
-			if(player.getLocation().toVector().isInAABB(pos1, pos2)){
+			if(player.getLocation().toVector().distance(location) < 20){
 				task.ProgressTask(1, epicPlayer);
 			}
 		}
