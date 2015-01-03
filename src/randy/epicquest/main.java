@@ -26,6 +26,7 @@ import randy.filehandlers.FileChecker;
 import randy.filehandlers.ConfigLoader;
 import randy.filehandlers.SaveLoader;
 import randy.listeners.InventoryDrag;
+import randy.listeners.ItemDropListener;
 import randy.listeners.OpenBook;
 import randy.listeners.PartyMessage;
 import randy.listeners.TypePlayerJoin;
@@ -70,7 +71,8 @@ public class main extends JavaPlugin{
 	private final OpenBook openBook = new OpenBook();
 	private final TypeSmelt smeltListener = new TypeSmelt();
 	private final InventoryDrag inventoryDrag = new InventoryDrag();
-	private final TypeCraftItem itemCraftListenever = new TypeCraftItem();
+	private final TypeCraftItem itemCraftListener = new TypeCraftItem();
+	private final ItemDropListener itemDropListener = new ItemDropListener();
 	
 	//Party timers
 	Timer timer = new Timer();
@@ -86,6 +88,7 @@ public class main extends JavaPlugin{
 
 	public void onEnable() {
 		instance = this;
+		this.saveDefaultConfig();
 
 		/*
 		 * Set events
@@ -107,8 +110,9 @@ public class main extends JavaPlugin{
 		getServer().getPluginManager().registerEvents(smeltListener, this);
 		getServer().getPluginManager().registerEvents(inventoryDrag, this);
 		getServer().getPluginManager().registerEvents(openBook, this);
-		getServer().getPluginManager().registerEvents(itemCraftListenever, this);
-
+		getServer().getPluginManager().registerEvents(itemCraftListener, this);
+		getServer().getPluginManager().registerEvents(itemDropListener, this);
+		
 		/*
 		 * Check all files before trying to load the plugin
 		 */
@@ -742,10 +746,12 @@ public class main extends JavaPlugin{
 						if(epicPlayer.hasPermission("epicquest.admin.reload")){
 							EpicQuestDatabase.ClearDatabase();
 							QuestLoader.loadQuests();
-							System.out.print(ChatColor.GREEN + "Succesfully reloaded the quest database.");
+							EpicQuest.ResetQuestTaskInfo();
+							player.sendMessage(ChatColor.GREEN + "Succesfully reloaded the quest database.");
 						}else{
 							player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
 						}
+						return true;
 					}
 
 					//Quest block

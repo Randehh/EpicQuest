@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import randy.epicquest.EpicPlayer;
+import randy.epicquest.EpicSystem;
 import randy.epicquest.main;
 import randy.quests.EpicQuestTask.TaskTypes;
 
@@ -141,4 +142,21 @@ public class EpicQuest {
 	 * 
 	 */
 	public int getTaskAmount(){ return questTasks.size(); }
+	
+	/*
+	 * 
+	 * Misc
+	 * 
+	 */
+	public static void ResetQuestTaskInfo(){
+		for(EpicPlayer player : EpicSystem.getPlayerList()){
+			for(EpicQuest quest : player.getQuestList()){
+				for(int i = 0; i < quest.getTaskAmount(); i++){
+					EpicQuestTask task = quest.getTasks().get(i);
+					task.setTaskID(EpicQuestDatabase.getTaskID(quest.getQuestNo(), i));
+					task.setTaskGoal(EpicQuestDatabase.getTaskAmount(quest.getQuestNo(), i));
+				}
+			}
+		}
+	}
 }

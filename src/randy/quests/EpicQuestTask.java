@@ -60,6 +60,14 @@ public class EpicQuestTask {
 		return taskGoal;
 	}
 	
+	public void setTaskGoal(int goal){
+		taskGoal = goal;
+	}
+	
+	public void setTaskID(String id){
+		taskID = id;
+	}
+	
 	//Progress text
 	public String getPlayerTaskProgressText() {
 		//Get information to send the progress

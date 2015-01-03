@@ -1,0 +1,18 @@
+#Active quest limit
+Quest_Limit: 1000
+
+#Daily quest limit
+Daily_Limit: 1000
+
+#Maximum players per party
+Max_Party_Size: 5
+
+#If set to false, the plugin will check for OP
+Use_Permissions: true
+
+#If set to true, the player will always have a quest book in their inventory through which to check their quests
+Use_Book: true
+
+#Don't touch this
+Time: 0
+Save_Time: 0

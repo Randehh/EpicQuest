@@ -1,9 +1,12 @@
 package randy.filehandlers;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -21,6 +24,17 @@ public class QuestLoader {
 	 * Load quests
 	 */
 	public static void loadQuests(){
+		
+		//Load the file again
+		try {
+			quests.load(questfile);
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		} catch (InvalidConfigurationException e1) {
+			e1.printStackTrace();
+		}
 		
 		Object[] questlist = QuestLoader.quests.getKeys(false).toArray();
 		for(int i = 0; i < questlist.length; i++){
