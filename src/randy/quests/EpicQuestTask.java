@@ -24,24 +24,31 @@ public class EpicQuestTask {
 	private int taskGoal;
 	private int taskCurrent = 0;
 	private String taskID;
+	private EpicQuest quest;
 	
-	public EpicQuestTask(TaskTypes taskType, String taskID, int taskGoal){
+	public EpicQuestTask(TaskTypes taskType, String taskID, int taskGoal, EpicQuest quest){
 		this.taskType = taskType;
 		this.taskID = taskID;
 		this.taskGoal = taskGoal;
+		this.quest = quest;
 	}
 	
 	public void ProgressTask(int amount, EpicPlayer player){
 		taskCurrent += amount;
 		
-		if(player != null){
+		if(player != null && SendText()){
 			player.getPlayer().sendMessage(getPlayerTaskProgressText());
 		}
 	}
 	
 	public boolean IsComplete(){
-		if(taskCurrent >= taskGoal)return true;
+		if(taskCurrent >= taskGoal) return true;
 		return false;
+	}
+	
+	public boolean SendText(){
+		if(taskCurrent > taskGoal) return false;
+		return true;
 	}
 	
 	public TaskTypes getType(){
@@ -66,6 +73,10 @@ public class EpicQuestTask {
 	
 	public void setTaskID(String id){
 		taskID = id;
+	}
+	
+	public EpicQuest getQuest(){
+		return quest;
 	}
 	
 	//Progress text

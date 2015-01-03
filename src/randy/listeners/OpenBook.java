@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
@@ -38,8 +39,7 @@ public class OpenBook implements Listener{
 		}
 	}
 
-	
-	private BookMeta SetQuestBookPages(EpicPlayer epicPlayer, BookMeta book){
+	private static BookMeta SetQuestBookPages(EpicPlayer epicPlayer, BookMeta book){
 		
 		//Empty the old book
 		book.setPages(new ArrayList<String>());
@@ -98,11 +98,6 @@ public class OpenBook implements Listener{
 				taskInfo.append(quest.getTasks().get(i).getPlayerTaskProgressText());
 				taskInfo.append("\n");
 			}
-			
-			for(int task = 0; task < quest.getTasks().size(); task++){
-				taskInfo.append(quest.getTasks().get(task).getPlayerTaskProgressText());
-				taskInfo.append("\n");
-			}
 			pageText.append(taskInfo.toString());
 			
 			book.addPage(pageText.toString());
@@ -110,6 +105,27 @@ public class OpenBook implements Listener{
 		
 		book.setAuthor("The Almighty One");
 		
+		epicPlayer.getPlayer().updateInventory();
+		
 		return book;
+	}
+	
+	public static void UpdateBook(EpicPlayer player){
+		Inventory inventory = player.getPlayer().getInventory();
+		if(inventory.contains(Material.WRITTEN_BOOK)){
+			for(int i = 0; i < inventory.getContents().length; i++){
+				ItemStack item = inventory.getContents()[i];
+				if(item != null && item.getType() == Material.WRITTEN_BOOK){
+					BookMeta bookMeta = (BookMeta)item.getItemMeta();
+					SetQuestBookPages(player, bookMeta);
+					
+					ItemStack book = new ItemStack(Material.WRITTEN_BOOK, 1);
+					book.setItemMeta(bookMeta);
+					
+					inventory.remove(item);
+					inventory.setItem(i, book);
+				}
+			}
+		}
 	}
 }

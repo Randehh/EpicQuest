@@ -37,7 +37,8 @@ public class EpicQuest {
 			EpicQuestTask task = new EpicQuestTask(
 					taskType,
 					EpicQuestDatabase.getTaskID(questNo, i), 
-					EpicQuestDatabase.getTaskAmount(questNo, i));
+					EpicQuestDatabase.getTaskAmount(questNo, i),
+					this);
 			questTasks.add(task);
 			epicPlayer.addTask(task);
 		}

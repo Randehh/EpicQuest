@@ -13,6 +13,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
+import randy.listeners.OpenBook;
 import randy.quests.EpicQuest;
 import randy.quests.EpicQuestDatabase;
 import randy.quests.EpicQuestTask;
@@ -106,10 +107,12 @@ public class EpicPlayer {
 	public void giveQuestBook(){
 		Inventory inventory = getPlayer().getInventory();
 		if(inventory.contains(Material.WRITTEN_BOOK)){
-			for(ItemStack item : inventory.getContents()){
-				if(item.getType() != Material.WRITTEN_BOOK) continue;
-				BookMeta bookMeta = (BookMeta)item.getItemMeta();
-				if(bookMeta.getTitle().equals("Quest Book")) return;
+			for(int i = 0; i < inventory.getContents().length; i++){
+				ItemStack item = inventory.getContents()[i];
+				if(item != null && item.getType() == Material.WRITTEN_BOOK){
+					BookMeta bookMeta = (BookMeta)item.getItemMeta();
+					if(bookMeta.getTitle().equals("Quest Book")) return;
+				}
 			}
 		}
 		
@@ -196,6 +199,7 @@ public class EpicPlayer {
 				getPlayer().sendMessage(quest.getTasks().get(i).getPlayerTaskProgressText());
 			}
 			
+			OpenBook.UpdateBook(this);
 			return true;
 		}else{
 			
@@ -209,6 +213,20 @@ public class EpicPlayer {
 	public void removeQuest(EpicQuest quest){
 		if(hasQuest(quest)){
 			questList.remove(quest);
+			for(TaskTypes type : questTasks.keySet()){
+				List<EpicQuestTask> toBeRemoved = new ArrayList<EpicQuestTask>();
+				for(EpicQuestTask task : questTasks.get(type)){
+					if(task.getQuest() == quest){
+						toBeRemoved.add(task);
+					}
+				}
+				
+				for(EpicQuestTask task : toBeRemoved){
+					questTasks.get(type).remove(task);
+				}
+			}
+			
+			OpenBook.UpdateBook(this);
 		}
 	}
 	public void completeAllQuests(){
