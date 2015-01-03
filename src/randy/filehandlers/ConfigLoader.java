@@ -65,6 +65,13 @@ public class ConfigLoader {
 			EpicSystem.setUseBook(configuration.getBoolean("Use_Book"));
 		}
 		
+		if(!configuration.contains("Use_Heroes")){
+			configuration.set("Use_Heroes", true);
+			EpicSystem.setUseHeroes(true);
+		}else{
+			EpicSystem.setUseHeroes(configuration.getBoolean("Use_Heroes"));
+		}
+		
 		try {
 			configuration.save(configfile);
 		} catch (IOException e) {

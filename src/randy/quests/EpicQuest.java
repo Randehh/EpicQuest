@@ -14,6 +14,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import com.herocraftonline.heroes.characters.Hero;
+
 import randy.epicquest.EpicPlayer;
 import randy.epicquest.EpicSystem;
 import randy.epicquest.main;
@@ -73,6 +75,7 @@ public class EpicQuest {
 	}
 	public String getQuestRewardPermission() { return EpicQuestDatabase.getRewardRank(questNumber); }
 	public String getQuestRewardCommand() { return EpicQuestDatabase.getRewardCommand(questNumber); }
+	public int getQuestRewardHeroesExp() { return EpicQuestDatabase.getRewardHeroesExp(questNumber); }
 	public void completeQuest(){
 		
 		//Basics
@@ -124,6 +127,14 @@ public class EpicQuest {
 				command = command.replaceAll("<player>", player.getName());
 		
 			Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
+		}
+		
+		//Heroes EXP
+		int heroesExp = getQuestRewardHeroesExp();
+		if(heroesExp != 0 && EpicSystem.useHeroes()){
+			Hero playerHero = main.heroes.getCharacterManager().getHero(player);
+			playerHero.addExp(heroesExp, playerHero.getHeroClass(), player.getLocation());
+			player.sendMessage(ChatColor.GREEN + "You gained " + heroesExp + " experience points for " + playerHero.getHeroClass().getName() + ".");
 		}
 		
 		//Send ending text

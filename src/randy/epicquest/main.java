@@ -21,6 +21,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.herocraftonline.heroes.Heroes;
+
 import randy.filehandlers.QuestLoader;
 import randy.filehandlers.FileChecker;
 import randy.filehandlers.ConfigLoader;
@@ -61,6 +63,7 @@ public class main extends JavaPlugin{
 	static Plugin epicQuestPlugin = Bukkit.getPluginManager().getPlugin("EpicQuest");
 	public static Permission permission = null;
 	public static Economy economy = null;
+	public static Heroes heroes = null;
 	private static main instance;
 
 	//Set the event classes
@@ -161,6 +164,7 @@ public class main extends JavaPlugin{
 		 */
 		setupPermissions();
 		setupEconomy();
+		setupHeroes();
 
 		//Start timer
 		startTimer();
@@ -184,8 +188,20 @@ public class main extends JavaPlugin{
 		if (economyProvider != null) {
 			economy = economyProvider.getProvider();
 		}
-
 		return (economy != null);
+	}
+	
+	private boolean setupHeroes(){
+		if(!EpicSystem.useHeroes()) return true;
+		if(!Bukkit.getPluginManager().getPlugin("Heroes").isEnabled()){
+			System.out.print("[EpicQuest]: Heroes is enabled in the config, but isn't found! Disabling Heroes support.");
+			EpicSystem.setUseHeroes(false);
+			return false;
+		}else{
+			heroes = (Heroes)Bukkit.getPluginManager().getPlugin("Heroes");
+			System.out.print("[EpicQuest]: Successfully hooked into Heroes!");
+		}
+		return true;
 	}
 
 	/*

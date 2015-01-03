@@ -2,6 +2,7 @@ name: EpicQuest
 main: randy.epicquest.main
 version: 3.3
 depend: [Vault]
+softdepend: [Heroes]
 commands:
   quest:
     description: Quest stuff

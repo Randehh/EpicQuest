@@ -61,6 +61,8 @@ public class QuestLoader {
 				EpicQuestDatabase.setRewardID(i, idList);
 			}
 			
+			EpicQuestDatabase.setRewardHeroesExp(i, quests.getInt("q"+i+".Rewards.HeroesExp", 0));
+			
 			String[] amountString = quests.getString("q"+i+".Rewards.Item.Amount").split(",");
 			List<Integer> amountList = new ArrayList<Integer>();
 			for(int e = 0; e < amountString.length; e++){ amountList.add(Integer.parseInt(amountString[e])); }
