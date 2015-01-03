@@ -96,7 +96,10 @@ public class EpicPlayer {
 	public boolean hasPermission(String permission){
 		if(EpicSystem.usePermissions()){
 			if(getPlayer().hasPermission(permission)) return true;
-		}else if(getPlayer().isOp()) return true;
+		}
+		
+		if(permission.contains("admin") && !getPlayer().isOp()) return true;
+		if(permission.contains("user")) return true;
 		return false;
 	}
 	
