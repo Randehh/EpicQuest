@@ -740,7 +740,9 @@ public class main extends JavaPlugin{
 					//Reload quests
 					if(args[0].equalsIgnoreCase("reload")){
 						if(epicPlayer.hasPermission("epicquest.admin.reload")){
+							EpicQuestDatabase.ClearDatabase();
 							QuestLoader.loadQuests();
+							System.out.print(ChatColor.GREEN + "Succesfully reloaded the quest database.");
 						}else{
 							player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
 						}

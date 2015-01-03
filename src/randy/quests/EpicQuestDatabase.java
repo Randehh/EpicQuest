@@ -44,6 +44,27 @@ public class EpicQuestDatabase {
 	private static HashMap<Integer, List<Integer>> questItemRequiredAmount = new HashMap<Integer, List<Integer>>();
 	private static HashMap<Integer, Integer> questLevel = new HashMap<Integer, Integer>();
 	
+	
+	public static void ClearDatabase(){
+		questName.clear();
+		questStartInfo.clear();
+		questEndInfo.clear();
+		questWorlds.clear();
+		questTaskType.clear();;
+		questTaskID.clear();
+		questTaskAmount.clear();
+		questRewardMoney.clear();
+		questRewardID.clear();
+		questRewardAmount.clear();
+		questRewardRank.clear();
+		questRewardCommand.clear();
+		questResetTime.clear();
+		questLocked.clear();
+		questItemRequiredID.clear();
+		questItemRequiredAmount.clear();
+		questLevel.clear();
+	}
+	
 	/*
 	 * 
 	 * Getters
