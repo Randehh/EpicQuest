@@ -50,7 +50,7 @@ public class main extends JavaPlugin{
 
 
 	//Set a few variables needed throughout the start-up
-	String pluginversion = "3.2.3";
+	String pluginversion = "3.3";
 	String pluginname = "EpicQuest";
 	static Plugin epicQuestPlugin = Bukkit.getPluginManager().getPlugin("EpicQuest");
 	public static Permission permission = null;
