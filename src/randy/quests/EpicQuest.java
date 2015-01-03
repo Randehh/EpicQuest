@@ -117,6 +117,7 @@ public class EpicQuest {
 			}
 		}
 		
+		//Execute command
 		String command = getQuestRewardCommand();
 		if(command != null && !command.equals("no command")){
 			if(command.contains("<player>"))
@@ -124,6 +125,9 @@ public class EpicQuest {
 		
 			Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
 		}
+		
+		//Send ending text
+		player.sendMessage(""+ChatColor.GRAY + ChatColor.ITALIC + getQuestEnd());
 		
 		if(!epicPlayer.getQuestsCompleted().contains(questNumber))
 			epicPlayer.getQuestsCompleted().add(questNumber);

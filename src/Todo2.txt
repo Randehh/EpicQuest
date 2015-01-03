@@ -4,9 +4,6 @@ Editing quests in-game
 Events
 RPG Item support
 
-Quest type:
-	On command
-
 First:
 Citizens
 Fix collect
