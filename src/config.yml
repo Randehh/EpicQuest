@@ -13,6 +13,9 @@ Use_Permissions: true
 #If set to true, the player will always have a quest book in their inventory through which to check their quests
 Use_Book: true
 
+#Use heroes exp
+Use_Heroes: false
+
 #Don't touch this
 Time: 0
 Save_Time: 0

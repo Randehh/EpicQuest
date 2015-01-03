@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import net.md_5.bungee.api.ChatColor;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -106,6 +108,7 @@ public class TypeKill extends TypeBase implements Listener{
 				if(!(entity instanceof Player)){
 					String name = entity.getType().toString();
 					if(entity.getCustomName() != null) name = entity.getCustomName();
+					name = ChatColor.stripColor(name);
 					if(name.equalsIgnoreCase(task.getTaskID())){
 						task.ProgressTask(1, player);
 					}
