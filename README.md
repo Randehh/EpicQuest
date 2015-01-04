@@ -1,6 +1,6 @@
 #EpicQuest
-The ultimate, lightweight quest plugin!
------------------------------------------
+#The ultimate, lightweight quest plugin!
+
 EpicQuest is an easy to use yet highly customizable quest plugin. Immerse your players into Minecraft with a commandless questing experience through villagers, bounty signs and a book to show your progress!
 
 ##Table of Contents:
