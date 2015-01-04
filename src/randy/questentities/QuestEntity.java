@@ -1,17 +1,20 @@
-package randy.villagers;
+package randy.questentities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.entity.Villager;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
 import randy.epicquest.EpicPlayer;
+import randy.epicquest.EpicSystem;
 import randy.quests.EpicQuest;
 
-public class EpicVillager {
+public class QuestEntity {
 	
 	public enum QuestPhase{
 		INTRO_TALK,
@@ -19,7 +22,7 @@ public class EpicVillager {
 		ENDING_TALK
 	}
 	
-	public Villager villager;
+	public Entity entity;
 	public HashMap<Integer, SentenceBatch> openingSentences = new HashMap<Integer, SentenceBatch>();
 	public HashMap<Integer, SentenceBatch> middleSentences = new HashMap<Integer, SentenceBatch>();
 	public HashMap<Integer, SentenceBatch> endingSentences = new HashMap<Integer, SentenceBatch>();
@@ -30,8 +33,35 @@ public class EpicVillager {
 	
 	public HashMap<EpicPlayer, QuestPhase> questPhases = new HashMap<EpicPlayer, QuestPhase>();
 	
-	public EpicVillager(Villager villager){
-		this.villager = villager;
+	public QuestEntity(Entity entity){
+		this.entity = entity;
+	}
+	
+	public void SetBasics(int questNumber){
+		List<Integer> questList = new ArrayList<Integer>();
+		questList.add(questNumber);
+
+		List<String> openingList = new ArrayList<String>();
+		openingList.add("Hey there, could you help me out?");
+		List<String> middleList = new ArrayList<String>();
+		middleList.add("Come back to me when you are done.");
+		List<String> endingList = new ArrayList<String>();
+		endingList.add("Awesome, thanks a bunch!");
+
+		openingSentences.put(questList.get(0), new SentenceBatch(openingList));
+		middleSentences.put(questList.get(0), new SentenceBatch(middleList));
+		endingSentences.put(questList.get(0), new SentenceBatch(endingList));
+		this.questList = questList;
+
+		//Set basic vars for every online player
+		Player[] players = Bukkit.getOnlinePlayers();
+		for(int i = 0; i < players.length; i++){
+			EpicPlayer ep = EpicSystem.getEpicPlayer(players[i]);
+			SetFirstInteraction(ep);
+		}
+		
+		QuestEntityHandler.entityList.put(entity, this);
+		QuestEntityHandler.newEntities.add(this);
 	}
 	
 	public void NextInteraction(EpicPlayer epicPlayer){
@@ -94,6 +124,6 @@ public class EpicVillager {
 	}
 	
 	private String formatMessage(String message){
-		return ChatColor.ITALIC + villager.getCustomName() + ": " + message;
+		return ChatColor.ITALIC + QuestEntityHandler.getEntityName(entity) + ": " + message;
 	}
 }

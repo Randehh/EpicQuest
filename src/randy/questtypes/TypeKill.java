@@ -9,7 +9,6 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -18,9 +17,9 @@ import org.bukkit.event.entity.EntityDeathEvent;
 
 import randy.epicquest.EpicPlayer;
 import randy.epicquest.EpicSystem;
+import randy.questentities.QuestEntityHandler;
 import randy.quests.EpicQuestTask;
 import randy.quests.EpicQuestTask.TaskTypes;
-import randy.villagers.VillagerHandler;
 
 public class TypeKill extends TypeBase implements Listener{
 	
@@ -46,10 +45,7 @@ public class TypeKill extends TypeBase implements Listener{
 		}
 		
 		Entity ent = event.getEntity();
-		if(ent instanceof Villager){
-			Villager villager = (Villager)ent;
-			if(VillagerHandler.villagerList.containsKey(villager)) event.setCancelled(true);
-		}
+		if(QuestEntityHandler.entityList.containsKey(ent)) event.setCancelled(true);
 	}
 	
 	private DamageTag getDamageTag(UUID id){

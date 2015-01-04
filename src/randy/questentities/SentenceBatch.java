@@ -1,4 +1,4 @@
-package randy.villagers;
+package randy.questentities;
 
 import java.util.HashMap;
 import java.util.List;

@@ -72,6 +72,13 @@ public class ConfigLoader {
 			EpicSystem.setUseHeroes(configuration.getBoolean("Use_Heroes"));
 		}
 		
+		if(!configuration.contains("Use_Citizens")){
+			configuration.set("Use_Citizens", true);
+			EpicSystem.setUseCitizens(true);
+		}else{
+			EpicSystem.setUseCitizens(configuration.getBoolean("Use_Citizens"));
+		}
+		
 		try {
 			configuration.save(configfile);
 		} catch (IOException e) {

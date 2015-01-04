@@ -29,6 +29,7 @@ public class EpicSystem {
 	static boolean usePermissions = false;
 	static boolean useBook = true;
 	static boolean useHeroes = false;
+	static boolean useCitizens = false;
 	
 	public static void setQuestLimit(int limit){ questLimit = limit; }
 	public static void setTime(int newTime){ time = newTime; startTime = newTime; }
@@ -41,6 +42,7 @@ public class EpicSystem {
 	public static void setUsePermissions(boolean use) { usePermissions = use; }
 	public static void setUseBook(boolean use) { useBook = use; }
 	public static void setUseHeroes(boolean use) { useHeroes = use; }
+	public static void setUseCitizens(boolean use) { useCitizens = use; }
 	
 	public static int getQuestLimit(){ return questLimit; }
 	public static int getTime() { return time; }
@@ -52,8 +54,9 @@ public class EpicSystem {
 	public static ArrayList<Location> getBlockList(){ return blockedList; }
 	public static int getMaxPartySize() { return maxPartySize; }
 	public static boolean usePermissions() { return usePermissions; }
-	public static boolean useBook( ){ return useBook; }
-	public static boolean useHeroes(){ return useHeroes; }
+	public static boolean useBook( ) { return useBook; }
+	public static boolean useHeroes() { return useHeroes; }
+	public static boolean useCitizens() { return useCitizens; }
 	
 	public static void modifyTime(int newTime) { time += newTime; }
 	public static void modifySaveTime(int newSaveTime) { saveTime += newSaveTime; }

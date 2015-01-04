@@ -12,17 +12,18 @@ import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Villager;
+import org.bukkit.entity.Entity;
 
 import randy.epicquest.EpicPlayer;
 import randy.epicquest.EpicSign;
 import randy.epicquest.EpicSystem;
+import randy.epicquest.main;
+import randy.questentities.QuestEntity;
+import randy.questentities.SentenceBatch;
+import randy.questentities.QuestEntityHandler;
+import randy.questentities.QuestEntity.QuestPhase;
 import randy.quests.EpicQuest;
 import randy.quests.EpicQuestTask;
-import randy.villagers.EpicVillager;
-import randy.villagers.EpicVillager.QuestPhase;
-import randy.villagers.SentenceBatch;
-import randy.villagers.VillagerHandler;
 
 public class SaveLoader {
 
@@ -42,8 +43,8 @@ public class SaveLoader {
 	static File blockfile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "block.yml");
 	static FileConfiguration block = YamlConfiguration.loadConfiguration(blockfile);
 	
-	static File villagerfile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "villager.yml");
-	static FileConfiguration villager = YamlConfiguration.loadConfiguration(villagerfile);
+	static File questEntityfile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "questentities.yml");
+	static FileConfiguration questEntity = YamlConfiguration.loadConfiguration(questEntityfile);
 
 	/*
 	 * Save players
@@ -107,29 +108,29 @@ public class SaveLoader {
 			block.save(blockfile);
 		}
 		
-		HashMap<Villager, EpicVillager> villagerMap = VillagerHandler.villagerList;
-		if(!villagerMap.isEmpty()){
+		HashMap<Entity, QuestEntity> entityMap = QuestEntityHandler.entityList;
+		if(!entityMap.isEmpty()){
 			
 			//Reset file
-			if(!villagerfile.exists()){
-				villagerfile.createNewFile();
+			if(!questEntityfile.exists()){
+				questEntityfile.createNewFile();
 			}else{
-				villagerfile.delete();
-				villagerfile.createNewFile();
+				questEntityfile.delete();
+				questEntityfile.createNewFile();
 			}
 			
-			Object[] villagerList = villagerMap.keySet().toArray();
-			for(int i = 0; i < villagerList.length; i++){
-				Villager tempVil = (Villager)villagerList[i];
-				EpicVillager epicVil = VillagerHandler.GetEpicVillager(tempVil);
-				String villagerName = tempVil.getCustomName();
+			Object[] entityList = entityMap.keySet().toArray();
+			for(Object tmp : entityList){
+				Entity entity = (Entity)tmp;
+				QuestEntity qEntity = QuestEntityHandler.GetQuestEntity(entity);
+				String entityName = QuestEntityHandler.getEntityName(entity);
 				
-				if(VillagerHandler.newVillagers.contains(epicVil)){
-					Location loc = tempVil.getLocation();
-					villager.set("Villager."+villagerName+".World", tempVil.getWorld().getName());
-					villager.set("Villager."+villagerName+".Location", loc.getBlockX()+":"+loc.getBlockY()+":"+loc.getBlockZ());
+				if(QuestEntityHandler.newEntities.contains(qEntity)){
+					Location loc = entity.getLocation();
+					questEntity.set("Entities."+entityName+".World", entity.getWorld().getName());
+					questEntity.set("Entities."+entityName+".Location", loc.getBlockX()+":"+loc.getBlockY()+":"+loc.getBlockZ());
 					
-					List<Integer> questList = epicVil.questList;
+					List<Integer> questList = qEntity.questList;
 					String questString = "";
 					for(int q = 0; q < questList.size(); q++){
 						int actualQuest = questList.get(q);
@@ -139,14 +140,20 @@ public class SaveLoader {
 							questString += actualQuest;
 						}
 						
-						villager.set("Villager."+villagerName+".OpeningSentences."+actualQuest, epicVil.openingSentences.get(actualQuest).getSentences());
-						villager.set("Villager."+villagerName+".MiddleSentences."+actualQuest, epicVil.middleSentences.get(actualQuest).getSentences());
-						villager.set("Villager."+villagerName+".EndingSentences."+actualQuest, epicVil.endingSentences.get(actualQuest).getSentences());
+						questEntity.set("Entities."+entityName+".OpeningSentences."+actualQuest, qEntity.openingSentences.get(actualQuest).getSentences());
+						questEntity.set("Entities."+entityName+".MiddleSentences."+actualQuest, qEntity.middleSentences.get(actualQuest).getSentences());
+						questEntity.set("Entities."+entityName+".EndingSentences."+actualQuest, qEntity.endingSentences.get(actualQuest).getSentences());
 					}
-					villager.set("Villager."+villagerName+".Quests", questString);
+					questEntity.set("Entities."+entityName+".Quests", questString);
 				}
 				
-				if(isShutDown) tempVil.remove();
+				//Save player stuff
+				for(EpicPlayer epicPlayer : EpicSystem.getPlayerList()){
+					questEntity.set("Entities."+entityName+".Players."+epicPlayer.getPlayerName()+".CurrentQuest", qEntity.currentQuest.get(epicPlayer));
+					questEntity.set("Entities."+entityName+".Players."+epicPlayer.getPlayerName()+".QuestPhase", qEntity.questPhases.get(epicPlayer).toString());
+				}
+				
+				if(isShutDown) entity.remove();
 			}
 		}
 		
@@ -165,7 +172,7 @@ public class SaveLoader {
 			System.out.print("There are no players to save");
 		}
 		
-		villager.save(villagerfile);
+		questEntity.save(questEntityfile);
 	}
 
 	public static void savePlayer(EpicPlayer epicPlayer){		
@@ -254,15 +261,6 @@ public class SaveLoader {
 
 		//Set daily limit
 		save.set("Daily_Left", epicPlayer.getQuestDailyLeft());
-		
-		//Set villager stuff in villager file
-		List<EpicVillager> villagerList = VillagerHandler.GetEpicVillagerList();
-		for(int i = 0; i < villagerList.size(); i++){
-			EpicVillager vil = villagerList.get(i);
-			String villagerName = vil.villager.getCustomName();
-			villager.set("Villager."+villagerName+".Players."+playername+".CurrentQuest", vil.currentQuest.get(epicPlayer));
-			villager.set("Villager."+villagerName+".Players."+playername+".QuestPhase", vil.questPhases.get(epicPlayer).toString());
-		}
 
 		//Save file
 		try {			
@@ -321,51 +319,57 @@ public class SaveLoader {
 		
 		
 		//Villagers
-		if(villager.contains("Villager")){
-			Object[] villagerarray = villager.getConfigurationSection("Villager").getKeys(false).toArray();
-			for(int i = 0; i < villagerarray.length; i++){
-				
-				//Name
-				String villagerName = (String)villagerarray[i];
-				
-				//Location
-				World world = Bukkit.getWorld(villager.getString("Villager."+villagerName+".World"));
-				String[] locationSplit = villager.getString("Villager."+villagerName+".Location").split(":");
-				Location loc = new Location(world, Integer.parseInt(locationSplit[0]), Integer.parseInt(locationSplit[1]), Integer.parseInt(locationSplit[2]));
-				
-				//Quests
-				List<Integer> questList = new ArrayList<Integer>();
-				
-				//Create
-				VillagerHandler.RemoveLeftoverVillager(villagerName, world);
-				VillagerHandler.SpawnVillager(world, loc, villagerName);
-				
-				//Advanced villager stuff
-				EpicVillager epicVillager = VillagerHandler.GetEpicVillager(world, villagerName);
-				
-				Object[] quests = villager.getConfigurationSection("Villager."+villagerName+".OpeningSentences").getKeys(false).toArray();
-				for(int q = 0; q < quests.length; q++){
-					int questNo = Integer.parseInt((String)quests[q]);
-					questList.add(questNo);
-					
-					//Load sentences					
-					epicVillager.openingSentences.put(questNo, new SentenceBatch(villager.getStringList("Villager."+villagerName+".OpeningSentences."+questNo)));
-					epicVillager.middleSentences.put(questNo, new SentenceBatch(villager.getStringList("Villager."+villagerName+".MiddleSentences."+questNo)));
-					epicVillager.endingSentences.put(questNo, new SentenceBatch(villager.getStringList("Villager."+villagerName+".EndingSentences."+questNo)));
-				}
-				
-				epicVillager.questList = questList;
-				
-				//Set player stuff
-				Object[] players = villager.getConfigurationSection("Villager."+villagerName+".Players").getKeys(false).toArray();
-				for(int p = 0; p < players.length; p++){
-					String playername = (String)players[p];
-					EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(playername);
-					epicVillager.currentQuest.put(epicPlayer, villager.getInt("Villager."+villagerName+".Players."+playername+".CurrentQuest"));
-					epicVillager.questPhases.put(epicPlayer, QuestPhase.valueOf(villager.getString("Villager."+villagerName+".Players."+playername+".QuestPhase")));
+		Bukkit.getScheduler().scheduleSyncDelayedTask(main.getInstance(), new Runnable(){
+			@Override
+			public void run() {
+				if(questEntity.contains("Entities")){
+					Object[] entitiesArray = questEntity.getConfigurationSection("Entities").getKeys(false).toArray();
+					for(Object tmp : entitiesArray){
+						//Name
+						String entityName = (String)tmp;
+						
+						//Location
+						World world = Bukkit.getWorld(questEntity.getString("Entities."+entityName+".World"));
+						String[] locationSplit = questEntity.getString("Entities."+entityName+".Location").split(":");
+						Location loc = new Location(world, Integer.parseInt(locationSplit[0]), Integer.parseInt(locationSplit[1]), Integer.parseInt(locationSplit[2]));
+						
+						//Quests
+						List<Integer> questList = new ArrayList<Integer>();
+						
+						//Create
+						QuestEntityHandler.RemoveLeftoverVillager(entityName, world);
+						if(!EpicSystem.useCitizens()) QuestEntityHandler.SpawnVillager(world, loc, entityName);
+						
+						//Advanced villager stuff
+						Entity entity = QuestEntityHandler.GetEntity(world, entityName);
+						QuestEntity qEntity = new QuestEntity(entity);
+						QuestEntityHandler.entityList.put(entity, qEntity);
+						
+						Object[] quests = questEntity.getConfigurationSection("Entities."+entityName+".OpeningSentences").getKeys(false).toArray();
+						for(int q = 0; q < quests.length; q++){
+							int questNo = Integer.parseInt((String)quests[q]);
+							questList.add(questNo);
+							
+							//Load sentences					
+							qEntity.openingSentences.put(questNo, new SentenceBatch(questEntity.getStringList("Entities."+entityName+".OpeningSentences."+questNo)));
+							qEntity.middleSentences.put(questNo, new SentenceBatch(questEntity.getStringList("Entities."+entityName+".MiddleSentences."+questNo)));
+							qEntity.endingSentences.put(questNo, new SentenceBatch(questEntity.getStringList("Entities."+entityName+".EndingSentences."+questNo)));
+						}
+						
+						qEntity.questList = questList;
+						
+						//Set player stuff
+						Object[] players = questEntity.getConfigurationSection("Entities."+entityName+".Players").getKeys(false).toArray();
+						for(int p = 0; p < players.length; p++){
+							String playername = (String)players[p];
+							EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(playername);
+							qEntity.currentQuest.put(epicPlayer, questEntity.getInt("Entities."+entityName+".Players."+playername+".CurrentQuest"));
+							qEntity.questPhases.put(epicPlayer, QuestPhase.valueOf(questEntity.getString("Entities."+entityName+".Players."+playername+".QuestPhase")));
+						}
+					}
 				}
 			}
-		}
+		}, 50);
 
 		System.out.print("[EpicQuest]: loaded the progress of " + fileNames.length + " players.");
 	}

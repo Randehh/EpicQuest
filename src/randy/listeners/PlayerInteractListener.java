@@ -2,12 +2,13 @@ package randy.listeners;
 
 import java.util.List;
 
+import net.citizensnpcs.api.CitizensAPI;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -17,20 +18,24 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import randy.epicquest.EpicPlayer;
 import randy.epicquest.EpicSign;
 import randy.epicquest.EpicSystem;
+import randy.questentities.QuestEntity;
+import randy.questentities.QuestEntityHandler;
 import randy.quests.EpicQuest;
-import randy.villagers.VillagerHandler;
 
 public class PlayerInteractListener implements Listener{
 	
+	public static Player createNewQuestEntity = null;
+	public static int createNewQuestEntityQuest = -1;
+
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event){
-		
+
 		//Get player and the action
 		Player player = event.getPlayer();
 		String playername = player.getName();
 		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(playername);
 		if(event.getAction() == Action.RIGHT_CLICK_BLOCK){
-			
+
 			//Get the block and check if it's a sign
 			List<EpicSign> signList = EpicSystem.getSignList();
 			BlockState block = event.getClickedBlock().getState();
@@ -39,7 +44,7 @@ public class PlayerInteractListener implements Listener{
 				Location signLoc = sign.getLocation();
 				Location blockLoc = block.getLocation();
 				blockLoc.setWorld(null);
-				
+
 				if(signLoc.equals(blockLoc)){
 					if(sign.getQuest() == -1){
 						if(epicPlayer.canGetQuest()){
@@ -64,20 +69,29 @@ public class PlayerInteractListener implements Listener{
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onPlayerInteractEntity(PlayerInteractEntityEvent event){
-		Entity clickedEntity = event.getRightClicked();
-		if(clickedEntity instanceof Villager){
-			
-			Player player = event.getPlayer();
-			EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getName());
-			Villager villager = (Villager)clickedEntity;
-			
-			if(VillagerHandler.villagerList.containsKey(villager)){
-				VillagerHandler.GetEpicVillager(villager).NextInteraction(epicPlayer);
-				event.setCancelled(true);
+		Entity entity = event.getRightClicked();
+		Player player = event.getPlayer();
+		
+		if(createNewQuestEntity != null && createNewQuestEntity == player){
+			if(CitizensAPI.getNPCRegistry().isNPC(entity)){
+				QuestEntity qEntity = new QuestEntity(entity);
+				qEntity.SetBasics(createNewQuestEntityQuest);
+				player.sendMessage(ChatColor.GREEN + QuestEntityHandler.getEntityName(entity) + " is now a quest giver.");
+			}else{
+				player.sendMessage(ChatColor.RED + "That isn't a citizens NPC. Try again.");
 			}
+			createNewQuestEntity = null;
+			return;
+		}
+
+		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getName());
+
+		if(QuestEntityHandler.entityList.containsKey(entity)){
+			QuestEntityHandler.GetQuestEntity(entity).NextInteraction(epicPlayer);
+			event.setCancelled(true);
 		}
 	}
 }

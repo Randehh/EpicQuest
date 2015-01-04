@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import net.citizensnpcs.api.CitizensAPI;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
@@ -34,6 +35,9 @@ import randy.listeners.ChatListener;
 import randy.listeners.PlayerInteractListener;
 import randy.listeners.PlayerJoinListener;
 import randy.listeners.SignListener;
+import randy.questentities.QuestEntity;
+import randy.questentities.SentenceBatch;
+import randy.questentities.QuestEntityHandler;
 import randy.quests.EpicQuest;
 import randy.quests.EpicQuestDatabase;
 import randy.quests.EpicQuestTask;
@@ -50,9 +54,6 @@ import randy.questtypes.TypeRepair;
 import randy.questtypes.TypeSmelt;
 import randy.questtypes.TypeTalkToVillager;
 import randy.questtypes.TypeTame;
-import randy.villagers.EpicVillager;
-import randy.villagers.SentenceBatch;
-import randy.villagers.VillagerHandler;
 
 public class main extends JavaPlugin{
 
@@ -86,7 +87,7 @@ public class main extends JavaPlugin{
 	private final TypeTalkToVillager talkToVillagerListener = new TypeTalkToVillager();
 	private final TypeGoTo goToListener = new TypeGoTo();
 	private final TypeClickBlock clickBlockListener = new TypeClickBlock();
-	
+
 	//Party timers
 	Timer timer = new Timer();
 	TimerTask timerTask;
@@ -129,7 +130,7 @@ public class main extends JavaPlugin{
 		getServer().getPluginManager().registerEvents(talkToVillagerListener, this);
 		getServer().getPluginManager().registerEvents(goToListener, this);
 		getServer().getPluginManager().registerEvents(clickBlockListener, this);
-		
+
 		/*
 		 * Check all files before trying to load the plugin
 		 */
@@ -149,6 +150,13 @@ public class main extends JavaPlugin{
 		 */
 		ConfigLoader.loadConfig();
 		QuestLoader.loadQuests();
+
+		//Set up these first before loading the rest
+		setupPermissions();
+		setupEconomy();
+		setupHeroes();
+		setupCitizens();
+
 		SaveLoader.load();
 
 		//Check all players and see if it is first start
@@ -158,13 +166,6 @@ public class main extends JavaPlugin{
 				SaveLoader.loadPlayer(players[i].getName());
 			}
 		}
-
-		/*
-		 * Setup economy and permissions
-		 */
-		setupPermissions();
-		setupEconomy();
-		setupHeroes();
 
 		//Start timer
 		startTimer();
@@ -190,16 +191,29 @@ public class main extends JavaPlugin{
 		}
 		return (economy != null);
 	}
-	
+
 	private boolean setupHeroes(){
 		if(!EpicSystem.useHeroes()) return true;
-		if(!Bukkit.getPluginManager().getPlugin("Heroes").isEnabled()){
+		if(Bukkit.getPluginManager().getPlugin("Heroes") == null || !Bukkit.getPluginManager().getPlugin("Heroes").isEnabled()){
 			System.out.print("[EpicQuest]: Heroes is enabled in the config, but isn't found! Disabling Heroes support.");
 			EpicSystem.setUseHeroes(false);
 			return false;
 		}else{
 			heroes = (Heroes)Bukkit.getPluginManager().getPlugin("Heroes");
 			System.out.print("[EpicQuest]: Successfully hooked into Heroes!");
+		}
+		return true;
+	}
+
+	private boolean setupCitizens(){
+		if(!EpicSystem.useCitizens()) return true;
+
+		if(Bukkit.getPluginManager().getPlugin("Citizens") == null || !Bukkit.getPluginManager().getPlugin("Citizens").isEnabled()){
+			System.out.print("[EpicQuest]: Citizens is enabled in the config, but isn't found! Disabling Citizens support.");
+			EpicSystem.setUseCitizens(false);
+			return false;
+		}else{
+			System.out.print("[EpicQuest]: Successfully hooked into Citizens!");
 		}
 		return true;
 	}
@@ -216,9 +230,9 @@ public class main extends JavaPlugin{
 				Player player = (Player) sender;
 				String playername = player.getName();
 				EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(playername);
-				
+
 				List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.EXECUTE_COMMAND);
-				
+
 				if(!taskList.isEmpty()){
 					StringBuilder fullCommand = new StringBuilder();
 					fullCommand.append(commandName);
@@ -226,15 +240,15 @@ public class main extends JavaPlugin{
 						fullCommand.append(" ");
 						fullCommand.append(arg);
 					}
-					
-					
+
+
 					for(EpicQuestTask task : taskList){
 						if(task.getTaskID().equalsIgnoreCase(fullCommand.toString())){
 							task.ProgressTask(1, epicPlayer);
 						}
 					}
 				}
-				
+
 				if(args.length > 0){
 
 					/*
@@ -243,7 +257,7 @@ public class main extends JavaPlugin{
 					if(args[0].equalsIgnoreCase("help")){
 						if(epicPlayer.hasPermission("epicquest.user.help")){
 							if(args.length == 1 || (args.length == 2 && args[1] == ""+2)){
-							
+
 								player.sendMessage(ChatColor.GOLD + "[=======  Help list (1/2) =======]");
 								player.sendMessage(ChatColor.GOLD + "/q help <number> - Displays a help page.");
 								player.sendMessage(ChatColor.GOLD + "/q give <number> - Gives you a quest, quest number optional from questlist.");
@@ -253,10 +267,10 @@ public class main extends JavaPlugin{
 								player.sendMessage(ChatColor.GOLD + "/q stats <playername> - Display stats on the player.");
 								player.sendMessage(ChatColor.GOLD + "/q turnin - Turn in your quests.");
 								player.sendMessage(ChatColor.GOLD + "[=======================]");
-								
+
 							}else if(args.length == 2){
 								if(Integer.parseInt(args[1]) == 2){
-									
+
 									player.sendMessage(ChatColor.GOLD + "[=======  Help list (2/2) =======]");
 									player.sendMessage(ChatColor.GOLD + "/q party - Shows who is in your party.");
 									player.sendMessage(ChatColor.GOLD + "/q party questbook - Gets the party questbook.");
@@ -266,7 +280,7 @@ public class main extends JavaPlugin{
 									player.sendMessage(ChatColor.GOLD + "/q party leave - Leave the party.");
 									player.sendMessage(ChatColor.GOLD + "/q party chat - Toggle party chat.");
 									player.sendMessage(ChatColor.GOLD + "[=======================]");
-									
+
 								}
 							}
 						}else{
@@ -274,16 +288,16 @@ public class main extends JavaPlugin{
 						}
 						return true;
 					}
-					
+
 					/*
 					 * Party commands
 					 */
 					if(args[0].equalsIgnoreCase("party")){
 						if(epicPlayer.hasPermission("epicquest.user.party")){
-							
+
 							//If there are more arguments than only party
 							if(args.length >= 2){
-								
+
 								//Invite player
 								if(args[1].equalsIgnoreCase("invite")){
 									if(args.length == 3){
@@ -292,12 +306,12 @@ public class main extends JavaPlugin{
 											if(invitedPlayer != player){
 												EpicPlayer invitedEpicPlayer = EpicSystem.getEpicPlayer(invitedPlayer);
 												if(invitedEpicPlayer.getParty() == null){
-													
+
 													//Count current party size, including invited members
 													int partySize = 1;
 													if(epicPlayer.getParty() != null){
 														partySize = epicPlayer.getParty().getSize();
-													
+
 														if(!invitationTimer.keySet().isEmpty()){
 															EpicPlayer[] playerList = (EpicPlayer[]) (invitationTimer.keySet().toArray());
 															for(int i = 0; i < playerList.length; i++){
@@ -305,14 +319,14 @@ public class main extends JavaPlugin{
 															}
 														}
 													}
-													
+
 													if(partySize != EpicSystem.getMaxPartySize()){
 														invitedPlayer.sendMessage(ChatColor.GREEN + player.getName() + " invited you to his party (" + partySize + ").");
 														invitedPlayer.sendMessage(ChatColor.GREEN + "Type '/q party accept' to accept the invitation.");
 														invitedEpicPlayer.hasPartyInvitation = epicPlayer;
-														
+
 														invitationTimer.put(invitedEpicPlayer, 15);
-														
+
 														player.sendMessage("" + ChatColor.ITALIC + ChatColor.GREEN + "You invited " + invitedEpicPlayer.getPlayerName() + " to your party.");
 													}else{
 														player.sendMessage(ChatColor.RED + "Your party is already full!");
@@ -330,30 +344,30 @@ public class main extends JavaPlugin{
 										player.sendMessage("/q party invite <playername>");
 									}
 								}
-								
+
 								//Accept invitation
 								if(args[1].equalsIgnoreCase("accept")){
 									if(epicPlayer.hasPartyInvitation != null && invitationTimer.containsKey(epicPlayer)){
-										
+
 										EpicPlayer invitationPlayer = epicPlayer.hasPartyInvitation;
 										if(invitationPlayer.getParty() == null){
 											new EpicParty(invitationPlayer, epicPlayer);
 											epicPlayer.hasPartyInvitation = null;
-											
+
 											invitationPlayer.getPlayer().sendMessage(ChatColor.GREEN + player.getDisplayName() + " has joined your party!");
 											player.sendMessage(ChatColor.GREEN + "You have joined " + invitationPlayer.getPlayerName() + "'s party!");
 										}else{
 											epicPlayer.hasPartyInvitation.getParty().addPlayer(epicPlayer);
 											epicPlayer.hasPartyInvitation = null;
 										}
-										
+
 										//Remove player from timer
 										invitationTimer.remove(epicPlayer);
 									}else{
 										player.sendMessage(ChatColor.RED + "You don't have a party invitation.");
 									}
 								}
-								
+
 								//Kick player
 								if(args[1].equalsIgnoreCase("kick")){
 									if(args.length == 3){
@@ -376,7 +390,7 @@ public class main extends JavaPlugin{
 										player.sendMessage("/q party kick <playername>");
 									}
 								}
-								
+
 								//Change party leader
 								if(args[1].equalsIgnoreCase("leader")){
 									if(args.length == 3){
@@ -399,7 +413,7 @@ public class main extends JavaPlugin{
 										player.sendMessage("/q party leader <playername>");
 									}
 								}
-								
+
 								//Leave party
 								if(args[1].equalsIgnoreCase("leave")){
 									EpicParty party = epicPlayer.getParty();
@@ -409,7 +423,7 @@ public class main extends JavaPlugin{
 										player.sendMessage(ChatColor.RED + "You are not in a party.");
 									}
 								}
-								
+
 								//Toggle party chat
 								if(args[1].equalsIgnoreCase("chat")){
 									if(epicPlayer.getParty() != null){
@@ -419,7 +433,7 @@ public class main extends JavaPlugin{
 									}	
 								}
 							}else{
-								
+
 								//Show party formation
 								EpicParty party = epicPlayer.getParty();
 								if(party != null){
@@ -433,7 +447,7 @@ public class main extends JavaPlugin{
 						}
 						return true;
 					}
-					
+
 					/*
 					 * Turn in quests command
 					 */
@@ -697,7 +711,7 @@ public class main extends JavaPlugin{
 					/*
 					 * Admin commmands
 					 */
-					
+
 					//Debug stuff
 					if(args[0].equalsIgnoreCase("debug")){
 						if(epicPlayer.hasPermission("epicquest.admin.debug")){
@@ -714,71 +728,61 @@ public class main extends JavaPlugin{
 						}
 						return true;
 					}
-					
+
 					//Spawn villager
-					if(args[0].equalsIgnoreCase("villager")){
-						if(epicPlayer.hasPermission("epicquest.admin.villager")){
-							if(args.length >= 4 && args[1].equalsIgnoreCase("spawn")){
+					if(args[0].equalsIgnoreCase("questentity")){
+						if(epicPlayer.hasPermission("epicquest.admin.questentity")){
+
+							if(args[1].equalsIgnoreCase("create")){	
 								
-								//Spawn
-								String name = "";
-								for(int i = 2; i < args.length - 1; i++){
-									if(i == args.length - 1)
-										name += args[i];
-									else
-										name += args[i] + " ";
+								if(args.length == 3 && !EpicSystem.useCitizens()){
+									player.sendMessage("/q questentity create <name> <questnumber>");
+									return true;
+								}else if(args.length == 4 && EpicSystem.useCitizens()){
+									player.sendMessage("/q questentity create <questnumber>");
+									return true;
 								}
-								name = name.trim();
 								
 								int quest = Integer.parseInt(args[args.length - 1]);
-								List<Integer> questList = new ArrayList<Integer>();
-								questList.add(quest);
-								if(VillagerHandler.SpawnVillager(player.getWorld(), player.getLocation(), name)){
-									player.sendMessage(ChatColor.GREEN + "A villager with the name " + name + " has been spawned with quest " + quest +".");
-									
-									List<String> openingList = new ArrayList<String>();
-									openingList.add("Hey there, could you help me out?");
-									List<String> middleList = new ArrayList<String>();
-									middleList.add("Come back to me when you are done.");
-									List<String> endingList = new ArrayList<String>();
-									endingList.add("Awesome, thanks a bunch!");
-									
-									EpicVillager villager = VillagerHandler.GetEpicVillager(VillagerHandler.GetVillager(player.getWorld(), name));
-									villager.openingSentences.put(questList.get(0), new SentenceBatch(openingList));
-									villager.middleSentences.put(questList.get(0), new SentenceBatch(middleList));
-									villager.endingSentences.put(questList.get(0), new SentenceBatch(endingList));
-									villager.questList = questList;
-									
-									//Set basic vars for every online player
-									Player[] players = Bukkit.getOnlinePlayers();
-									for(int i = 0; i < players.length; i++){
-										EpicPlayer ep = EpicSystem.getEpicPlayer(players[i]);
-										villager.SetFirstInteraction(ep);
-									}
-									
-									VillagerHandler.newVillagers.add(villager);
+								
+								if(EpicSystem.useCitizens()){
+									PlayerInteractListener.createNewQuestEntity = player;
+									PlayerInteractListener.createNewQuestEntityQuest = quest;
+									player.sendMessage(ChatColor.GREEN + "Right click a Citizen to make it a quest giver.");
 								}else{
-									player.sendMessage(ChatColor.RED + "A villager with the name " + name +" has already been found in this world.");
+									String name = "";
+									for(int i = 2; i < args.length - 1; i++){
+										if(i == args.length - 1)
+											name += args[i];
+										else
+											name += args[i] + " ";
+									}
+									name = name.trim();
+									
+									QuestEntityHandler.SpawnVillager(player.getWorld(), player.getLocation(), name);
+									QuestEntityHandler.GetQuestEntity(QuestEntityHandler.GetEntity(player.getWorld(), name)).SetBasics(quest);
+									
+									player.sendMessage(ChatColor.GREEN + "A villager with the name " + name + " has been created with quest " + quest +".");
 								}
-								
+
 							}else if(args.length == 3 && args[1].equalsIgnoreCase("remove")){
-								
+
 								//Remove
 								String name = args[2];
 								name = name.trim();
-								if(!VillagerHandler.RemoveVillager(player.getWorld(), name)){
+								if(!QuestEntityHandler.RemoveVillager(player.getWorld(), name)){
 									player.sendMessage(ChatColor.RED + "A villager with the name " + name +" has not been found in this world.");
 								}else{
 									player.sendMessage(ChatColor.GREEN + "The villager with the name " + name + " has been removed.");
 								}
-								
+
 							}
 						}else{
 							player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
 						}
 						return true;
 					}
-					
+
 					//Save
 					if(args[0].equalsIgnoreCase("save")){
 						if(epicPlayer.hasPermission("epicquest.admin.save")){
@@ -788,7 +792,7 @@ public class main extends JavaPlugin{
 						}
 						return true;
 					}
-					
+
 					//Reload quests
 					if(args[0].equalsIgnoreCase("reload")){
 						if(epicPlayer.hasPermission("epicquest.admin.reload")){
@@ -869,26 +873,26 @@ public class main extends JavaPlugin{
 					saveAll(false);
 					EpicSystem.setSaveTime(0);
 				}
-				
+
 				//Count down the invitation timers
 				if(!invitationTimer.isEmpty()){
 					Object[] playerList = invitationTimer.keySet().toArray();
 					for(int i = 0; i < playerList.length; i++){
 						EpicPlayer tempPlayer = (EpicPlayer)playerList[i];
 						invitationTimer.put(tempPlayer, invitationTimer.get(tempPlayer) - 1);
-						
+
 						if(invitationTimer.get(tempPlayer) == 0){
 							tempPlayer.hasPartyInvitation.getPlayer().sendMessage(""+ChatColor.ITALIC + ChatColor.RED + tempPlayer.getPlayerName() + " declined your party invitation.");
 							tempPlayer.hasPartyInvitation = null;
-							
+
 							tempPlayer.getPlayer().sendMessage(""+ChatColor.ITALIC + ChatColor.RED + "You declined " + tempPlayer.hasPartyInvitation.getPlayerName() + "'s party invitation.");
 							invitationTimer.remove(tempPlayer);
 						}
 					}
 				}
-				
+
 				//Move villagers back
-				VillagerHandler.MoveVillagersBack();
+				QuestEntityHandler.MoveVillagersBack();
 			}
 		};
 		timer.schedule(timerTask, 1000, 1000);
@@ -897,7 +901,7 @@ public class main extends JavaPlugin{
 	private void saveAll(boolean isShutDown){
 		try {
 			SaveLoader.save(isShutDown);
-			
+
 			if(isShutDown){
 				EpicSystem.getPlayerList().clear();
 			}
@@ -905,7 +909,7 @@ public class main extends JavaPlugin{
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static main getInstance(){
 		return instance;
 	}

@@ -16,6 +16,9 @@ Use_Book: true
 #Use heroes exp
 Use_Heroes: false
 
+#Use citizens instead of villagers
+Use_Citizens: false
+
 #Don't touch this
 Time: 0
 Save_Time: 0

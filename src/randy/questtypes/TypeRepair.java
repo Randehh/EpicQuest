@@ -3,7 +3,6 @@ package randy.questtypes;
 import java.util.List;
 
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftInventory;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,6 +11,7 @@ import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.AnvilInventory;
+import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
@@ -34,7 +34,7 @@ public class TypeRepair extends TypeBase implements Listener{
 
 		for(EpicQuestTask task : taskList){
 			if(event.getInventory().getType() == InventoryType.CRAFTING){
-				CraftInventory craftInventory = (CraftInventory)event.getInventory();
+				CraftingInventory craftInventory = (CraftingInventory)event.getInventory();
 				ItemStack[] content = craftInventory.getContents();
 
 				String itemNeeded = task.getTaskID();
