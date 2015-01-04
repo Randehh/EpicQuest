@@ -17,7 +17,7 @@ import org.bukkit.entity.Entity;
 import randy.epicquest.EpicPlayer;
 import randy.epicquest.EpicSign;
 import randy.epicquest.EpicSystem;
-import randy.epicquest.main;
+import randy.epicquest.EpicMain;
 import randy.questentities.QuestEntity;
 import randy.questentities.SentenceBatch;
 import randy.questentities.QuestEntityHandler;
@@ -319,7 +319,7 @@ public class SaveLoader {
 		
 		
 		//Villagers
-		Bukkit.getScheduler().scheduleSyncDelayedTask(main.getInstance(), new Runnable(){
+		Bukkit.getScheduler().scheduleSyncDelayedTask(EpicMain.getInstance(), new Runnable(){
 			@Override
 			public void run() {
 				if(questEntity.contains("Entities")){

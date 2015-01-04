@@ -18,7 +18,7 @@ import com.herocraftonline.heroes.characters.Hero;
 
 import randy.epicquest.EpicPlayer;
 import randy.epicquest.EpicSystem;
-import randy.epicquest.main;
+import randy.epicquest.EpicMain;
 import randy.quests.EpicQuestTask.TaskTypes;
 
 public class EpicQuest {
@@ -94,7 +94,7 @@ public class EpicQuest {
 		}
 			
 		//Generate money reward
-		Economy economy = main.economy;
+		Economy economy = EpicMain.economy;
 		int money = getQuestRewardMoney();
 		if(economy != null && economy.isEnabled()){
 			if(!economy.hasAccount(playerName)){ economy.createPlayerAccount(playerName); }
@@ -111,7 +111,7 @@ public class EpicQuest {
 		}
 		
 		//Generate permission reward
-		Permission permission = main.permission;
+		Permission permission = EpicMain.permission;
 		String rank = getQuestRewardPermission();
 		if(permission != null && permission.isEnabled()){
 			if(Arrays.asList(permission.getGroups()).contains(rank)){
@@ -132,7 +132,7 @@ public class EpicQuest {
 		//Heroes EXP
 		int heroesExp = getQuestRewardHeroesExp();
 		if(heroesExp != 0 && EpicSystem.useHeroes()){
-			Hero playerHero = main.heroes.getCharacterManager().getHero(player);
+			Hero playerHero = EpicMain.heroes.getCharacterManager().getHero(player);
 			playerHero.addExp(heroesExp, playerHero.getHeroClass(), player.getLocation());
 			player.sendMessage(ChatColor.GREEN + "You gained " + heroesExp + " experience points for " + playerHero.getHeroClass().getName() + ".");
 		}

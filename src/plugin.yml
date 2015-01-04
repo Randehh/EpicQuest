@@ -1,5 +1,5 @@
 name: EpicQuest
-main: randy.epicquest.main
+main: randy.epicquest.EpicMain
 version: 3.4
 depend: [Vault]
 softdepend: [Heroes, Citizens]

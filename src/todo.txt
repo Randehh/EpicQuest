@@ -1,12 +1,14 @@
-Todo:
-	Refactor a lot of internal stuff
-		- Easier method of getting quest types instead of going through a list all the time
-		- Stringbuilder on config loaders and messages
-		- Ability for quest sections
-	Quest sections (sub-quests)
-	RPG Items support
-	Citizens support
+Citizens support
+Phases
+Editing quests in-game
+Events
+RPG Item support
 
-DONE:
-	Quest reloading
-	GoTo quest type
+First:
+Citizens
+Fix collect
+RPG Item
+Reload quests and shit
+BarAPI for progress tracking
+Heroes support
+CustomMob support

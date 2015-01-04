@@ -55,7 +55,7 @@ import randy.questtypes.TypeSmelt;
 import randy.questtypes.TypeTalkToVillager;
 import randy.questtypes.TypeTame;
 
-public class main extends JavaPlugin{
+public class EpicMain extends JavaPlugin{
 
 
 	//Set a few variables needed throughout the start-up
@@ -65,7 +65,7 @@ public class main extends JavaPlugin{
 	public static Permission permission = null;
 	public static Economy economy = null;
 	public static Heroes heroes = null;
-	private static main instance;
+	private static EpicMain instance;
 
 	//Set the event classes
 	private final PlayerJoinListener joinListener = new PlayerJoinListener();
@@ -910,7 +910,7 @@ public class main extends JavaPlugin{
 		}
 	}
 
-	public static main getInstance(){
+	public static EpicMain getInstance(){
 		return instance;
 	}
 }
