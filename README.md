@@ -46,7 +46,7 @@ EpicQuest is an easy to use yet highly customizable quest plugin. Immerse your p
 * Check which quests you have in a book - no commands! -
 * Includes Vault integration
 
-####Coming Soon:
+###Coming Soon:
 * RPG Items support (collect quest type and rewards)
 * BarAPI for progress tracking
 
