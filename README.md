@@ -79,14 +79,10 @@ questentity remove <name> | Remove a villager with a quest | epicquest.admin.que
 reload | Reload quests from the quests file | epicquest.admin.reload
 
 ##How to use
-###Quests:
-[Creating Quests](http://dev.bukkit.org/bukkit-plugins/epicquest/pages/creating-quests/)
-###Quest Givers:
-[How to Use Quest Givers](http://dev.bukkit.org/bukkit-plugins/epicquest/pages/how-to-use-quest-givers/)
-###Tips and Tricks:
-[Tips and Tricks](http://dev.bukkit.org/bukkit-plugins/epicquest/pages/tips-and-tricks/)
-###Sharing Quests:
-[Quest Sharing](http://dev.bukkit.org/server-mods/epicquest/pages/quest-sharing/)
+####[Quests](http://dev.bukkit.org/bukkit-plugins/epicquest/pages/creating-quests/)
+####[Quest Givers](http://dev.bukkit.org/bukkit-plugins/epicquest/pages/how-to-use-quest-givers/)
+####[Tips and Tricks](http://dev.bukkit.org/bukkit-plugins/epicquest/pages/tips-and-tricks/)
+####[Sharing Quests](http://dev.bukkit.org/server-mods/epicquest/pages/quest-sharing/)
 
 ##Contribute!
 Feel like you want to help EpicQuest improve? Simply clone the repo and away you go. I'll be more than happy to accept fork requests as long as it's a beneficial contribution towards EpicQuest; however, even a small change, even like changing up the README.md or fixing a slight bug will do just fine!
