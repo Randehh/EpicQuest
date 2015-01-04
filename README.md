@@ -2,16 +2,7 @@
 
 EpicQuest is an easy to use yet highly customizable quest plugin. Immerse your players into Minecraft with a commandless questing experience through villagers, bounty signs and a book to show your progress!
 
-##Table of Contents:
-####1. Features
-####2. Commands
-####3. How to Use
-####4. Sharing Quests
-####5. How to Contribute
-
-==============================
-
-##1. Features:
+##Features:
 * Multiple tasks per quest
 * Multiple quests at the same time
 * Quest types:
@@ -59,7 +50,7 @@ EpicQuest is an easy to use yet highly customizable quest plugin. Immerse your p
 * RPG Items support (collect quest type and rewards)
 * BarAPI for progress tracking
 
-##2. Commands
+##Commands
 You must use either /q or /quest to precede the following commands:
 
 Command	| Description | Permission
