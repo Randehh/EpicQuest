@@ -2,6 +2,8 @@
 
 EpicQuest is an easy to use yet highly customizable quest plugin. Immerse your players into Minecraft with a commandless questing experience through villagers, bounty signs and a book to show your progress!
 
+**Quests Villagers Tips WARNING! If you are upgrading to 3.1, be sure to read the changelog! Your plugin will BREAK if you don't!**
+
 ##Features:
 * Multiple tasks per quest
 * Multiple quests at the same time
@@ -75,16 +77,16 @@ questentity create <name> <quest> | Spawns a villager with a quest. Check the qu
 questentity create <name> | Select a Citizen after this command to make him give quests. Check the questentities.yml file after reloading the server for more advanced options! | epicquest.admin.questentity
 questentity remove <name> | Remove a villager with a quest | epicquest.admin.questentity
 reload | Reload quests from the quests file | epicquest.admin.reload
-How to use
 
-Quests Villagers Tips WARNING! If you are upgrading to 3.1, be sure to read the changelog! Your plugin will BREAK if you don't!
+##How to use
+###Quests:
+[Creating Quests](http://dev.bukkit.org/bukkit-plugins/epicquest/pages/creating-quests/)
+###Quest Givers:
+[How to Use Quest Givers](http://dev.bukkit.org/bukkit-plugins/epicquest/pages/how-to-use-quest-givers/)
+###Tips and Tricks:
+[Tips and Tricks](http://dev.bukkit.org/bukkit-plugins/epicquest/pages/tips-and-tricks/)
+###Sharing Quests:
+[Quest Sharing](http://dev.bukkit.org/server-mods/epicquest/pages/quest-sharing/)
 
-Sharing quests
-
-http://dev.bukkit.org/server-mods/epicquest/pages/quest-sharing/
-
-Contribute!
-
-Help me out on GitHub if you have a cool idea:  https://github.com/Akumasama/epicquest3
-
-Consider donating for more frequent updates on the top right of this page!
+##Contribute!
+Feel like you want to help EpicQuest improve? Simply clone the repo and away you go. I'll be more than happy to accept fork requests as long as it's a beneficial contribution towards EpicQuest; however, even a small change, even like changing up the README.md or fixing a slight bug will do just fine!
