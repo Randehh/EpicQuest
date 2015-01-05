@@ -100,8 +100,8 @@ public class EpicPlayer {
 			if(getPlayer().hasPermission(permission)) return true;
 		}
 		
-		if(permission.contains("admin") && !getPlayer().isOp()) return true;
-		if(permission.contains("user")) return true;
+		if(permission.contains(".user.")) return true;
+		if(permission.contains(".admin.") && getPlayer().isOp()) return true;
 		return false;
 	}
 	
