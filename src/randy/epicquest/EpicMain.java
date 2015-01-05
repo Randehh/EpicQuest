@@ -54,7 +54,7 @@ import randy.questtypes.TypeTame;
 
 public class EpicMain extends JavaPlugin{
 	//Set a few variables needed throughout the start-up
-	String pluginversion = "3.4";
+	String pluginversion = "3.4.2";
 	String pluginname = "EpicQuest";
 	static Plugin epicQuestPlugin = Bukkit.getPluginManager().getPlugin("EpicQuest");
 	public static Permission permission = null;
