@@ -76,6 +76,7 @@ public class EpicPlayer {
 	 * 
 	 */
 	public Player getPlayer(){
+		@SuppressWarnings("deprecation")
 		Player[] playerList = Bukkit.getOnlinePlayers();
 		for(int i = 0; i < playerList.length; i++){
 			if(playerList[i].getName().equals(playerName)){
@@ -263,7 +264,7 @@ public class EpicPlayer {
 	}
 	public void addTask(EpicQuestTask task){
 		TaskTypes type = task.getType();
-		if(!questTasks.containsKey(type)) questTasks.put(type, (List)new ArrayList<EpicQuestTask>());
+		if(!questTasks.containsKey(type)) questTasks.put(type, (List<EpicQuestTask>)new ArrayList<EpicQuestTask>());
 		if(!questTasks.get(type).contains(task)) questTasks.get(type).add(task);
 	}
 	

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import net.citizensnpcs.api.CitizensAPI;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
@@ -35,8 +34,6 @@ import randy.listeners.ChatListener;
 import randy.listeners.PlayerInteractListener;
 import randy.listeners.PlayerJoinListener;
 import randy.listeners.SignListener;
-import randy.questentities.QuestEntity;
-import randy.questentities.SentenceBatch;
 import randy.questentities.QuestEntityHandler;
 import randy.quests.EpicQuest;
 import randy.quests.EpicQuestDatabase;
@@ -100,6 +97,7 @@ public class main extends JavaPlugin{
 		System.out.print(pluginname + " succesfully disabled.");
 	}
 
+	@SuppressWarnings("deprecation")
 	public void onEnable() {
 		instance = this;
 		this.saveDefaultConfig();
@@ -224,6 +222,7 @@ public class main extends JavaPlugin{
 	 * 
 	 */
 
+	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String commandName, String[] args){
 		if(sender instanceof Player){
 			if(commandName.equalsIgnoreCase("q") || commandName.equalsIgnoreCase("quest")){
