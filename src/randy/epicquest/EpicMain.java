@@ -257,15 +257,30 @@ public class EpicMain extends JavaPlugin{
 					 * Help command
 					 */
 					if(args[0].equalsIgnoreCase("help")){
+						
+						//Check for admin first
+						if(args[1].equalsIgnoreCase("admin") && epicPlayer.hasPermission("epicquest.admin.help")){
+							player.sendMessage(ChatColor.GOLD + "[=======  Admin help  =======]");
+							player.sendMessage(ChatColor.GOLD + "/q questentity <number> - Enables Citizens quest giver mode.");
+							player.sendMessage(ChatColor.GOLD + "/q questentity <name> <questnumber> - Spawn a villager with a quest.");
+							player.sendMessage(ChatColor.GOLD + "/q questentity remove <name> - Removes Quest Giver with a specific name.");
+							player.sendMessage(ChatColor.GOLD + "/q questblock give random - Enables random Questblock mode.");
+							player.sendMessage(ChatColor.GOLD + "/q questblock give <questnumber> - Enables Questblock mode.");
+							player.sendMessage(ChatColor.GOLD + "/q questblock turnin - Enables quest turn in Questblock mode.");
+							player.sendMessage(ChatColor.GOLD + "/q reload - Reloads all quests.");
+							player.sendMessage(ChatColor.GOLD + "[====================]");
+							return true;
+						}
+						
 						if(epicPlayer.hasPermission("epicquest.user.help")){
 							if(args.length == 1 || (args.length == 2 && args[1] == ""+2)){
 
 								player.sendMessage(ChatColor.GOLD + "[=======  Help list (1/2) =======]");
 								player.sendMessage(ChatColor.GOLD + "/q help <number> - Displays a help page.");
-								player.sendMessage(ChatColor.GOLD + "/q give <number> - Gives you a quest, quest number optional from questlist.");
+								player.sendMessage(ChatColor.GOLD + "/q give <questnumber> - Gives you a quest, quest number optional from questlist.");
 								player.sendMessage(ChatColor.GOLD + "/q questbook <page> - Displays all the quests you have.");
 								player.sendMessage(ChatColor.GOLD + "/q questlist <page> - Displays available to you.");
-								player.sendMessage(ChatColor.GOLD + "/q info <number> - Display info on the quest.");
+								player.sendMessage(ChatColor.GOLD + "/q info <questnumber> - Display info on the quest.");
 								player.sendMessage(ChatColor.GOLD + "/q stats <playername> - Display stats on the player.");
 								player.sendMessage(ChatColor.GOLD + "/q turnin - Turn in your quests.");
 								player.sendMessage(ChatColor.GOLD + "[=======================]");
