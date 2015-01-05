@@ -13,6 +13,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
+import org.bukkit.util.Vector;
 
 import randy.epicquest.EpicPlayer;
 import randy.epicquest.EpicSign;
@@ -85,7 +86,7 @@ public class SaveLoader {
 		}
 		signFile.save(signfile);
 
-		ArrayList<Location> blocklist = EpicSystem.getBlockList();
+		ArrayList<Vector> blocklist = EpicSystem.getBlockList();
 		if(!blocklist.isEmpty()){
 
 			//Reset file
@@ -101,7 +102,7 @@ public class SaveLoader {
 
 			//Set the block in the file
 			for(int i = 0; i < blocklist.size(); i++){
-				Location loc = blocklist.get(i);
+				Vector loc = blocklist.get(i);
 				block.set("Blocked."+ loc.getBlockX() + ":" + loc.getBlockY() + ":" + loc.getBlockZ(), "");
 			}
 			
@@ -299,12 +300,12 @@ public class SaveLoader {
 			System.out.print("[EpicQuest]: Succesfully loaded " + signList.size() + " quest signs.");
 		}
 
-		ArrayList<Location> blocklist = new ArrayList<Location>();
+		ArrayList<Vector> blocklist = new ArrayList<Vector>();
 		if(block.contains("Blocked")){
 			Object[] blockarray = block.getConfigurationSection("Blocked").getKeys(false).toArray();
 			for(int i = 0; i < blockarray.length; i++){
 				String[] blockSplit = ((String) blockarray[i]).split(":");
-				Location loc = new Location(null, Integer.parseInt(blockSplit[0]), Integer.parseInt(blockSplit[1]), Integer.parseInt(blockSplit[2]));
+				Vector loc = new Vector(Integer.parseInt(blockSplit[0]), Integer.parseInt(blockSplit[1]), Integer.parseInt(blockSplit[2]));
 				blocklist.add(loc);
 			}
 			System.out.print("[EpicQuest]: Succesfully loaded " + blockarray.length + " blocks in the block list.");

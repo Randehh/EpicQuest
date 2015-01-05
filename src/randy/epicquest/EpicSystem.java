@@ -8,6 +8,7 @@ import java.util.Random;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 import randy.filehandlers.SaveLoader;
 
@@ -17,7 +18,7 @@ public class EpicSystem {
 	
 	private static List<EpicPlayer> playerList = new ArrayList<EpicPlayer>();
 	public static List<EpicSign> signList = new ArrayList<EpicSign>();
-	private static ArrayList<Location> blockedList = new ArrayList<Location>();
+	private static ArrayList<Vector> blockedList = new ArrayList<Vector>();
 	public static HashMap<Location, EpicPlayer> furnaceList = new HashMap<Location, EpicPlayer>();
 	
 	static int questLimit = 10;
@@ -37,7 +38,7 @@ public class EpicSystem {
 	public static void setPlayerList(List<EpicPlayer> newPlayerList) { playerList = newPlayerList; }
 	public static void setSignList(List<EpicSign> newSignList) { signList = newSignList; }
 	public static void setSaveTime(int time){ saveTime = time; }
-	public static void setBlockList(ArrayList<Location> newBlockList) { blockedList = newBlockList; }
+	public static void setBlockList(ArrayList<Vector> newBlockList) { blockedList = newBlockList; }
 	public static void setMaxPartySize(int size) { maxPartySize = size; }
 	public static void setUsePermissions(boolean use) { usePermissions = use; }
 	public static void setUseBook(boolean use) { useBook = use; }
@@ -51,7 +52,7 @@ public class EpicSystem {
 	public static List<EpicSign> getSignList() { return signList; }
 	public static int getSaveTime(){ return saveTime; }
 	public static int getStartTime() { return startTime; }
-	public static ArrayList<Location> getBlockList(){ return blockedList; }
+	public static ArrayList<Vector> getBlockList(){ return blockedList; }
 	public static int getMaxPartySize() { return maxPartySize; }
 	public static boolean usePermissions() { return usePermissions; }
 	public static boolean useBook( ) { return useBook; }
