@@ -37,6 +37,7 @@ public class QuestEntity {
 		this.entity = entity;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void SetBasics(int questNumber){
 		List<Integer> questList = new ArrayList<Integer>();
 		questList.add(questNumber);

@@ -76,6 +76,7 @@ public class EpicQuest {
 	public String getQuestRewardPermission() { return EpicQuestDatabase.getRewardRank(questNumber); }
 	public String getQuestRewardCommand() { return EpicQuestDatabase.getRewardCommand(questNumber); }
 	public int getQuestRewardHeroesExp() { return EpicQuestDatabase.getRewardHeroesExp(questNumber); }
+	@SuppressWarnings("deprecation")
 	public void completeQuest(){
 		
 		//Basics
