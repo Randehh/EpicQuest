@@ -151,7 +151,7 @@ public class EpicQuest {
 	 * Player progress
 	 * 
 	 */
-	public boolean getPlayerQuestCompleted(){ for(int i = 0; i < questTasks.size(); i++){ if( !questTasks.get(i).IsComplete() ){ return false; } } return true; }
+	public boolean isCompleted(){ for(int i = 0; i < questTasks.size(); i++){ if( !questTasks.get(i).IsComplete() ){ return false; } } return true; }
 	
 	/*
 	 * 

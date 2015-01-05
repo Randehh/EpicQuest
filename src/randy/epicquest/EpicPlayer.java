@@ -256,7 +256,7 @@ public class EpicPlayer {
 	public List<EpicQuest> getCompleteableQuest(){
 		List<EpicQuest> tempList = new ArrayList<EpicQuest>();
 		for(int i = 0; i < questList.size(); i++){
-			if(questList.get(i).getPlayerQuestCompleted()){ 
+			if(questList.get(i).isCompleted()){ 
 				tempList.add(questList.get(i));
 			}
 		}

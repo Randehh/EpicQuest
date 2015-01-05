@@ -585,7 +585,7 @@ public class EpicMain extends JavaPlugin{
 
 										for(int quest = page * 10; quest < list.size() && quest < displaypage * 10; quest++){
 											String message =  null;
-											if(list.get(quest).getPlayerQuestCompleted()){
+											if(list.get(quest).isCompleted()){
 												message = ChatColor.GREEN + "";
 											}else{
 												message = ChatColor.RED + "";
