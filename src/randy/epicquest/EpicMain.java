@@ -20,6 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.Vector;
 
 import com.herocraftonline.heroes.Heroes;
 
@@ -52,15 +53,15 @@ import randy.questtypes.TypeSmelt;
 import randy.questtypes.TypeTalkToVillager;
 import randy.questtypes.TypeTame;
 
-public class main extends JavaPlugin{
+public class EpicMain extends JavaPlugin{
 	//Set a few variables needed throughout the start-up
-	String pluginversion = "3.3";
+	String pluginversion = "3.4.2";
 	String pluginname = "EpicQuest";
 	static Plugin epicQuestPlugin = Bukkit.getPluginManager().getPlugin("EpicQuest");
 	public static Permission permission = null;
 	public static Economy economy = null;
 	public static Heroes heroes = null;
-	private static main instance;
+	private static EpicMain instance;
 
 	//Set the event classes
 	private final PlayerJoinListener joinListener = new PlayerJoinListener();
@@ -257,15 +258,30 @@ public class main extends JavaPlugin{
 					 * Help command
 					 */
 					if(args[0].equalsIgnoreCase("help")){
+						
+						//Check for admin first
+						if(args[1].equalsIgnoreCase("admin") && epicPlayer.hasPermission("epicquest.admin.help")){
+							player.sendMessage(ChatColor.GOLD + "[=======  Admin help  =======]");
+							player.sendMessage(ChatColor.GOLD + "/q questentity <number> - Enables Citizens quest giver mode.");
+							player.sendMessage(ChatColor.GOLD + "/q questentity <name> <questnumber> - Spawn a villager with a quest.");
+							player.sendMessage(ChatColor.GOLD + "/q questentity remove <name> - Removes Quest Giver with a specific name.");
+							player.sendMessage(ChatColor.GOLD + "/q questblock give random - Enables random Questblock mode.");
+							player.sendMessage(ChatColor.GOLD + "/q questblock give <questnumber> - Enables Questblock mode.");
+							player.sendMessage(ChatColor.GOLD + "/q questblock turnin - Enables quest turn in Questblock mode.");
+							player.sendMessage(ChatColor.GOLD + "/q reload - Reloads all quests.");
+							player.sendMessage(ChatColor.GOLD + "[====================]");
+							return true;
+						}
+						
 						if(epicPlayer.hasPermission("epicquest.user.help")){
 							if(args.length == 1 || (args.length == 2 && args[1] == ""+2)){
 
 								player.sendMessage(ChatColor.GOLD + "[=======  Help list (1/2) =======]");
 								player.sendMessage(ChatColor.GOLD + "/q help <number> - Displays a help page.");
-								player.sendMessage(ChatColor.GOLD + "/q give <number> - Gives you a quest, quest number optional from questlist.");
+								player.sendMessage(ChatColor.GOLD + "/q give <questnumber> - Gives you a quest, quest number optional from questlist.");
 								player.sendMessage(ChatColor.GOLD + "/q questbook <page> - Displays all the quests you have.");
 								player.sendMessage(ChatColor.GOLD + "/q questlist <page> - Displays available to you.");
-								player.sendMessage(ChatColor.GOLD + "/q info <number> - Display info on the quest.");
+								player.sendMessage(ChatColor.GOLD + "/q info <questnumber> - Display info on the quest.");
 								player.sendMessage(ChatColor.GOLD + "/q stats <playername> - Display stats on the player.");
 								player.sendMessage(ChatColor.GOLD + "/q turnin - Turn in your quests.");
 								player.sendMessage(ChatColor.GOLD + "[=======================]");
@@ -570,7 +586,7 @@ public class main extends JavaPlugin{
 
 										for(int quest = page * 10; quest < list.size() && quest < displaypage * 10; quest++){
 											String message =  null;
-											if(list.get(quest).getPlayerQuestCompleted()){
+											if(list.get(quest).isCompleted()){
 												message = ChatColor.GREEN + "";
 											}else{
 												message = ChatColor.RED + "";
@@ -867,7 +883,7 @@ public class main extends JavaPlugin{
 					}
 
 					EpicSystem.setTime(0);
-					EpicSystem.setBlockList(new ArrayList<Location>());
+					EpicSystem.setBlockList(new ArrayList<Vector>());
 				}
 
 				//If timer has run for 5 minutes, save all
@@ -912,7 +928,7 @@ public class main extends JavaPlugin{
 		}
 	}
 
-	public static main getInstance(){
+	public static EpicMain getInstance(){
 		return instance;
 	}
 }

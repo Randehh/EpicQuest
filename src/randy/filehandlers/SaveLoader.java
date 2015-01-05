@@ -13,11 +13,12 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
+import org.bukkit.util.Vector;
 
 import randy.epicquest.EpicPlayer;
 import randy.epicquest.EpicSign;
 import randy.epicquest.EpicSystem;
-import randy.epicquest.main;
+import randy.epicquest.EpicMain;
 import randy.questentities.QuestEntity;
 import randy.questentities.SentenceBatch;
 import randy.questentities.QuestEntityHandler;
@@ -85,7 +86,7 @@ public class SaveLoader {
 		}
 		signFile.save(signfile);
 
-		ArrayList<Location> blocklist = EpicSystem.getBlockList();
+		ArrayList<Vector> blocklist = EpicSystem.getBlockList();
 		if(!blocklist.isEmpty()){
 
 			//Reset file
@@ -101,7 +102,7 @@ public class SaveLoader {
 
 			//Set the block in the file
 			for(int i = 0; i < blocklist.size(); i++){
-				Location loc = blocklist.get(i);
+				Vector loc = blocklist.get(i);
 				block.set("Blocked."+ loc.getBlockX() + ":" + loc.getBlockY() + ":" + loc.getBlockZ(), "");
 			}
 			
@@ -274,15 +275,6 @@ public class SaveLoader {
 	 * Load players
 	 */
 	public static void load() {
-		
-		//Load all players
-		File folder = new File("plugins" + File.separator + "EpicQuest" + File.separator + "Players");
-        String[] fileNames = folder.list();
-        if(fileNames.length > 0){
-        	for(String playerName : fileNames){
-        		System.out.print("Loading player " + playerName);
-        	}
-        }
 
 		EpicSystem.setTime(config.getInt("Time"));
 		EpicSystem.setSaveTime(config.getInt("Save_Time"));
@@ -304,22 +296,25 @@ public class SaveLoader {
 				
 				signList.add(new EpicSign(quest, loc));
 			}
+			
+			System.out.print("[EpicQuest]: Succesfully loaded " + signList.size() + " quest signs.");
 		}
 
-		ArrayList<Location> blocklist = new ArrayList<Location>();
+		ArrayList<Vector> blocklist = new ArrayList<Vector>();
 		if(block.contains("Blocked")){
 			Object[] blockarray = block.getConfigurationSection("Blocked").getKeys(false).toArray();
 			for(int i = 0; i < blockarray.length; i++){
 				String[] blockSplit = ((String) blockarray[i]).split(":");
-				Location loc = new Location(null, Integer.parseInt(blockSplit[0]), Integer.parseInt(blockSplit[1]), Integer.parseInt(blockSplit[2]));
+				Vector loc = new Vector(Integer.parseInt(blockSplit[0]), Integer.parseInt(blockSplit[1]), Integer.parseInt(blockSplit[2]));
 				blocklist.add(loc);
 			}
+			System.out.print("[EpicQuest]: Succesfully loaded " + blockarray.length + " blocks in the block list.");
 		}
 		EpicSystem.setBlockList(blocklist);
 		
 		
 		//Villagers
-		Bukkit.getScheduler().scheduleSyncDelayedTask(main.getInstance(), new Runnable(){
+		Bukkit.getScheduler().scheduleSyncDelayedTask(EpicMain.getInstance(), new Runnable(){
 			@Override
 			public void run() {
 				if(questEntity.contains("Entities")){
@@ -367,11 +362,12 @@ public class SaveLoader {
 							qEntity.questPhases.put(epicPlayer, QuestPhase.valueOf(questEntity.getString("Entities."+entityName+".Players."+playername+".QuestPhase")));
 						}
 					}
+					System.out.print("[EpicQuest]: Succesfully loaded " + entitiesArray.length + " Quest Givers.");
 				}
 			}
 		}, 50);
 
-		System.out.print("[EpicQuest]: loaded the progress of " + fileNames.length + " players.");
+		
 	}
 
 	public static void loadPlayer(String playername){

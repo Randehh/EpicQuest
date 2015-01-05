@@ -1,6 +1,7 @@
 package randy.quests;
 
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
+
 import randy.epicquest.EpicPlayer;
 
 public class EpicQuestTask {

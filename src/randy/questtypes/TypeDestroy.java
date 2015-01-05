@@ -2,7 +2,6 @@ package randy.questtypes;
 
 import java.util.List;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -29,31 +28,30 @@ public class TypeDestroy extends TypeBase implements Listener{
 		//Block information
 		Block block = event.getBlock();
 		Material blockdestroyed = block.getType();
-		int x = block.getX();
-		int y = block.getY();
-		int z = block.getZ();
-		Location loc = new Location(null, x, y, z);
-		
-		for(EpicQuestTask task : taskList){
-			String blockneeded = task.getTaskID();
-			
-			if(blockdestroyed == Material.matchMaterial(blockneeded)){
-				task.ProgressTask(1, epicPlayer);
-				EpicSystem.getBlockList().add(loc);
-			}
-		}
 		
 		//Check for sign		
 		List<EpicSign> signList = EpicSystem.getSignList();
 		for(int i = 0; i < signList.size(); i++ ){
 			EpicSign sign = signList.get(i);
-			if(sign.getLocation().equals(loc)){
+			if(sign.getLocation().equals(block.getLocation())){
 				if(epicPlayer.hasPermission("epicquest.admin.sign")){
 					signList.remove(sign);
 					return;
 				}else{
 					event.setCancelled(true);
 				}
+			}
+		}
+		
+		//Check block list
+		if(EpicSystem.getBlockList().contains(block.getLocation().toVector())) return;
+		
+		for(EpicQuestTask task : taskList){
+			String blockneeded = task.getTaskID();
+			
+			if(blockdestroyed == Material.matchMaterial(blockneeded)){
+				task.ProgressTask(1, epicPlayer);
+				EpicSystem.getBlockList().add(block.getLocation().toVector());
 			}
 		}
 	}

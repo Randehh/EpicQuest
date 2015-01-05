@@ -85,4 +85,4 @@ reload | Reload quests from the quests file | epicquest.admin.reload
 ####[Sharing Quests](http://dev.bukkit.org/server-mods/epicquest/pages/quest-sharing/)
 
 ##Contribute!
-Feel like you want to help EpicQuest improve? Simply clone the repo and away you go. I'll be more than happy to accept fork requests as long as it's a beneficial contribution towards EpicQuest; however, even a small change, even like changing up the README.md or fixing a slight bug will do just fine!
+Feel like you want to help EpicQuest improve? Simply clone the repo and away you go. I'll be more than happy to accept fork requests as long as it's a beneficial contribution towards EpicQuest; however, even a small change, even like changing up the README.md or fixing a slight bug will do just fine! Be sure to update your repo before starting on something!

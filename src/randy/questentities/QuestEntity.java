@@ -92,7 +92,7 @@ public class QuestEntity {
 			}
 			
 			//Not completed quest
-			if(!epicPlayer.getQuestByNumber(actualQuestNo).getPlayerQuestCompleted()){
+			if(!epicPlayer.getQuestByNumber(actualQuestNo).isCompleted()){
 				sentences = middleSentences.get(actualQuestNo);
 				epicPlayer.getPlayer().sendMessage(formatMessage(sentences.Random(epicPlayer)));
 				loop = false;
@@ -121,7 +121,18 @@ public class QuestEntity {
 	
 	public void SetFirstInteraction(EpicPlayer epicPlayer){
 		if(currentQuest.get(epicPlayer) == null) currentQuest.put(epicPlayer, 0);
-		if(questPhases.get(epicPlayer) == null) questPhases.put(epicPlayer, QuestPhase.INTRO_TALK);
+		if(questPhases.get(epicPlayer) == null){
+			QuestPhase phase = QuestPhase.INTRO_TALK;
+			int questNo = this.questList.get(0);
+			if(epicPlayer.hasQuest(questNo)){
+				if(epicPlayer.getQuest(questNo).isCompleted()){
+					phase = QuestPhase.ENDING_TALK;
+				}else{
+					phase = QuestPhase.BUSY;
+				}
+			}
+			questPhases.put(epicPlayer, phase);
+		}
 	}
 	
 	private String formatMessage(String message){

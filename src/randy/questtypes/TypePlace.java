@@ -2,7 +2,6 @@ package randy.questtypes;
 
 import java.util.List;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -28,17 +27,16 @@ public class TypePlace extends TypeBase implements Listener{
 		//Block information
 		Block block = event.getBlock();
 		Material blockPlaced = block.getType();
-		int x = block.getX();
-		int y = block.getY();
-		int z = block.getZ();
-		Location loc = new Location(null, x, y, z);
+		
+		//Check block list
+		if(EpicSystem.getBlockList().contains(block.getLocation().toVector())) return;
 
 		for(EpicQuestTask task : taskList){
 			String blockneeded = task.getTaskID();
 
 			if(blockPlaced == Material.matchMaterial(blockneeded)){
 				task.ProgressTask(1, epicPlayer);
-				EpicSystem.getBlockList().add(loc);
+				EpicSystem.getBlockList().add(block.getLocation().toVector());
 			}
 		}
 	}
