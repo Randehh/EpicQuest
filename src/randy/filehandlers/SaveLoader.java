@@ -274,15 +274,6 @@ public class SaveLoader {
 	 * Load players
 	 */
 	public static void load() {
-		
-		//Load all players
-		File folder = new File("plugins" + File.separator + "EpicQuest" + File.separator + "Players");
-        String[] fileNames = folder.list();
-        if(fileNames.length > 0){
-        	for(String playerName : fileNames){
-        		System.out.print("Loading player " + playerName);
-        	}
-        }
 
 		EpicSystem.setTime(config.getInt("Time"));
 		EpicSystem.setSaveTime(config.getInt("Save_Time"));
@@ -304,6 +295,8 @@ public class SaveLoader {
 				
 				signList.add(new EpicSign(quest, loc));
 			}
+			
+			System.out.print("[EpicQuest]: Succesfully loaded " + signList.size() + " quest signs.");
 		}
 
 		ArrayList<Location> blocklist = new ArrayList<Location>();
@@ -314,6 +307,7 @@ public class SaveLoader {
 				Location loc = new Location(null, Integer.parseInt(blockSplit[0]), Integer.parseInt(blockSplit[1]), Integer.parseInt(blockSplit[2]));
 				blocklist.add(loc);
 			}
+			System.out.print("[EpicQuest]: Succesfully loaded " + blockarray.length + " blocks in the block list.");
 		}
 		EpicSystem.setBlockList(blocklist);
 		
@@ -367,11 +361,12 @@ public class SaveLoader {
 							qEntity.questPhases.put(epicPlayer, QuestPhase.valueOf(questEntity.getString("Entities."+entityName+".Players."+playername+".QuestPhase")));
 						}
 					}
+					System.out.print("[EpicQuest]: Succesfully loaded " + entitiesArray.length + " Quest Givers.");
 				}
 			}
 		}, 50);
 
-		System.out.print("[EpicQuest]: loaded the progress of " + fileNames.length + " players.");
+		
 	}
 
 	public static void loadPlayer(String playername){
