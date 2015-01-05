@@ -320,6 +320,7 @@ public class EpicPlayer {
 		return false;
 	}
 	public boolean isTimeOut(int questNo){
+		if(EpicQuestDatabase.getQuestResetTime(questNo) == -1 && getQuestsCompleted().contains(questNo)) return true;
 		
 		checkTimer(questNo, false);
 		
@@ -354,7 +355,7 @@ public class EpicPlayer {
 		if(playerLevel >= requiredLevel) return true;
 		return false;
 	}
-	public void checkTimer(int questNo, boolean substractDifference){
+	public void checkTimer(int questNo, boolean substractDifference){		
 		int timeDifference = EpicSystem.getTime() - EpicSystem.getStartTime();
 		int newQuestTime = questTimer.get(questNo) - timeDifference;
 		
