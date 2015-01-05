@@ -53,8 +53,6 @@ import randy.questtypes.TypeTalkToVillager;
 import randy.questtypes.TypeTame;
 
 public class EpicMain extends JavaPlugin{
-
-
 	//Set a few variables needed throughout the start-up
 	String pluginversion = "3.4";
 	String pluginname = "EpicQuest";
@@ -92,8 +90,13 @@ public class EpicMain extends JavaPlugin{
 
 	public void onDisable() {
 		saveAll(true);
-		timerTask.cancel();
+
+		if(timerTask != null){
+			timerTask.cancel();
+		}
+		
 		timer.cancel();
+		
 		System.out.print(pluginname + " succesfully disabled.");
 	}
 
@@ -135,14 +138,14 @@ public class EpicMain extends JavaPlugin{
 
 		try {
 			if(!FileChecker.checkFiles()){
-				Bukkit.getPluginManager().disablePlugin(epicQuestPlugin);
+				Bukkit.getPluginManager().disablePlugin(this);
 			}
 		} catch (SecurityException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
-
+		
 		/*
 		 * Load configs
 		 */
