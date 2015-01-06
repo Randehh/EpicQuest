@@ -5,6 +5,7 @@ import me.confuser.barapi.BarAPI;
 import org.bukkit.ChatColor;
 
 import randy.epicquest.EpicPlayer;
+import randy.epicquest.EpicSystem;
 
 public class EpicQuestTask {
 	
@@ -33,21 +34,19 @@ public class EpicQuestTask {
 	private int taskCurrent = 0;
 	private String taskID;
 	private EpicQuest quest;
-	private boolean barAPIIsEnabled;
 	
-	public EpicQuestTask(TaskTypes taskType, String taskID, int taskGoal, EpicQuest quest, boolean isBarAPIEnabled){
+	public EpicQuestTask(TaskTypes taskType, String taskID, int taskGoal, EpicQuest quest){
 		this.taskType = taskType;
 		this.taskID = taskID;
 		this.taskGoal = taskGoal;
 		this.quest = quest;
-		barAPIIsEnabled = isBarAPIEnabled;
 	}
 
 	public void ProgressTask(int amount, EpicPlayer player){
 		taskCurrent += amount;
 		
 		if(player != null && SendText()){
-			if(barAPIIsEnabled){
+			if(EpicSystem.useBarAPI()){
 				BarAPI.setMessage(player.getPlayer(), getPlayerTaskProgressText(), (float)getTaskProgress()/getTaskGoal());
 			}else{
 				player.getPlayer().sendMessage(getPlayerTaskProgressText());

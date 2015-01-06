@@ -16,6 +16,7 @@ public class TypeSmelt extends TypeBase implements Listener{
 	
 	@EventHandler
 	public void OnFurnaceSmelt(FurnaceSmeltEvent event){
+		if(!EpicSystem.furnaceList.containsKey(event.getBlock().getLocation())) return;
 		
 		EpicPlayer epicPlayer = EpicSystem.furnaceList.get(event.getBlock().getLocation());
 		List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.SMELT_ITEM);

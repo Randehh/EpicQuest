@@ -2,7 +2,7 @@ name: EpicQuest
 main: randy.epicquest.EpicMain
 version: 3.4.3
 depend: [Vault]
-softdepend: [Heroes, Citizens]
+softdepend: [Heroes, Citizens, BarAPI]
 commands:
   quest:
     description: Quest stuff

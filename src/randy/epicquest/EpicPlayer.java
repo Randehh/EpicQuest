@@ -106,6 +106,8 @@ public class EpicPlayer {
 	}
 	
 	public void giveQuestBook(){
+		if(getPlayer() == null) return;
+		
 		Inventory inventory = getPlayer().getInventory();
 		if(inventory.contains(Material.WRITTEN_BOOK)){
 			for(int i = 0; i < inventory.getContents().length; i++){
