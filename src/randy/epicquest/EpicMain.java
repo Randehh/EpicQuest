@@ -158,6 +158,7 @@ public class EpicMain extends JavaPlugin{
 		setupEconomy();
 		setupHeroes();
 		setupCitizens();
+		setupBarAPI();
 
 		SaveLoader.load();
 
@@ -216,6 +217,19 @@ public class EpicMain extends JavaPlugin{
 			return false;
 		}else{
 			System.out.print("[EpicQuest]: Successfully hooked into Citizens!");
+		}
+		return true;
+	}
+	
+	private boolean setupBarAPI(){
+		if(!EpicSystem.useBarAPI()) return true;
+
+		if(Bukkit.getPluginManager().getPlugin("BarAPI") == null || !Bukkit.getPluginManager().getPlugin("BarAPI").isEnabled()){
+			System.out.print("[EpicQuest]: BarAPI is enabled in the config, but isn't found! Disabling BarAPI support.");
+			EpicSystem.setUseBarAPI(false);
+			return false;
+		}else{
+			System.out.print("[EpicQuest]: Successfully hooked into BarAPI!");
 		}
 		return true;
 	}
