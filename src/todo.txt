@@ -1,14 +1,8 @@
-Citizens support
+Reload QuestEntities
+Fix collect
+RPG Item
+BarAPI for progress tracking
 Phases
 Editing quests in-game
 Events
 RPG Item support
-
-First:
-Citizens
-Fix collect
-RPG Item
-Reload quests and shit
-BarAPI for progress tracking
-Heroes support
-CustomMob support

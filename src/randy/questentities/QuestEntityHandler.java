@@ -65,9 +65,11 @@ public class QuestEntityHandler {
 	}
 	
 	public static String getEntityName(Entity entity){
+		
 		String entityName = null;
-		if(!EpicSystem.useCitizens()) entityName = ((Villager)entity).getCustomName();
-		else{
+		if(!EpicSystem.useCitizens()){
+			if(entity instanceof Villager) entityName = ((Villager)entity).getCustomName();
+		}else{
 			if(CitizensAPI.getNPCRegistry().isNPC(entity)){
 				NPC citizensNPC = CitizensAPI.getNPCRegistry().getNPC(entity);
 				entityName = ChatColor.stripColor(citizensNPC.getName());
@@ -117,10 +119,14 @@ public class QuestEntityHandler {
 	
 	public static void MoveVillagersBack(){
 		if(EpicSystem.useCitizens()) return;
+		
 		Object[] villagerArray = entityList.keySet().toArray();
-		for(int i = 0; i < villagerArray.length; i++){
-			Villager tempVil = (Villager)villagerArray[i];
-			tempVil.teleport(GetQuestEntity(tempVil).originalLocation);
+		for(Object entity : villagerArray){
+			if(!(entity instanceof Villager)) continue;
+			Villager tempVil = (Villager)entity;
+			QuestEntity qEntity = GetQuestEntity(tempVil);
+			
+			if(qEntity != null && qEntity.originalLocation != null)	tempVil.teleport(qEntity.originalLocation);
 		}
 	}
 	
