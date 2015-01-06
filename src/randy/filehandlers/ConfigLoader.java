@@ -79,6 +79,13 @@ public class ConfigLoader {
 			EpicSystem.setUseCitizens(configuration.getBoolean("Use_Citizens"));
 		}
 		
+		if(!configuration.contains("Use_Bar_API")){
+			configuration.set("Use_Bar_API", false);
+			EpicSystem.setUseBarAPI(false);
+		}else{
+			EpicSystem.setUseBarAPI(configuration.getBoolean("Use_Bar_API"));
+		}
+		
 		try {
 			configuration.save(configfile);
 		} catch (IOException e) {
