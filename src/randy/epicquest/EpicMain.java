@@ -55,7 +55,7 @@ import randy.questtypes.TypeTame;
 
 public class EpicMain extends JavaPlugin{
 	//Set a few variables needed throughout the start-up
-	String pluginversion = "3.4.2";
+	String pluginversion = "3.4.3";
 	String pluginname = "EpicQuest";
 	static Plugin epicQuestPlugin = Bukkit.getPluginManager().getPlugin("EpicQuest");
 	public static Permission permission = null;
@@ -817,7 +817,8 @@ public class EpicMain extends JavaPlugin{
 							EpicQuestDatabase.ClearDatabase();
 							QuestLoader.loadQuests();
 							EpicQuest.ResetQuestTaskInfo();
-							player.sendMessage(ChatColor.GREEN + "Succesfully reloaded the quest database.");
+							QuestEntityHandler.Reload();
+							player.sendMessage(ChatColor.GREEN + "Succesfully reloaded the quest database and Quest Givers.");
 						}else{
 							player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
 						}

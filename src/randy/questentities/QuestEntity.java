@@ -120,8 +120,8 @@ public class QuestEntity {
 	}
 	
 	public void SetFirstInteraction(EpicPlayer epicPlayer){
-		if(currentQuest.get(epicPlayer) == null) currentQuest.put(epicPlayer, 0);
-		if(questPhases.get(epicPlayer) == null){
+		if(!currentQuest.containsKey(epicPlayer)) currentQuest.put(epicPlayer, 0);
+		if(!questPhases.containsKey(epicPlayer)){
 			QuestPhase phase = QuestPhase.INTRO_TALK;
 			int questNo = this.questList.get(0);
 			if(epicPlayer.hasQuest(questNo)){
@@ -136,6 +136,6 @@ public class QuestEntity {
 	}
 	
 	private String formatMessage(String message){
-		return ChatColor.ITALIC + QuestEntityHandler.getEntityName(entity) + ": " + message;
+		return ""+ ChatColor.GRAY + ChatColor.ITALIC + QuestEntityHandler.getEntityName(entity) + ": " + ChatColor.WHITE + message;
 	}
 }
