@@ -169,7 +169,9 @@ public class SaveLoader {
 				//Save player stuff
 				for(EpicPlayer epicPlayer : EpicSystem.getPlayerList()){
 					save.set("Players."+epicPlayer.getPlayerName()+".CurrentQuest", qEntity.currentQuest.get(epicPlayer));
-					save.set("Players."+epicPlayer.getPlayerName()+".QuestPhase", qEntity.questPhases.get(epicPlayer).toString());
+					QuestPhase phase = qEntity.questPhases.get(epicPlayer);
+					if(phase == null) phase = QuestPhase.INTRO_TALK;
+					save.set("Players."+epicPlayer.getPlayerName()+".QuestPhase", phase.toString());
 				}
 				
 				save.save(savefile);
