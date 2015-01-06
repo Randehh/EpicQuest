@@ -106,6 +106,25 @@ public class SaveLoader {
 			block.save(blockfile);
 		}
 		
+		saveQuestEntities(isShutDown);
+		
+		List<EpicPlayer> playersToSave = EpicSystem.getPlayerList();
+		if(!playersToSave.isEmpty()){
+			
+			for(int i = 0; i < playersToSave.size(); i++){
+
+				// Get the file of the player which has to be saved
+				EpicPlayer epicPlayer = playersToSave.get(i);
+				savePlayer(epicPlayer);
+			}			
+
+			System.out.print("[EpicQuest]: saved "  + playersToSave.size() + " player(s).");
+		}else{
+			System.out.print("There are no players to save");
+		}
+	}
+	
+	public static void saveQuestEntities(boolean isShutDown) throws IOException{
 		HashMap<Entity, QuestEntity> entityMap = QuestEntityHandler.entityList;
 		if(!entityMap.isEmpty()){			
 			Object[] entityList = entityMap.keySet().toArray();
@@ -157,21 +176,6 @@ public class SaveLoader {
 				
 				if(isShutDown) entity.remove();
 			}
-		}
-		
-		List<EpicPlayer> playersToSave = EpicSystem.getPlayerList();
-		if(!playersToSave.isEmpty()){
-			
-			for(int i = 0; i < playersToSave.size(); i++){
-
-				// Get the file of the player which has to be saved
-				EpicPlayer epicPlayer = playersToSave.get(i);
-				savePlayer(epicPlayer);
-			}			
-
-			System.out.print("[EpicQuest]: saved "  + playersToSave.size() + " player(s).");
-		}else{
-			System.out.print("There are no players to save");
 		}
 	}
 
@@ -316,55 +320,57 @@ public class SaveLoader {
 		Bukkit.getScheduler().scheduleSyncDelayedTask(EpicMain.getInstance(), new Runnable(){
 			@Override
 			public void run() {
-				File folder = new File("plugins" + File.separator + "EpicQuest" + File.separator + "QuestEntities");
-		        String[] fileNames = folder.list();
-		        if(fileNames.length > 0){
-		        	for(String entityName : fileNames){
-		        		
-		        		entityName = entityName.replace(".yml", "");
-		        		
-		        		File saveFile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "QuestEntities" + File.separator + entityName + ".yml");
-		        		YamlConfiguration save = YamlConfiguration.loadConfiguration(saveFile);
-		        		
-		        		//Location
-		        		World world = Bukkit.getWorld(save.getString("World"));
-		        		String[] locationSplit = save.getString("Location").split(":");
-		        		Location loc = new Location(world, Integer.parseInt(locationSplit[0]), Integer.parseInt(locationSplit[1]), Integer.parseInt(locationSplit[2]));
-						
-						//Create
-						QuestEntityHandler.RemoveLeftoverVillager(entityName, world);
-						if(!EpicSystem.useCitizens()) QuestEntityHandler.SpawnVillager(world, loc, entityName);
-						
-						//Advanced QuestEntity stuff
-						Entity entity = QuestEntityHandler.GetEntity(world, entityName);
-						QuestEntity qEntity = new QuestEntity(entity);
-						QuestEntityHandler.entityList.put(entity, qEntity);
-						
-						qEntity.questList = save.getIntegerList("Quests");
-						qEntity.originalLocation = loc;
-						
-						for(int quest : qEntity.questList){
-							
-							//Load sentences					
-							qEntity.openingSentences.put(quest, new SentenceBatch(save.getStringList("OpeningSentences."+quest)));
-							qEntity.middleSentences.put(quest, new SentenceBatch(save.getStringList("MiddleSentences."+quest)));
-							qEntity.endingSentences.put(quest, new SentenceBatch(save.getStringList("EndingSentences."+quest)));
-						}
-						
-						//Set player stuff
-						Object[] players = save.getConfigurationSection("Players").getKeys(false).toArray();
-						for(Object playerObj : players){
-							String player = (String)playerObj;
-							EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player);
-							qEntity.currentQuest.put(epicPlayer, save.getInt("Players."+player+".CurrentQuest"));
-							qEntity.questPhases.put(epicPlayer, QuestPhase.valueOf(save.getString("Players."+player+".QuestPhase")));
-						}
-		        	}
-		        }
+				loadQuestEntities();
 			}
 		}, 50);
-
-		
+	}
+	
+	public static void loadQuestEntities(){
+		File folder = new File("plugins" + File.separator + "EpicQuest" + File.separator + "QuestEntities");
+        String[] fileNames = folder.list();
+        if(fileNames.length > 0){
+        	for(String entityName : fileNames){
+        		
+        		entityName = entityName.replace(".yml", "");
+        		
+        		File saveFile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "QuestEntities" + File.separator + entityName + ".yml");
+        		YamlConfiguration save = YamlConfiguration.loadConfiguration(saveFile);
+        		
+        		//Location
+        		World world = Bukkit.getWorld(save.getString("World"));
+        		String[] locationSplit = save.getString("Location").split(":");
+        		Location loc = new Location(world, Integer.parseInt(locationSplit[0]), Integer.parseInt(locationSplit[1]), Integer.parseInt(locationSplit[2]));
+				
+				//Create
+				QuestEntityHandler.RemoveLeftoverVillager(entityName, world);
+				if(!EpicSystem.useCitizens()) QuestEntityHandler.SpawnVillager(world, loc, entityName);
+				
+				//Advanced QuestEntity stuff
+				Entity entity = QuestEntityHandler.GetEntity(world, entityName);
+				QuestEntity qEntity = new QuestEntity(entity);
+				QuestEntityHandler.entityList.put(entity, qEntity);
+				
+				qEntity.questList = save.getIntegerList("Quests");
+				qEntity.originalLocation = loc;
+				
+				for(int quest : qEntity.questList){
+					
+					//Load sentences					
+					qEntity.openingSentences.put(quest, new SentenceBatch(save.getStringList("OpeningSentences."+quest)));
+					qEntity.middleSentences.put(quest, new SentenceBatch(save.getStringList("MiddleSentences."+quest)));
+					qEntity.endingSentences.put(quest, new SentenceBatch(save.getStringList("EndingSentences."+quest)));
+				}
+				
+				//Set player stuff
+				Object[] players = save.getConfigurationSection("Players").getKeys(false).toArray();
+				for(Object playerObj : players){
+					String player = (String)playerObj;
+					EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player);
+					qEntity.currentQuest.put(epicPlayer, save.getInt("Players."+player+".CurrentQuest"));
+					qEntity.questPhases.put(epicPlayer, QuestPhase.valueOf(save.getString("Players."+player+".QuestPhase")));
+				}
+        	}
+        }
 	}
 
 	public static void loadPlayer(String playername){

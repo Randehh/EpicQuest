@@ -817,7 +817,8 @@ public class EpicMain extends JavaPlugin{
 							EpicQuestDatabase.ClearDatabase();
 							QuestLoader.loadQuests();
 							EpicQuest.ResetQuestTaskInfo();
-							player.sendMessage(ChatColor.GREEN + "Succesfully reloaded the quest database.");
+							QuestEntityHandler.Reload();
+							player.sendMessage(ChatColor.GREEN + "Succesfully reloaded the quest database and Quest Givers.");
 						}else{
 							player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
 						}

@@ -1,5 +1,6 @@
 package randy.questentities;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import randy.epicquest.EpicSystem;
+import randy.filehandlers.SaveLoader;
 
 public class QuestEntityHandler {
 	
@@ -77,6 +79,19 @@ public class QuestEntityHandler {
 		}
 		if(entityName == null) entityName = entity.getType().toString();
 		return entityName;
+	}
+	
+	public static void Reload(){
+		try {
+			SaveLoader.saveQuestEntities(false);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		entityList.clear();
+		newEntities.clear();
+		
+		SaveLoader.loadQuestEntities();
 	}
 	
 	/*

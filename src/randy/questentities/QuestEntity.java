@@ -136,6 +136,6 @@ public class QuestEntity {
 	}
 	
 	private String formatMessage(String message){
-		return ChatColor.ITALIC + QuestEntityHandler.getEntityName(entity) + ": " + message;
+		return ""+ ChatColor.GRAY + ChatColor.ITALIC + QuestEntityHandler.getEntityName(entity) + ": " + ChatColor.WHITE + message;
 	}
 }
