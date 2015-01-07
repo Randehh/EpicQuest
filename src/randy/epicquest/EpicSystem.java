@@ -17,6 +17,7 @@ public class EpicSystem {
 	public static Random random = new Random();
 	
 	private static List<EpicPlayer> playerList = new ArrayList<EpicPlayer>();
+	private static List<Object> placeHolderForLeaderboard = new ArrayList<Object>();
 	public static List<EpicSign> signList = new ArrayList<EpicSign>();
 	private static ArrayList<Vector> blockedList = new ArrayList<Vector>();
 	public static HashMap<Location, EpicPlayer> furnaceList = new HashMap<Location, EpicPlayer>();
@@ -83,11 +84,20 @@ public class EpicSystem {
 		return null;
 	}
 	
+	public static List<EpicPlayer> getEpicPlayerList(){
+		return playerList;
+	}
+	
 	public static EpicPlayer getEpicPlayer(Player player){
 		
 		String name = player.getName();
 		
 		return getEpicPlayer(name);
+	}
+	
+	public static List<Object> getLeaderboard(){
+		//TODO: Create self rearranging List so that index 0 will have EpicPlayer with greatest Quests completed and index (index.length - 1) with lowest
+		return placeHolderForLeaderboard;
 	}
 	
 	public static void addPlayer(EpicPlayer player){
