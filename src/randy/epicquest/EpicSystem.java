@@ -32,6 +32,7 @@ public class EpicSystem {
 	static boolean useHeroes = false;
 	static boolean useCitizens = false;
 	static boolean useBarAPI = false;
+	static boolean enabledAnnouncer = true;
 	
 	public static void setQuestLimit(int limit){ questLimit = limit; }
 	public static void setTime(int newTime){ time = newTime; startTime = newTime; }
@@ -46,6 +47,7 @@ public class EpicSystem {
 	public static void setUseHeroes(boolean use) { useHeroes = use; }
 	public static void setUseCitizens(boolean use) { useCitizens = use; }
 	public static void setUseBarAPI(boolean use){ useBarAPI = use; }
+	public static void setEnabledAnnouncer(boolean enabled) { enabledAnnouncer = enabled; }
 	
 	public static int getQuestLimit(){ return questLimit; }
 	public static int getTime() { return time; }
@@ -61,6 +63,7 @@ public class EpicSystem {
 	public static boolean useHeroes() { return useHeroes; }
 	public static boolean useCitizens() { return useCitizens; }
 	public static boolean useBarAPI(){ return useBarAPI; }
+	public static boolean enabledAnnouncer(){ return enabledAnnouncer; }
 	
 	public static void modifyTime(int newTime) { time += newTime; }
 	public static void modifySaveTime(int newSaveTime) { saveTime += newSaveTime; }
