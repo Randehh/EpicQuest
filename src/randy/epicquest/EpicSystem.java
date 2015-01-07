@@ -83,6 +83,10 @@ public class EpicSystem {
 		return null;
 	}
 	
+	public static List<EpicPlayer> getEpicPlayerList(){
+		return playerList;
+	}
+	
 	public static EpicPlayer getEpicPlayer(Player player){
 		
 		String name = player.getName();

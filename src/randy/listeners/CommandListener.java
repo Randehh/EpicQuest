@@ -532,6 +532,13 @@ public class CommandListener implements CommandExecutor {
 					/*
 					 * Leaderboards
 					 */
+					
+					if(args[0].equalsIgnoreCase("leaderboard")){
+						if(epicPlayer.hasPermission("epicquest.user.leaderboard")){
+							//TODO: Create self rearranging List so that index 0 will have EpicPlayer with greatest Quests completed and index (index.length - 1) with lowest
+						}
+					}					
+					
 					/*if(args[0].equalsIgnoreCase("leaderboard")){
 					if(epicPlayer.hasPermission("epicquest.user.leaderboard")){
 						Collections.sort(playerprogress.getQuestList(playername));
