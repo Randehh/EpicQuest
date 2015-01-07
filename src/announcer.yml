@@ -1,0 +1,8 @@
+Quest_Amount_Completed:
+- '20=<player> has completed 20 quests!'
+- '50=<player> has completed 50 quests, nice!'
+- '100=<player> has completed an astonishing 100 quests!'
+- '150=<player> has completed a grand amount of 150 quests!'
+- '200=<player> is legendary with 200 completed quests!'
+Quest_Completed:
+- '0=<player> has achieved the impossible and cleared every quest!'

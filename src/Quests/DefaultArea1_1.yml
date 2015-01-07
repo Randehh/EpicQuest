@@ -1,0 +1,26 @@
+Name: Restoring the Field
+Start_Info: The attack left our crops squashed. Could you help us plant some new seeds? I'm starting to get too old for this...
+End_Info: Thank you for taking this load off my back! Take this.
+Tasks:
+    '0':
+        Type: place
+        id: 'WHEAT'
+        Amount: 5
+Rewards:
+    Money: 2
+#    Item:
+#    - 'IRON_SWORD=1'
+#    - 'LEATHER_CHESTPLATE=1'
+#    Command:
+#    - 'your command here'
+#    Permission_Group: 'groupname'
+    HeroesExp: 10
+Reset_Time: -1
+Requirements:
+    QuestsCompleted:
+    - 'DefaultArea1_0'
+#    Worlds:
+#    - 'worldname'
+#    Items:
+#    - 'itemname=amount'
+#    Level: 0

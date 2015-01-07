@@ -1,0 +1,30 @@
+Name: Regaining Our Strength
+Start_Info: A lot of our equipment was damaged during the attack... Can you help us by creating some armor?
+End_Info: You can keep it after all, don't worry about it! We even got you a spare helmet!
+Tasks:
+    '0':
+        Type: kill
+        id: 'COW'
+        Amount: 5
+    '1':
+        Type: craft
+        id: 'LEATHER_PANTS'
+        Amount: 1
+Rewards:
+    Money: 1
+    Item:
+    - 'LEATHER_HELMET=1'
+#    - 'LEATHER_CHESTPLATE=1'
+#    Command:
+#    - 'your command here'
+#    Permission_Group: 'groupname'
+    HeroesExp: 10
+Reset_Time: -1
+Requirements:
+    QuestsCompleted:
+    - 'DefaultArea1_0'
+#    Worlds:
+#    - 'worldname'
+#    Items:
+#    - 'itemname=amount'
+#    Level: 0

@@ -1,0 +1,34 @@
+Name: Getting Your Hands Dirty
+Start_Info: Now that you have a workbench, go ahead and create yourself a pickaxe. Use it to gather some stone and coal, then come back to me!
+End_Info: Let's put it to good use in our next step.
+Tasks:
+    '0':
+        Type: craft
+        id: 'WOOD_PICKAXE'
+        Amount: 4
+    '1':
+        Type: destroy
+        id: 'STONE'
+        Amount: 10
+    '1':
+        Type: destroy
+        id: 'COAL'
+        Amount: 2
+Rewards:
+    Money: 5
+#    Item:
+#    - 'GRILLED_PORK=3'
+#    Command:
+#    - 'your command here'
+#    Permission_Group: 'groupname'
+    HeroesExp: 5
+Reset_Time: -1
+Requirements:
+    QuestsCompleted:
+    - 'DefaultArea0_2'
+    - 'DefaultArea0_1'
+#    Worlds:
+#    - 'worldname'
+#    Items:
+#    - 'itemname=amount'
+#    Level: 0

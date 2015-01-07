@@ -22,6 +22,9 @@ Use_Citizens: false
 #Use the Enderdragon's health bar as quest progression instead of text
 Use_Bar_API: false
 
+#Have cool announcements and stuff?
+Enable_Announcer: true
+
 #Don't touch this
 Time: 0
 Save_Time: 0

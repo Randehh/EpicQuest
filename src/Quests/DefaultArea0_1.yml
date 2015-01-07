@@ -1,0 +1,25 @@
+Name: Your First Kill
+Start_Info: You got your wooden sword ready that you just got? Great! It's time for you to make your first kill!
+End_Info: That wasn't too hard, was it? Talk to me when you're ready for more!
+Tasks:
+    '0':
+        Type: kill
+        id: 'pig'
+        Amount: 5
+Rewards:
+    Money: 1
+    Item:
+    - 'PORK=3'
+#    Command:
+#    - 'your command here'
+#    Permission_Group: 'groupname'
+    HeroesExp: 5
+Reset_Time: -1
+Requirements:
+    QuestsCompleted:
+    - 'DefaultArea0_0'
+#    Worlds:
+#    - 'worldname'
+#    Items:
+#    - 'itemname=amount'
+#    Level: 0

@@ -1,0 +1,33 @@
+Name: Things Are Heating Up
+Start_Info: Now that you have a workbench, go ahead and create yourself a pickaxe. Use it to gather some stone and coal, then come back to me!
+End_Info: Be sure to keep some food on you at all times! Are you ready to go to the next village?
+Tasks:
+    '0':
+        Type: craft
+        id: 'FURNACE'
+        Amount: 1
+    '1':
+        Type: place
+        id: 'FURNACE'
+        Amount: 1
+    '1':
+        Type: smelt
+        id: 'PORK'
+        Amount: 1
+Rewards:
+    Money: 5
+#    Item:
+#    - 'GRILLED_PORK=3'
+#    Command:
+#    - 'your command here'
+#    Permission_Group: 'groupname'
+    HeroesExp: 5
+Reset_Time: -1
+Requirements:
+    QuestsCompleted:
+    - 'DefaultArea0_3'
+#    Worlds:
+#    - 'worldname'
+#    Items:
+#    - 'itemname=amount'
+#    Level: 0

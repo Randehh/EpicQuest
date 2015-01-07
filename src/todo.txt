@@ -1,10 +1,9 @@
+Announcer
 Fix collect
 RPG Item
-BarAPI for progress tracking
 Phases
 Events
 RPG Item support
-Announcements
 Stats leaderboards
 
 Editing quests in-game
