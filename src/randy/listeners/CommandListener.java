@@ -91,7 +91,7 @@ public class CommandListener implements CommandExecutor {
 						if(epicPlayer.hasPermission("epicquest.user.help")){
 							if(args.length == 1 || (args.length == 2 && args[1] == ""+2)){
 
-								player.sendMessage(ChatColor.GOLD + "[=======  Help list (1/2) =======]");
+								player.sendMessage(ChatColor.GOLD + "[=======  Help list (1/3) =======]");
 								player.sendMessage(ChatColor.GOLD + "/q help <number> - Displays a help page.");
 								player.sendMessage(ChatColor.GOLD + "/q give <questnumber> - Gives you a quest, quest number optional from questlist.");
 								player.sendMessage(ChatColor.GOLD + "/q questbook <page> - Displays all the quests you have.");
@@ -104,7 +104,7 @@ public class CommandListener implements CommandExecutor {
 							}else if(args.length == 2){
 								if(Integer.parseInt(args[1]) == 2){
 
-									player.sendMessage(ChatColor.GOLD + "[=======  Help list (2/2) =======]");
+									player.sendMessage(ChatColor.GOLD + "[=======  Help list (2/3) =======]");
 									player.sendMessage(ChatColor.GOLD + "/q party - Shows who is in your party.");
 									player.sendMessage(ChatColor.GOLD + "/q party questbook - Gets the party questbook.");
 									player.sendMessage(ChatColor.GOLD + "/q party invite <playername> - Invites a player to your party.");
@@ -114,6 +114,10 @@ public class CommandListener implements CommandExecutor {
 									player.sendMessage(ChatColor.GOLD + "/q party chat - Toggle party chat.");
 									player.sendMessage(ChatColor.GOLD + "[=======================]");
 
+								}else if(Integer.parseInt(args[1]) == 3){
+									player.sendMessage(ChatColor.GOLD + "[=======  Help list (3/3) =======]");
+									player.sendMessage(ChatColor.GOLD + "/q leaderboard");
+									player.sendMessage(ChatColor.GOLD + "[=======================]");
 								}
 							}
 						}else{
