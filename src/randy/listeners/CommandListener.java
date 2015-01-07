@@ -535,18 +535,35 @@ public class CommandListener implements CommandExecutor {
 					
 					if(args[0].equalsIgnoreCase("leaderboard")){
 						if(epicPlayer.hasPermission("epicquest.user.leaderboard")){
-							//TODO: Create self rearranging List so that index 0 will have EpicPlayer with greatest Quests completed and index (index.length - 1) with lowest
+							String amount;
+							Object[] top3 = null;
+							List<Object> leaderboard = EpicSystem.getLeaderboard();
+							int position = 0;
+							
+							if(leaderboard.size() >= 3){ amount = "3"; }else{ amount = String.valueOf(leaderboard.size()); } 
+							if(amount == "3"){
+								top3 = new Object[]{leaderboard.get(0), leaderboard.get(1), leaderboard.get(2)};
+							}else if(amount == "2"){
+								top3 = new Object[]{leaderboard.get(0), leaderboard.get(1), "-----------"};
+							}else{
+								top3 = new Object[]{leaderboard.get(0), "-----------", "-----------"};
+							}
+							
+							for(int i=0;i<leaderboard.size();i++){
+								EpicPlayer lePlayer = (EpicPlayer)leaderboard.get(i);
+								
+								if(lePlayer.getPlayerName() == player.getDisplayName()) position = i;
+							}
+							
+							player.sendMessage(ChatColor.GOLD + "[=======  Leaderboards (Top " + amount +"=======]");
+							player.sendMessage(ChatColor.GOLD + "     1) " + top3[0]);
+							player.sendMessage(ChatColor.GOLD + "     2) " + top3[1]);
+							player.sendMessage(ChatColor.GOLD + "     3) " + top3[2]);
+							player.sendMessage(ChatColor.GOLD + "[===================================]");
+							player.sendMessage(ChatColor.GOLD + "");
+							player.sendMessage(ChatColor.GOLD + "Your current position is " + String.valueOf(position) + ".");
 						}
 					}					
-					
-					/*if(args[0].equalsIgnoreCase("leaderboard")){
-					if(epicPlayer.hasPermission("epicquest.user.leaderboard")){
-						Collections.sort(playerprogress.getQuestList(playername));
-					}else{
-						player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
-					}
-					return true;
-				}*/
 
 					/*
 					 * Admin commmands
