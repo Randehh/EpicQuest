@@ -33,7 +33,7 @@ public class EpicPlayer {
 	int statTaskCompleted;
 	EpicParty currentParty;
 	public boolean partyChat = false;
-	EpicPlayer hasPartyInvitation = null;
+	public EpicPlayer hasPartyInvitation = null;
 	HashMap<TaskTypes, List<EpicQuestTask>> questTasks = new HashMap<TaskTypes, List<EpicQuestTask>>();
 	
 	public EpicPlayer(String playerName, List<EpicQuest> questList, List<Integer> questCompleted, int questDailyLeft, List<Integer> questTimer, float statMoneyEarned, int statQuestCompleted, int statQuestDropped, int statQuestGet, int statTaskCompleted){
