@@ -1,0 +1,26 @@
+Name: Village in Trouble
+Start_Info: Oh thank god you've arrived! We're in dire need of your help, the village is in trouble!
+End_Info: Thank you so much! Please, take this as a token of my gratitude.
+Tasks:
+    '0':
+        Type: kill
+        id: 'ZOMBIE'
+        Amount: 6
+Rewards:
+    Money: 10
+    Item:
+    - 'IRON_SWORD=1'
+    - 'LEATHER_CHESTPLATE=1'
+#    Command:
+#    - 'your command here'
+#    Permission_Group: 'groupname'
+    HeroesExp: 10
+Reset_Time: -1
+Requirements:
+    QuestsCompleted:
+    - 'DefaultArea0_4'
+#    Worlds:
+#    - 'worldname'
+#    Items:
+#    - 'itemname=amount'
+#    Level: 0

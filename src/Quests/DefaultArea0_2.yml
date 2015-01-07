@@ -1,0 +1,33 @@
+Name: Crafting a Crafting Table
+Start_Info: You're going to need a crafting table if you want to craft advanced items. Get some logs, create planks then turn those into a table!
+End_Info: Great, now let's get to creating the table!
+Tasks:
+    '0':
+        Type: destroy
+        id: 'LOG'
+        Amount: 4
+    '1':
+        Type: craft
+        id: 'WOOD'
+        Amount: 4
+    '2':
+        Type: craft
+        id: 'WORKBENCH'
+        Amount: 1
+Rewards:
+    Money: 5
+#    Item:
+#    - 'GRILLED_PORK=3'
+#    Command:
+#    - 'your command here'
+#    Permission_Group: 'groupname'
+    HeroesExp: 5
+Reset_Time: -1
+Requirements:
+    QuestsCompleted:
+    - 'DefaultArea0_0'
+#    Worlds:
+#    - 'worldname'
+#    Items:
+#    - 'itemname=amount'
+#    Level: 0

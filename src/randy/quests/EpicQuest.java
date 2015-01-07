@@ -16,6 +16,7 @@ import org.bukkit.inventory.PlayerInventory;
 
 import com.herocraftonline.heroes.characters.Hero;
 
+import randy.epicquest.EpicAnnouncer;
 import randy.epicquest.EpicPlayer;
 import randy.epicquest.EpicSystem;
 import randy.epicquest.EpicMain;
@@ -142,8 +143,9 @@ public class EpicQuest {
 		//Send ending text
 		player.sendMessage(""+ChatColor.GRAY + ChatColor.ITALIC + getQuestEnd());
 		
-		if(!epicPlayer.getQuestsCompleted().contains(questNumber))
-			epicPlayer.getQuestsCompleted().add(questNumber);
+		EpicAnnouncer.SendQuestCompletedText(epicPlayer, this.questNumber);
+		
+		if(!epicPlayer.getQuestsCompleted().contains(questNumber)) epicPlayer.getQuestsCompleted().add(questNumber);
 		epicPlayer.getQuestList().remove(this);
 	}
 	

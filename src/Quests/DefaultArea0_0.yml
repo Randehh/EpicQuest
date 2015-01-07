@@ -1,0 +1,25 @@
+Name: Welcome!
+Start_Info: Welcome to this quest introduction. Please talk to the guide in front of you to start your journey!
+End_Info: I shall introduce you to this world!
+Tasks:
+    '0':
+        Type: talktovillager
+        id: 'Guide'
+        Amount: 1
+Rewards:
+    Money: 1
+    Item:
+    - 'WOOD_SWORD=1'
+#    Command:
+#    - 'your command here'
+#    Permission_Group: 'groupname'
+    HeroesExp: 2
+Reset_Time: -1
+Requirements:
+#    QuestsCompleted:
+#    - 'quest'
+#    Worlds:
+#    - 'worldname'
+#    Items:
+#    - 'itemname=amount'
+#    Level: 0

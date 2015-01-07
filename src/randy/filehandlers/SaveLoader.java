@@ -15,6 +15,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
+import randy.epicquest.EpicAnnouncer;
 import randy.epicquest.EpicPlayer;
 import randy.epicquest.EpicSign;
 import randy.epicquest.EpicSystem;
@@ -43,6 +44,9 @@ public class SaveLoader {
 
 	static File blockfile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "block.yml");
 	static FileConfiguration block = YamlConfiguration.loadConfiguration(blockfile);
+	
+	static File announcerfile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "announcer.yml");
+	static FileConfiguration announcer = YamlConfiguration.loadConfiguration(announcerfile);
 
 	/*
 	 * Save players
@@ -304,7 +308,8 @@ public class SaveLoader {
 			
 			System.out.print("[EpicQuest]: Succesfully loaded " + signList.size() + " quest signs.");
 		}
-
+		
+		//Blocked list
 		ArrayList<Vector> blocklist = new ArrayList<Vector>();
 		if(block.contains("Blocked")){
 			Object[] blockarray = block.getConfigurationSection("Blocked").getKeys(false).toArray();
@@ -317,6 +322,15 @@ public class SaveLoader {
 		}
 		EpicSystem.setBlockList(blocklist);
 		
+		//Announcer
+		for(String line : announcer.getStringList("Quest_Amount_Completed")){
+			String[] split = line.split("=");
+			EpicAnnouncer.questAmountCompletedText.put(Integer.parseInt(split[0]), split[1]);
+		}
+		for(String line : announcer.getStringList("Quest_Completed")){
+			String[] split = line.split("=");
+			EpicAnnouncer.questCompletedText.put(Integer.parseInt(split[0]), split[1]);
+		}
 		
 		//Villagers
 		Bukkit.getScheduler().scheduleSyncDelayedTask(EpicMain.getInstance(), new Runnable(){

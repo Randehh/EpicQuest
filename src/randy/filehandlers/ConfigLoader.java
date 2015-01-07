@@ -86,6 +86,13 @@ public class ConfigLoader {
 			EpicSystem.setUseBarAPI(configuration.getBoolean("Use_Bar_API"));
 		}
 		
+		if(!configuration.contains("Enable_Announcer")){
+			configuration.set("Enable_Announcer", false);
+			EpicSystem.setEnabledAnnouncer(false);
+		}else{
+			EpicSystem.setEnabledAnnouncer(configuration.getBoolean("Enable_Announcer"));
+		}
+		
 		try {
 			configuration.save(configfile);
 		} catch (IOException e) {
