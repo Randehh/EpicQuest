@@ -86,7 +86,7 @@ public class EpicQuest {
 		//Generate money reward
 		Economy economy = EpicMain.economy;
 		int money = getQuestRewardMoney();
-		if(economy != null && economy.isEnabled()){
+		if(EpicSystem.enabledMoneyRewards()){
 			if(!economy.hasAccount(playerName)){ economy.createPlayerAccount(playerName); }
 			
 			//Add money if there's money to add

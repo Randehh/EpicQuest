@@ -108,7 +108,8 @@ public class OpenBookListener implements Listener{
 		statistics.append(ChatColor.RED + "Quests get: " + epicPlayer.getStatQuestGet() + "\n");
 		statistics.append(ChatColor.RED + "Quests finished: " + epicPlayer.getStatQuestCompleted() + "\n");
 		statistics.append(ChatColor.RED + "Quests dropped: " + epicPlayer.getStatQuestDropped() + "\n");
-		statistics.append(ChatColor.RED + EpicMain.economy.currencyNamePlural() + " earned: " + (int)epicPlayer.getStatMoneyEarned() + "\n");
+		if(EpicSystem.enabledMoneyRewards())
+			statistics.append(ChatColor.RED + EpicMain.economy.currencyNamePlural() + " earned: " + (int)epicPlayer.getStatMoneyEarned() + "\n");
 		statistics.append(ChatColor.RED + "Tasks completed: " + epicPlayer.getStatTaskCompleted());
 		book.addPage(statistics.toString());
 		

@@ -67,6 +67,6 @@ public class QuestLoader {
     			EpicQuestDatabase.setQuestItemsRequired(questTag, itemRequirementMaterials);
         	}
         }
-		System.out.print("EpicQuest is done loading " + fileNames.length + " quests.");
+		System.out.print("[EpicQuest] Done loading " + fileNames.length + " quests.");
 	}
 }

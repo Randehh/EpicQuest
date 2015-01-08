@@ -92,7 +92,7 @@ public class EpicMain extends JavaPlugin{
 		
 		timer.cancel();
 		
-		System.out.print(pluginname + " succesfully disabled.");
+		System.out.print("[" + pluginname + "] succesfully disabled.");
 	}
 
 	@SuppressWarnings("deprecation")
@@ -185,9 +185,12 @@ public class EpicMain extends JavaPlugin{
 
 	private boolean setupEconomy(){
 		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-		if (economyProvider != null) {
+		if (economyProvider != null && economyProvider.getProvider().isEnabled()) {
 			economy = economyProvider.getProvider();
 		}
+		
+		//Economy not used or found
+		EpicSystem.setEnabledMoneyRewards(false);
 		return (economy != null);
 	}
 
