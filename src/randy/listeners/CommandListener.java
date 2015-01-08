@@ -320,7 +320,7 @@ public class CommandListener implements CommandExecutor {
 									int quest = Integer.parseInt(args[1]);
 
 									//Get all available quests
-									List<Integer> availableQuests = epicPlayer.getObtainableQuests();
+									List<String> availableQuests = epicPlayer.getObtainableQuests();
 
 									if(quest <= availableQuests.size()){
 
@@ -464,7 +464,7 @@ public class CommandListener implements CommandExecutor {
 							if(epicPlayer.hasPermission("epicquest.user.questlist")){
 
 								//Get all available quests
-								List<Integer> availableQuests = epicPlayer.getObtainableQuests();
+								List<String> availableQuests = epicPlayer.getObtainableQuests();
 
 								//Seperate the pages
 								int maxpages = 0;
@@ -604,7 +604,7 @@ public class CommandListener implements CommandExecutor {
 									return true;
 								}
 								
-								int quest = Integer.parseInt(args[args.length - 1]);
+								String quest = args[args.length - 1];
 								
 								if(EpicSystem.useCitizens()){
 									PlayerInteractListener.createNewQuestEntity = player;
@@ -675,10 +675,10 @@ public class CommandListener implements CommandExecutor {
 								if(args[2].equalsIgnoreCase("random")){
 									Location loc = player.getTargetBlock(null, 25).getLocation();
 									loc.setWorld(null);
-									EpicSystem.getSignList().add(new EpicSign(-1, loc));
+									EpicSystem.getSignList().add(new EpicSign("EpicQuest_Internal_Random", loc));
 									player.sendMessage("Questblock created that gives random quests.");
 								} else {
-									int quest = Integer.parseInt(args[2]);
+									String quest = args[2];
 									Location loc = player.getTargetBlock(null, 25).getLocation();
 									loc.setWorld(null);
 									EpicSystem.getSignList().add(new EpicSign(quest, loc));
@@ -687,7 +687,7 @@ public class CommandListener implements CommandExecutor {
 							} if(args[1].equalsIgnoreCase("turnin")){
 								Location loc = player.getTargetBlock(null, 25).getLocation();
 								loc.setWorld(null);
-								EpicSystem.getSignList().add(new EpicSign(-2, loc));
+								EpicSystem.getSignList().add(new EpicSign("EpicQuest_Internal_Turnin", loc));
 								player.sendMessage("Questblock created that turns in quests.");
 							}
 						}else{

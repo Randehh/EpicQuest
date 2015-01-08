@@ -25,7 +25,7 @@ import randy.quests.EpicQuest;
 public class PlayerInteractListener implements Listener{
 	
 	public static Player createNewQuestEntity = null;
-	public static int createNewQuestEntityQuest = -1;
+	public static String createNewQuestEntityQuest = null;
 
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event){
@@ -46,13 +46,13 @@ public class PlayerInteractListener implements Listener{
 				blockLoc.setWorld(null);
 
 				if(signLoc.equals(blockLoc)){
-					if(sign.getQuest() == -1){
+					if(sign.getQuest() == "EpicQuest_Internal_Random"){
 						if(epicPlayer.canGetQuest()){
 							epicPlayer.addQuestRandom();
 						}else{
 							player.sendMessage(ChatColor.RED + "There are no more quests available.");
 						}
-					} else if(sign.getQuest() == -2){
+					} else if(sign.getQuest() == "EpicQuest_Internal_Turnin"){
 						if(!epicPlayer.getCompleteableQuest().isEmpty()){
 							epicPlayer.completeAllQuests();
 						}else{

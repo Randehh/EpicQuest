@@ -1,95 +1,72 @@
 package randy.filehandlers;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 
+import randy.engine.Utils;
 import randy.quests.EpicQuestDatabase;
 
 public class QuestLoader {
-	
-	/*
-	 * Get file(s)
-	 */	
-	static File questfile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "quests.yml");
-	static FileConfiguration quests = YamlConfiguration.loadConfiguration(questfile);
 	
 	/*
 	 * Load quests
 	 */
 	public static void loadQuests(){
 		
-		//Load the file again
-		try {
-			quests.load(questfile);
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		} catch (InvalidConfigurationException e1) {
-			e1.printStackTrace();
-		}
-		
-		Object[] questlist = QuestLoader.quests.getKeys(false).toArray();
-		for(int i = 0; i < questlist.length; i++){
-			
-			//Get general info
-			EpicQuestDatabase.setQuestName(i, quests.getString("q"+i+".Name"));
-			EpicQuestDatabase.setQuestEndInfo(i, quests.getString("q"+i+".End_Info"));
-			EpicQuestDatabase.setQuestStartInfo(i, quests.getString("q"+i+".Start_Info"));
-			EpicQuestDatabase.setQuestResetTime(i, quests.getInt("q"+i+".Reset_Time"));
-			EpicQuestDatabase.setQuestLocked(i, quests.getString("q"+i+".Requirements.QuestsCompleted"));
-			EpicQuestDatabase.setQuestLevel(i, quests.getInt("q"+i+".Requirements.Level"));
-			
-			//Get reward info
-			EpicQuestDatabase.setRewardMoney(i, quests.getInt("q"+i+".Rewards.Money"));
-			
-			if(quests.getString("q"+i+".Rewards.Item.id") != null){
-				String[] idString = quests.getString("q"+i+".Rewards.Item.id").split(",");
-				List<String> idList = new ArrayList<String>();
-				for(int e = 0; e < idString.length; e++){ idList.add(idString[e]); }
-				EpicQuestDatabase.setRewardID(i, idList);
-			}else{
-				List<String> idList = new ArrayList<String>();
-				idList.add("");
-				EpicQuestDatabase.setRewardID(i, idList);
-			}
-			
-			EpicQuestDatabase.setRewardHeroesExp(i, quests.getInt("q"+i+".Rewards.HeroesExp", 0));
-			
-			String[] amountString = quests.getString("q"+i+".Rewards.Item.Amount").split(",");
-			List<Integer> amountList = new ArrayList<Integer>();
-			for(int e = 0; e < amountString.length; e++){ amountList.add(Integer.parseInt(amountString[e])); }
-			EpicQuestDatabase.setRewardAmount(i, amountList);
-			EpicQuestDatabase.setRewardCommand(i, quests.getString("q"+i+".Rewards.Command"));
-			
-			//Get tasks info
-			int taskamount = quests.getConfigurationSection("q"+i+".Tasks").getKeys(false).size();
-			for(int e = 0; e < taskamount; e++){
-				EpicQuestDatabase.setTaskType(i, e, quests.getString("q"+i+".Tasks."+e+".Type"));
-				EpicQuestDatabase.setTaskID(i, e, quests.getString("q"+i+".Tasks."+e+".id"));
-				EpicQuestDatabase.setTaskAmount(i, e, quests.getInt("q"+i+".Tasks."+e+".Amount"));
-			}
-			
-			//Get worlds
-			ArrayList<String> worldlist = new ArrayList<String>();
-			String[] worlds = quests.getString("q"+i+".Requirements.Worlds").split(", ");
-			for(int d = 0; d < worlds.length; d++){
-				worldlist.add(worlds[d]);
-			}
-			EpicQuestDatabase.setQuestWorlds(i, worldlist);
-			
-			//Get item requirement
-			EpicQuestDatabase.setQuestItemRequiredID(i, quests.getString("q"+i+".Requirements.Item.id"));
-			EpicQuestDatabase.setQuestItemRequiredAmount(i, quests.getString("q"+i+".Requirements.Item.Amount"));
-		}
-		
-		System.out.print("EpicQuest is done loading " + questlist.length + " quests.");
+		File folder = new File("plugins" + File.separator + "EpicQuest" + File.separator + "Quests");
+        String[] fileNames = folder.list();
+        if(fileNames.length > 0){
+        	for(String questTag : fileNames){
+        		
+        		questTag = questTag.replace(".yml", "");
+        		File questFile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "Quests" + File.separator + questTag + ".yml");
+        		YamlConfiguration quest = YamlConfiguration.loadConfiguration(questFile);
+        		
+        		EpicQuestDatabase.AddQuestTag(questTag);
+        		EpicQuestDatabase.setQuestName(questTag, quest.getString("Name"));
+    			EpicQuestDatabase.setQuestEndInfo(questTag, quest.getString("End_Info"));
+    			EpicQuestDatabase.setQuestStartInfo(questTag, quest.getString("Start_Info"));
+    			EpicQuestDatabase.setQuestResetTime(questTag, quest.getInt("Reset_Time"));
+    			EpicQuestDatabase.setQuestLocked(questTag, quest.getStringList("Requirements.QuestsCompleted"));
+    			EpicQuestDatabase.setQuestLevel(questTag, quest.getInt("Requirements.Level"));
+    			
+    			//Get reward info
+    			EpicQuestDatabase.setRewardMoney(questTag, quest.getInt("Rewards.Money"));
+    			
+    			//'WOOD_SWORD=1'
+    			List<String> itemRewardList = quest.getStringList("Rewards.Item");
+    			List<ItemStack> itemRewards = new ArrayList<ItemStack>();
+    			for(String item : itemRewardList){
+    				itemRewards.add(Utils.StringToItemStack(item, "="));
+    			}
+    			EpicQuestDatabase.setRewardItems(questTag, itemRewards);
+    			
+    			EpicQuestDatabase.setRewardCommand(questTag, quest.getStringList("Rewards.Command"));
+    			EpicQuestDatabase.setRewardHeroesExp(questTag, quest.getInt("Rewards.HeroesExp", 0));
+    			
+    			//Get tasks info
+    			int taskamount = quest.getConfigurationSection("Tasks").getKeys(false).size();
+    			for(int e = 0; e < taskamount; e++){
+    				EpicQuestDatabase.setTaskType(questTag, e, quest.getString("Tasks."+e+".Type"));
+    				EpicQuestDatabase.setTaskID(questTag, e, quest.getString("Tasks."+e+".id"));
+    				EpicQuestDatabase.setTaskAmount(questTag, e, quest.getInt("Tasks."+e+".Amount"));
+    			}
+    			
+    			EpicQuestDatabase.setQuestWorlds(questTag, quest.getStringList("Requirements.Worlds"));
+    			
+    			//Get item requirement
+    			List<String> itemRequirementList = quest.getStringList("Requirements.Items");
+    			List<ItemStack> itemRequirementMaterials = new ArrayList<ItemStack>();
+    			for(String item : itemRequirementList){
+    				itemRequirementMaterials.add(Utils.StringToItemStack(item, "="));
+    			}
+    			EpicQuestDatabase.setQuestItemsRequired(questTag, itemRequirementMaterials);
+        	}
+        }
+		System.out.print("EpicQuest is done loading " + fileNames.length + " quests.");
 	}
 }

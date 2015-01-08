@@ -255,9 +255,9 @@ public class EpicMain extends JavaPlugin{
 					List<EpicPlayer> playerList = EpicSystem.getPlayerList();
 					for(int i = 0; i < playerList.size(); i ++){
 						EpicPlayer epicPlayer = playerList.get(i);
-						List<Integer> questList = epicPlayer.getQuestTimerList();
-						for(int e = 0; e < questList.size(); e++){
-							epicPlayer.checkTimer(questList.get(e), true);
+						HashMap<String, Integer> questMap = epicPlayer.getQuestTimerMap();
+						for(String quest : questMap.keySet()){
+							epicPlayer.checkTimer(quest, true);
 						}
 
 						epicPlayer.setQuestDailyLeft(EpicSystem.getDailyLimit());

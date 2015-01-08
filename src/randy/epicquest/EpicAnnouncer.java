@@ -8,10 +8,10 @@ import org.bukkit.Bukkit;
 
 public class EpicAnnouncer {
 	
-	public static HashMap<Integer, String> questAmountCompletedText = new HashMap<Integer, String>();
-	public static HashMap<Integer, String> questCompletedText = new HashMap<Integer, String>();
+	public static HashMap<String, String> questAmountCompletedText = new HashMap<String, String>();
+	public static HashMap<String, String> questCompletedText = new HashMap<String, String>();
 	
-	public static void SendQuestCompletedText(EpicPlayer player, int quest){
+	public static void SendQuestCompletedText(EpicPlayer player, String quest){
 		if(questAmountCompletedText.containsKey(quest)){
 			Bukkit.broadcastMessage(ChatColor.GOLD + questAmountCompletedText.get(quest).replace("<player>", player.getPlayerName()));
 		}

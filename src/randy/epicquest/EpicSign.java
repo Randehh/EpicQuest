@@ -4,15 +4,15 @@ import org.bukkit.Location;
 
 public class EpicSign {
 	
-	int questNo;
+	String questTag;
 	Location location;
 	
-	public EpicSign(int questNo, Location loc){
-		this.questNo = questNo;
+	public EpicSign(String questTag, Location loc){
+		this.questTag = questTag;
 		this.location = loc;
 	}
 	
-	public int getQuest(){ return questNo; }
+	public String getQuest(){ return questTag; }
 	public Location getLocation() { return location; }
 
 }
