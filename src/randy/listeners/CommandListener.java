@@ -693,6 +693,12 @@ public class CommandListener implements CommandExecutor {
 						}
 						return true;
 					}
+				}else{
+					player.sendMessage(ChatColor.GOLD + "[-------Welcome to EpicQuest!-------]");
+					player.sendMessage(ChatColor.GREEN + "EpicQuest is developed by Impossible24 and bigbeno37");
+					player.sendMessage(ChatColor.GREEN + "This version is currently " + ChatColor.YELLOW + String.valueOf(EpicSystem.getVersion()));
+					player.sendMessage("");
+					player.sendMessage(ChatColor.GREEN + "For help with how to use EpicQuest, type in /q help");
 				}
 			}
 		}
