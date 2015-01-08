@@ -13,11 +13,11 @@ public class EpicAnnouncer {
 	
 	public static void SendQuestCompletedText(EpicPlayer player, String quest){
 		if(questAmountCompletedText.containsKey(quest)){
-			Bukkit.broadcastMessage(ChatColor.GOLD + questAmountCompletedText.get(quest).replace("<player>", player.getPlayerName()));
+			Bukkit.broadcastMessage(ChatColor.GOLD + questAmountCompletedText.get(quest).replace("<player>", player.getPlayer().getName()));
 		}
 		
 		if(questCompletedText.containsKey(quest)){
-			Bukkit.broadcastMessage(ChatColor.GOLD + questCompletedText.get(quest).replace("<player>", player.getPlayerName()));
+			Bukkit.broadcastMessage(ChatColor.GOLD + questCompletedText.get(quest).replace("<player>", player.getPlayer().getName()));
 		}
 	}
 }

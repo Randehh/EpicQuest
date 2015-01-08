@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -21,7 +22,7 @@ import randy.quests.EpicQuestTask.TaskTypes;
 
 public class EpicPlayer {
 	
-	String playerName;
+	UUID playerID;
 	List<EpicQuest> questList;
 	List<String> questCompleted;
 	int questDailyLeft;
@@ -36,9 +37,9 @@ public class EpicPlayer {
 	public EpicPlayer hasPartyInvitation = null;
 	HashMap<TaskTypes, List<EpicQuestTask>> questTasks = new HashMap<TaskTypes, List<EpicQuestTask>>();
 	
-	public EpicPlayer(String playerName, List<EpicQuest> questList, List<String> questCompleted, int questDailyLeft, HashMap<String, Integer> questTimer, float statMoneyEarned, int statQuestCompleted, int statQuestDropped, int statQuestGet, int statTaskCompleted){
+	public EpicPlayer(UUID playerID, List<EpicQuest> questList, List<String> questCompleted, int questDailyLeft, HashMap<String, Integer> questTimer, float statMoneyEarned, int statQuestCompleted, int statQuestDropped, int statQuestGet, int statTaskCompleted){
 		
-		this.playerName = playerName;
+		this.playerID = playerID;
 		this.questList = questList;
 		this.questCompleted = questCompleted;
 		this.questDailyLeft = questDailyLeft;
@@ -51,9 +52,9 @@ public class EpicPlayer {
 		
 	}
 	
-	public EpicPlayer(String playerName){
+	public EpicPlayer(UUID playerID){
 		
-		this.playerName = playerName;
+		this.playerID = playerID;
 		this.questList = new ArrayList<EpicQuest>();
 		this.questCompleted = new ArrayList<String>();
 		this.questDailyLeft = EpicSystem.getDailyLimit();
@@ -78,13 +79,13 @@ public class EpicPlayer {
 		@SuppressWarnings("deprecation")
 		Player[] playerList = Bukkit.getOnlinePlayers();
 		for(int i = 0; i < playerList.length; i++){
-			if(playerList[i].getName().equals(playerName)){
+			if(playerList[i].getUniqueId().equals(playerID)){
 				return playerList[i];
 			}
 		}
 		return null;
 	}
-	public String getPlayerName() { return playerName; }
+	public UUID getPlayerID() { return playerID; }
 	
 	public EpicParty getParty(){
 		return currentParty;

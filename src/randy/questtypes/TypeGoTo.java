@@ -20,7 +20,7 @@ public class TypeGoTo extends TypeBase implements Listener {
 		
 		//Get player and questlist
 		Player player = event.getPlayer();
-		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getName());
+		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getUniqueId());
 		List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.GO_TO);
 		
 		for(EpicQuestTask task : taskList){

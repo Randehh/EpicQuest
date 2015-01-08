@@ -162,7 +162,7 @@ public class EpicMain extends JavaPlugin{
 		Player[] players = getServer().getOnlinePlayers();
 		if(players.length > 0){
 			for(int i = 0; i < players.length; i++){
-				SaveLoader.loadPlayer(players[i].getName());
+				SaveLoader.loadPlayer(players[i].getUniqueId());
 			}
 		}
 
@@ -281,10 +281,10 @@ public class EpicMain extends JavaPlugin{
 						invitationTimer.put(tempPlayer, invitationTimer.get(tempPlayer) - 1);
 
 						if(invitationTimer.get(tempPlayer) == 0){
-							tempPlayer.hasPartyInvitation.getPlayer().sendMessage(""+ChatColor.ITALIC + ChatColor.RED + tempPlayer.getPlayerName() + " declined your party invitation.");
+							tempPlayer.hasPartyInvitation.getPlayer().sendMessage(""+ChatColor.ITALIC + ChatColor.RED + tempPlayer.getPlayer().getName() + " declined your party invitation.");
 							tempPlayer.hasPartyInvitation = null;
 
-							tempPlayer.getPlayer().sendMessage(""+ChatColor.ITALIC + ChatColor.RED + "You declined " + tempPlayer.hasPartyInvitation.getPlayerName() + "'s party invitation.");
+							tempPlayer.getPlayer().sendMessage(""+ChatColor.ITALIC + ChatColor.RED + "You declined " + tempPlayer.hasPartyInvitation.getPlayer().getName() + "'s party invitation.");
 							invitationTimer.remove(tempPlayer);
 						}
 					}

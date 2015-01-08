@@ -25,8 +25,7 @@ public class OpenBookListener implements Listener{
 		
 		//Get player and the action
 		Player player = event.getPlayer();
-		String playername = player.getName();
-		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(playername);	
+		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getUniqueId());	
 		ItemStack inHand = player.getInventory().getItem(event.getNewSlot());
 
 		if(inHand != null && inHand.getType() == Material.WRITTEN_BOOK){

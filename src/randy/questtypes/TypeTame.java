@@ -18,7 +18,7 @@ public class TypeTame extends TypeBase implements Listener{
 	public void onEntityTame(EntityTameEvent event){
 
 		Player player = (Player)event.getOwner();
-		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getName());
+		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getUniqueId());
 		List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.TAME_MOB);
 		
 		for(EpicQuestTask task : taskList){

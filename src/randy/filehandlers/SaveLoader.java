@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -172,10 +173,10 @@ public class SaveLoader {
 				
 				//Save player stuff
 				for(EpicPlayer epicPlayer : EpicSystem.getPlayerList()){
-					save.set("Players."+epicPlayer.getPlayerName()+".CurrentQuest", qEntity.currentQuest.get(epicPlayer));
+					save.set("Players."+epicPlayer.getPlayerID().toString()+".CurrentQuest", qEntity.currentQuest.get(epicPlayer));
 					QuestPhase phase = qEntity.questPhases.get(epicPlayer);
 					if(phase == null) phase = QuestPhase.INTRO_TALK;
-					save.set("Players."+epicPlayer.getPlayerName()+".QuestPhase", phase.toString());
+					save.set("Players."+epicPlayer.getPlayerID().toString()+".QuestPhase", phase.toString());
 				}
 				
 				save.save(savefile);
@@ -186,8 +187,8 @@ public class SaveLoader {
 	}
 
 	public static void savePlayer(EpicPlayer epicPlayer){		
-		String playername = epicPlayer.getPlayerName();
-		File savefile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "Players" + File.separator + playername + ".yml");
+		UUID id = epicPlayer.getPlayerID();
+		File savefile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "Players" + File.separator + id.toString() + ".yml");
 
 		//Reset the file by recreating the file
 		try {
@@ -356,26 +357,26 @@ public class SaveLoader {
 				
 				//Set player stuff
 				Object[] players = save.getConfigurationSection("Players").getKeys(false).toArray();
-				for(Object playerObj : players){
-					String player = (String)playerObj;
-					EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player);
-					qEntity.currentQuest.put(epicPlayer, save.getString("Players."+player+".CurrentQuest"));
-					qEntity.questPhases.put(epicPlayer, QuestPhase.valueOf(save.getString("Players."+player+".QuestPhase")));
+				for(Object idObj : players){
+					UUID id = UUID.fromString((String)idObj);
+					EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(id);
+					qEntity.currentQuest.put(epicPlayer, save.getString("Players."+id.toString()+".CurrentQuest"));
+					qEntity.questPhases.put(epicPlayer, QuestPhase.valueOf(save.getString("Players."+id.toString()+".QuestPhase")));
 				}
         	}
         }
 	}
 
-	public static void loadPlayer(String playername){
+	public static void loadPlayer(UUID id){
 		
 		//System.out.print("Loading player - " + playername);
 		EpicPlayer epicPlayer = null;
 
 		//Get the file
-		File savefile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "Players" + File.separator + playername + ".yml");
+		File savefile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "Players" + File.separator + id.toString() + ".yml");
 		if(savefile.exists()){
 			
-			epicPlayer = new EpicPlayer(playername);
+			epicPlayer = new EpicPlayer(id);
 
 			//Make the file editable
 			FileConfiguration save = YamlConfiguration.loadConfiguration(savefile);
@@ -424,10 +425,10 @@ public class SaveLoader {
 			
 			EpicSystem.addPlayer(epicPlayer);
 		}else{
-			EpicSystem.addFirstStart(playername);
+			EpicSystem.addFirstStart(id);
 		}
 		
-		EpicPlayer p = EpicSystem.getEpicPlayer(playername);
+		EpicPlayer p = EpicSystem.getEpicPlayer(id);
 		if(EpicSystem.useBook()) p.giveQuestBook();
 	}
 }

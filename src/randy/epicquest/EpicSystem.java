@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -16,6 +17,7 @@ public class EpicSystem {
 	
 	public static Random random = new Random();
 	
+	public static HashMap<UUID, Player> idMap = new HashMap<UUID, Player>();
 	private static List<EpicPlayer> playerList = new ArrayList<EpicPlayer>();
 	private static List<Object> placeHolderForLeaderboard = new ArrayList<Object>();
 	public static List<EpicSign> signList = new ArrayList<EpicSign>();
@@ -69,16 +71,16 @@ public class EpicSystem {
 	public static void modifyTime(int newTime) { time += newTime; }
 	public static void modifySaveTime(int newSaveTime) { saveTime += newSaveTime; }
 	
-	public static EpicPlayer getEpicPlayer(String name){
+	public static EpicPlayer getEpicPlayer(UUID id){
 		
 		//Search list for the player
 		for(int i = 0; i < playerList.size(); i++){
-			if(playerList.get(i).getPlayerName().equals(name)){ return playerList.get(i); }
+			if(playerList.get(i).getPlayerID().equals(id)){ return playerList.get(i); }
 		}
 		
 		//Player is not yet loaded or doesn't exist
-		SaveLoader.loadPlayer(name);
-		if(playerList.get(playerList.size() - 1).getPlayerName().equals(name)){ return playerList.get(playerList.size() - 1); }
+		SaveLoader.loadPlayer(id);
+		if(playerList.get(playerList.size() - 1).getPlayerID().equals(id)){ return playerList.get(playerList.size() - 1); }
 		
 		//Player doesn't exist
 		return null;
@@ -89,10 +91,11 @@ public class EpicSystem {
 	}
 	
 	public static EpicPlayer getEpicPlayer(Player player){
-		
-		String name = player.getName();
-		
-		return getEpicPlayer(name);
+		return getEpicPlayer(player.getUniqueId());
+	}
+	
+	public static Player getPlayerFromID(UUID id){
+		return idMap.get(id);
 	}
 	
 	public static List<Object> getLeaderboard(){
@@ -104,12 +107,12 @@ public class EpicSystem {
 		if(!playerList.contains(player)) playerList.add(player);
 	}
 	
-	public static void addFirstStart(String playerName){
+	public static void addFirstStart(UUID id){
 		
-		File savefile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "Players" + File.separator + playerName + ".yml");
+		File savefile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "Players" + File.separator + id.toString() + ".yml");
 
 		if(!savefile.exists()){
-			EpicPlayer epicPlayer = new EpicPlayer(playerName);
+			EpicPlayer epicPlayer = new EpicPlayer(id);
 			EpicSystem.addPlayer(epicPlayer);
 		}
 	}

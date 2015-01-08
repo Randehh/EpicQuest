@@ -21,7 +21,7 @@ public class TypePlace extends TypeBase implements Listener{
 
 		//Get player and questlist
 		Player player = event.getPlayer();
-		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getName());
+		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getUniqueId());
 		List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.PLACE_BLOCK);
 
 		//Block information
