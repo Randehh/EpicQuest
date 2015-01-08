@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -81,7 +82,7 @@ public class SaveLoader {
 
 				EpicSign sign = questsignlist.get(i);
 				Location loc = sign.getLocation();
-				int quest = sign.getQuest();
+				String quest = sign.getQuest();
 				signFile.set("Signs." + loc.getBlockX() + ":" + loc.getBlockY() + ":" + loc.getBlockZ(), quest);
 			}
 		}
@@ -160,10 +161,10 @@ public class SaveLoader {
 					save.set("World", entity.getWorld().getName());
 					save.set("Location", loc.getBlockX()+":"+loc.getBlockY()+":"+loc.getBlockZ());
 					
-					List<Integer> questList = qEntity.questList;
+					List<String> questList = qEntity.questList;
 					save.set("Quests", questList);
 					
-					for(int quest : questList){
+					for(String quest : questList){
 						save.set("OpeningSentences."+quest, qEntity.openingSentences.get(quest).getSentences());
 						save.set("MiddleSentences."+quest, qEntity.middleSentences.get(quest).getSentences());
 						save.set("EndingSentences."+quest, qEntity.endingSentences.get(quest).getSentences());
@@ -172,10 +173,10 @@ public class SaveLoader {
 				
 				//Save player stuff
 				for(EpicPlayer epicPlayer : EpicSystem.getPlayerList()){
-					save.set("Players."+epicPlayer.getPlayerName()+".CurrentQuest", qEntity.currentQuest.get(epicPlayer));
+					save.set("Players."+epicPlayer.getPlayerID().toString()+".CurrentQuest", qEntity.currentQuest.get(epicPlayer));
 					QuestPhase phase = qEntity.questPhases.get(epicPlayer);
 					if(phase == null) phase = QuestPhase.INTRO_TALK;
-					save.set("Players."+epicPlayer.getPlayerName()+".QuestPhase", phase.toString());
+					save.set("Players."+epicPlayer.getPlayerID().toString()+".QuestPhase", phase.toString());
 				}
 				
 				save.save(savefile);
@@ -186,8 +187,8 @@ public class SaveLoader {
 	}
 
 	public static void savePlayer(EpicPlayer epicPlayer){		
-		String playername = epicPlayer.getPlayerName();
-		File savefile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "Players" + File.separator + playername + ".yml");
+		UUID id = epicPlayer.getPlayerID();
+		File savefile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "Players" + File.separator + id.toString() + ".yml");
 
 		//Reset the file by recreating the file
 		try {
@@ -206,61 +207,38 @@ public class SaveLoader {
 
 		//Save task progress
 		List<EpicQuest> questlist = epicPlayer.getQuestList();
-		String queststring = null;
+		List<String> questTags = new ArrayList<String>();
 		
 		if(!questlist.isEmpty()){
 			for(int e = 0; e < questlist.size(); e++){
 				EpicQuest epicQuest = questlist.get(e);
-				int quest = epicQuest.getQuestNo();
+				String questTag = epicQuest.getQuestTag();
 				List<EpicQuestTask> taskList = epicQuest.getTasks();
 				for(int taskNumber = 0; taskNumber < taskList.size(); taskNumber++){
-					save.set("Quest."+quest+"."+taskNumber, taskList.get(taskNumber).getTaskProgress());
+					save.set("Quest."+questTag+"."+taskNumber, taskList.get(taskNumber).getTaskProgress());
 				}
-
-				//Save the list of quests the player has
-				if(queststring == null){
-					queststring = ""+questlist.get(e).getQuestNo();
-				}else{
-					queststring = queststring + ", " + questlist.get(e).getQuestNo();
-				}
+				
+				questTags.add(questlist.get(e).getQuestTag());
 			}
-			save.set("Quest_list", queststring);
+			save.set("Quest_list", questTags);
 		}
 
 		//Save the list of completed quests the player has
-		List<Integer> completedquestlist = epicPlayer.getQuestsCompleted();
-		String completedqueststring = null;
-		for(int e = 0; e < completedquestlist.size(); e++){
-
-			if(!completedquestlist.isEmpty()){
-				if(completedqueststring == null){
-					completedqueststring = ""+completedquestlist.get(e);
-				}else{
-					completedqueststring = completedqueststring + ", " + completedquestlist.get(e);
-				}
-				save.set("Completed_Quests", completedqueststring);
-			}
-		}
+		save.set("Completed_Quests", epicPlayer.getQuestsCompleted());
 
 		//Save list of quests that have timers running
-		List<Integer> timerquestlist = epicPlayer.getQuestTimerList();
-		String timerqueststring = null;
-		for(int e = 0; e < timerquestlist.size(); e++){
-
+		HashMap<String, Integer> timerQuestMap = epicPlayer.getQuestTimerMap();
+		List<String> timerQuestTags = new ArrayList<String>();
+		for(String questTag : timerQuestMap.keySet()){
+			
 			//Update timer
-			epicPlayer.checkTimer(e, true);
-
-			int quest = timerquestlist.get(e);
-			if(timerqueststring == null){
-				timerqueststring = ""+quest;
-			}else{
-				timerqueststring = timerqueststring + ", " + quest;
-			}
+			epicPlayer.checkTimer(questTag, true);
 
 			//Save the timer for the quests
-			save.set("Quest."+quest+".timer", timerquestlist.get(e));
+			save.set("Quest."+questTag+".timer", timerQuestMap.get(questTag));
+			timerQuestTags.add(questTag);
 		}
-		save.set("Timed_Quests", timerqueststring);
+		save.set("Timed_Quests", timerQuestTags);
 
 		//Save stats
 		save.set("Stats.Money_Earned", epicPlayer.getStatMoneyEarned());
@@ -301,7 +279,7 @@ public class SaveLoader {
 				Location loc = new Location(null, Integer.parseInt(coordarray[0]), Integer.parseInt(coordarray[1]), Integer.parseInt(coordarray[2]));
 
 				//Get quest
-				int quest = sign.getInt("Signs."+coords);
+				String quest = sign.getString("Signs."+coords);
 				
 				signList.add(new EpicSign(quest, loc));
 			}
@@ -325,11 +303,11 @@ public class SaveLoader {
 		//Announcer
 		for(String line : announcer.getStringList("Quest_Amount_Completed")){
 			String[] split = line.split("=");
-			EpicAnnouncer.questAmountCompletedText.put(Integer.parseInt(split[0]), split[1]);
+			EpicAnnouncer.questAmountCompletedText.put(split[0], split[1]);
 		}
 		for(String line : announcer.getStringList("Quest_Completed")){
 			String[] split = line.split("=");
-			EpicAnnouncer.questCompletedText.put(Integer.parseInt(split[0]), split[1]);
+			EpicAnnouncer.questCompletedText.put(split[0], split[1]);
 		}
 		
 		//Villagers
@@ -366,10 +344,10 @@ public class SaveLoader {
 				QuestEntity qEntity = new QuestEntity(entity);
 				QuestEntityHandler.entityList.put(entity, qEntity);
 				
-				qEntity.questList = save.getIntegerList("Quests");
+				qEntity.questList = save.getStringList("Quests");
 				qEntity.originalLocation = loc;
 				
-				for(int quest : qEntity.questList){
+				for(String quest : qEntity.questList){
 					
 					//Load sentences					
 					qEntity.openingSentences.put(quest, new SentenceBatch(save.getStringList("OpeningSentences."+quest)));
@@ -379,26 +357,26 @@ public class SaveLoader {
 				
 				//Set player stuff
 				Object[] players = save.getConfigurationSection("Players").getKeys(false).toArray();
-				for(Object playerObj : players){
-					String player = (String)playerObj;
-					EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player);
-					qEntity.currentQuest.put(epicPlayer, save.getInt("Players."+player+".CurrentQuest"));
-					qEntity.questPhases.put(epicPlayer, QuestPhase.valueOf(save.getString("Players."+player+".QuestPhase")));
+				for(Object idObj : players){
+					UUID id = UUID.fromString((String)idObj);
+					EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(id);
+					qEntity.currentQuest.put(epicPlayer, save.getString("Players."+id.toString()+".CurrentQuest"));
+					qEntity.questPhases.put(epicPlayer, QuestPhase.valueOf(save.getString("Players."+id.toString()+".QuestPhase")));
 				}
         	}
         }
 	}
 
-	public static void loadPlayer(String playername){
+	public static void loadPlayer(UUID id){
 		
 		//System.out.print("Loading player - " + playername);
 		EpicPlayer epicPlayer = null;
 
 		//Get the file
-		File savefile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "Players" + File.separator + playername + ".yml");
+		File savefile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "Players" + File.separator + id.toString() + ".yml");
 		if(savefile.exists()){
 			
-			epicPlayer = new EpicPlayer(playername);
+			epicPlayer = new EpicPlayer(id);
 
 			//Make the file editable
 			FileConfiguration save = YamlConfiguration.loadConfiguration(savefile);
@@ -407,17 +385,16 @@ public class SaveLoader {
 			if(save.contains("Quest_list")){
 
 				//Get quest numbers
-				String[] temp = save.getString("Quest_list").split(", ");
-				for(int e = 0; e < temp.length; e++){
+				List<String> questList = save.getStringList("Quest_list");
+				for(String questTag : questList){
 
 					//Create the EpicQuests
-					int quest = Integer.parseInt(temp[e]);
-					EpicQuest epicQuest = new EpicQuest(epicPlayer, quest);
+					EpicQuest epicQuest = new EpicQuest(epicPlayer, questTag);
 
 					//Load task progress
 					List<EpicQuestTask> taskList = epicQuest.getTasks();
 					for(int taskNumber = 0; taskNumber < taskList.size(); taskNumber++){
-						int amount = save.getInt("Quest."+quest+"."+taskNumber);
+						int amount = save.getInt("Quest."+questTag+"."+taskNumber);
 						taskList.get(taskNumber).ProgressTask(amount, null);
 					}	
 					epicPlayer.getQuestList().add(epicQuest);
@@ -425,30 +402,14 @@ public class SaveLoader {
 			}
 
 			//Get completed quests and set it
-			if(save.contains("Completed_Quests")){
-				String[] temp2 = save.get("Completed_Quests").toString().split(", ");
-				ArrayList<Integer> completedquestlist = new ArrayList<Integer>();
-				for(int e = 0; e < temp2.length; e++){
-					int quest = Integer.parseInt(temp2[e]);
-					completedquestlist.add(quest);
-				}
-
-				epicPlayer.setQuestsCompleted(completedquestlist);
-
-			}
-
+			epicPlayer.setQuestsCompleted(save.getStringList("Completed_Quests"));
+			
 			//Get quests that have a timer running and set it
 			if(save.contains("Timed_Quests")){
-				String[] temp2 = save.get("Timed_Quests").toString().split(", ");
-				ArrayList<Integer> timedquestlist = new ArrayList<Integer>();
-				for(int e = 0; e < temp2.length; e++){
-					int quest = Integer.parseInt(temp2[e]);
-					timedquestlist.add(quest);
-
-					//Get quest timer
-					int time = save.getInt("Quest."+quest+".timer");
-					epicPlayer.setQuestTimer(quest, time);
-				}					
+				List<String> timedQuests = save.getStringList("Timed_Quests");
+				for(String questTag : timedQuests){
+					epicPlayer.setQuestTimer(questTag, save.getInt("Quest."+questTag+".timer"));
+				}				
 			}
 
 
@@ -464,10 +425,10 @@ public class SaveLoader {
 			
 			EpicSystem.addPlayer(epicPlayer);
 		}else{
-			EpicSystem.addFirstStart(playername);
+			EpicSystem.addFirstStart(id);
 		}
 		
-		EpicPlayer p = EpicSystem.getEpicPlayer(playername);
+		EpicPlayer p = EpicSystem.getEpicPlayer(id);
 		if(EpicSystem.useBook()) p.giveQuestBook();
 	}
 }

@@ -51,6 +51,10 @@ public class EpicQuestTask {
 			}else{
 				player.getPlayer().sendMessage(getPlayerTaskProgressText());
 			}
+			
+			if(IsComplete() && quest.getQuestAutoComplete() && quest.isCompleted()){
+				quest.completeQuest();
+			}
 		}
 	}
 	

@@ -25,15 +25,14 @@ import randy.quests.EpicQuest;
 public class PlayerInteractListener implements Listener{
 	
 	public static Player createNewQuestEntity = null;
-	public static int createNewQuestEntityQuest = -1;
+	public static String createNewQuestEntityQuest = null;
 
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event){
 
 		//Get player and the action
 		Player player = event.getPlayer();
-		String playername = player.getName();
-		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(playername);
+		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getUniqueId());
 		if(event.getAction() == Action.RIGHT_CLICK_BLOCK){
 
 			//Get the block and check if it's a sign
@@ -46,13 +45,13 @@ public class PlayerInteractListener implements Listener{
 				blockLoc.setWorld(null);
 
 				if(signLoc.equals(blockLoc)){
-					if(sign.getQuest() == -1){
+					if(sign.getQuest() == "EpicQuest_Internal_Random"){
 						if(epicPlayer.canGetQuest()){
 							epicPlayer.addQuestRandom();
 						}else{
 							player.sendMessage(ChatColor.RED + "There are no more quests available.");
 						}
-					} else if(sign.getQuest() == -2){
+					} else if(sign.getQuest() == "EpicQuest_Internal_Turnin"){
 						if(!epicPlayer.getCompleteableQuest().isEmpty()){
 							epicPlayer.completeAllQuests();
 						}else{
@@ -87,7 +86,7 @@ public class PlayerInteractListener implements Listener{
 			return;
 		}
 
-		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getName());
+		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getUniqueId());
 
 		if(QuestEntityHandler.entityList.containsKey(entity)){
 			QuestEntityHandler.GetQuestEntity(entity).NextInteraction(epicPlayer);

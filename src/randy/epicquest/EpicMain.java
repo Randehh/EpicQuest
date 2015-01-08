@@ -49,7 +49,7 @@ import randy.questtypes.TypeTame;
 
 public class EpicMain extends JavaPlugin{
 	//Set a few variables needed throughout the start-up
-	String pluginversion = "3.4.3";
+	String pluginversion;
 	String pluginname = "EpicQuest";
 	static Plugin epicQuestPlugin = Bukkit.getPluginManager().getPlugin("EpicQuest");
 	public static Permission permission = null;
@@ -92,13 +92,14 @@ public class EpicMain extends JavaPlugin{
 		
 		timer.cancel();
 		
-		System.out.print(pluginname + " succesfully disabled.");
+		System.out.print("[" + pluginname + "] succesfully disabled.");
 	}
 
 	@SuppressWarnings("deprecation")
 	public void onEnable() {
 		instance = this;
 		this.saveDefaultConfig();
+		pluginversion = this.getDescription().getVersion();
 
 		/*
 		 * Set events
@@ -162,13 +163,13 @@ public class EpicMain extends JavaPlugin{
 		Player[] players = getServer().getOnlinePlayers();
 		if(players.length > 0){
 			for(int i = 0; i < players.length; i++){
-				SaveLoader.loadPlayer(players[i].getName());
+				SaveLoader.loadPlayer(players[i].getUniqueId());
 			}
 		}
 
 		//Start timer
 		startTimer();
-
+		
 		System.out.print(pluginname + " version " + pluginversion + " enabled.");
 	}
 
@@ -185,9 +186,12 @@ public class EpicMain extends JavaPlugin{
 
 	private boolean setupEconomy(){
 		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-		if (economyProvider != null) {
+		if (economyProvider != null && economyProvider.getProvider().isEnabled()) {
 			economy = economyProvider.getProvider();
 		}
+		
+		//Economy not used or found
+		EpicSystem.setEnabledMoneyRewards(false);
 		return (economy != null);
 	}
 
@@ -255,9 +259,9 @@ public class EpicMain extends JavaPlugin{
 					List<EpicPlayer> playerList = EpicSystem.getPlayerList();
 					for(int i = 0; i < playerList.size(); i ++){
 						EpicPlayer epicPlayer = playerList.get(i);
-						List<Integer> questList = epicPlayer.getQuestTimerList();
-						for(int e = 0; e < questList.size(); e++){
-							epicPlayer.checkTimer(questList.get(e), true);
+						HashMap<String, Integer> questMap = epicPlayer.getQuestTimerMap();
+						for(String quest : questMap.keySet()){
+							epicPlayer.checkTimer(quest, true);
 						}
 
 						epicPlayer.setQuestDailyLeft(EpicSystem.getDailyLimit());
@@ -281,10 +285,10 @@ public class EpicMain extends JavaPlugin{
 						invitationTimer.put(tempPlayer, invitationTimer.get(tempPlayer) - 1);
 
 						if(invitationTimer.get(tempPlayer) == 0){
-							tempPlayer.hasPartyInvitation.getPlayer().sendMessage(""+ChatColor.ITALIC + ChatColor.RED + tempPlayer.getPlayerName() + " declined your party invitation.");
+							tempPlayer.hasPartyInvitation.getPlayer().sendMessage(""+ChatColor.ITALIC + ChatColor.RED + tempPlayer.getPlayer().getName() + " declined your party invitation.");
 							tempPlayer.hasPartyInvitation = null;
 
-							tempPlayer.getPlayer().sendMessage(""+ChatColor.ITALIC + ChatColor.RED + "You declined " + tempPlayer.hasPartyInvitation.getPlayerName() + "'s party invitation.");
+							tempPlayer.getPlayer().sendMessage(""+ChatColor.ITALIC + ChatColor.RED + "You declined " + tempPlayer.hasPartyInvitation.getPlayer().getName() + "'s party invitation.");
 							invitationTimer.remove(tempPlayer);
 						}
 					}

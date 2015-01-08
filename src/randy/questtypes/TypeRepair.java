@@ -29,7 +29,7 @@ public class TypeRepair extends TypeBase implements Listener{
 	public void onCraftItem(CraftItemEvent event){
 
 		Player player = (Player)event.getInventory().getHolder();
-		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getName());
+		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getUniqueId());
 		List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.REPAIR_ITEM);
 
 		for(EpicQuestTask task : taskList){
@@ -64,7 +64,7 @@ public class TypeRepair extends TypeBase implements Listener{
 		Inventory inv = e.getInventory();
 		if(!(inv instanceof AnvilInventory)) return;
 
-		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getName());
+		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getUniqueId());
 		List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.REPAIR_ITEM);
 
 		for(EpicQuestTask task : taskList){

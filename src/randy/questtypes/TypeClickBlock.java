@@ -21,8 +21,7 @@ public class TypeClickBlock extends TypeBase implements Listener {
 		
 		//Get player and the action
 		Player player = event.getPlayer();
-		String playername = player.getName();
-		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(playername);
+		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getUniqueId());
 		if(event.getAction() == Action.RIGHT_CLICK_BLOCK){
 			
 			List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.CLICK_BLOCK);

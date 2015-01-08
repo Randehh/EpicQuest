@@ -22,7 +22,7 @@ public class TypeTalkToVillager  extends TypeBase implements Listener{
 		if(clickedEntity instanceof Villager){
 			
 			Player player = event.getPlayer();
-			EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getName());
+			EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getUniqueId());
 			List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.TALK_TO_VILLAGER);
 			Villager villager = (Villager)clickedEntity;
 			

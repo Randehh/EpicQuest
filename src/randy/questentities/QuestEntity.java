@@ -23,12 +23,12 @@ public class QuestEntity {
 	}
 	
 	public Entity entity;
-	public HashMap<Integer, SentenceBatch> openingSentences = new HashMap<Integer, SentenceBatch>();
-	public HashMap<Integer, SentenceBatch> middleSentences = new HashMap<Integer, SentenceBatch>();
-	public HashMap<Integer, SentenceBatch> endingSentences = new HashMap<Integer, SentenceBatch>();
-	public List<Integer> questList = new ArrayList<Integer>();
+	public HashMap<String, SentenceBatch> openingSentences = new HashMap<String, SentenceBatch>();
+	public HashMap<String, SentenceBatch> middleSentences = new HashMap<String, SentenceBatch>();
+	public HashMap<String, SentenceBatch> endingSentences = new HashMap<String, SentenceBatch>();
+	public List<String> questList = new ArrayList<String>();
 	
-	public HashMap<EpicPlayer, Integer> currentQuest = new HashMap<EpicPlayer, Integer>();
+	public HashMap<EpicPlayer, String> currentQuest = new HashMap<EpicPlayer, String>();
 	public Location originalLocation;
 	
 	public HashMap<EpicPlayer, QuestPhase> questPhases = new HashMap<EpicPlayer, QuestPhase>();
@@ -38,9 +38,9 @@ public class QuestEntity {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public void SetBasics(int questNumber){
-		List<Integer> questList = new ArrayList<Integer>();
-		questList.add(questNumber);
+	public void SetBasics(String questTag){
+		List<String> questList = new ArrayList<String>();
+		questList.add(questTag);
 
 		List<String> openingList = new ArrayList<String>();
 		openingList.add("Hey there, could you help me out?");
@@ -66,8 +66,7 @@ public class QuestEntity {
 	}
 	
 	public void NextInteraction(EpicPlayer epicPlayer){
-		int currentQuest = this.currentQuest.get(epicPlayer);
-		int actualQuestNo = this.questList.get(currentQuest);
+		String currentQuest = this.currentQuest.get(epicPlayer);
 		
 		QuestPhase currentPhase = questPhases.get(epicPlayer);
 		SentenceBatch sentences = null;
@@ -75,25 +74,25 @@ public class QuestEntity {
 		while(loop){
 		switch(currentPhase){
 		case INTRO_TALK:
-			sentences = openingSentences.get(actualQuestNo);
+			sentences = openingSentences.get(currentQuest);
 			epicPlayer.getPlayer().sendMessage(formatMessage(sentences.Next(epicPlayer)));
 			if(sentences.IsLast(epicPlayer)){
-				epicPlayer.addQuest(new EpicQuest(epicPlayer, actualQuestNo));
+				epicPlayer.addQuest(new EpicQuest(epicPlayer, currentQuest));
 				questPhases.put(epicPlayer, QuestPhase.BUSY);
 			}
 			loop = false;
 			break;
 		case BUSY:
 			//Dropped quest?
-			if(!epicPlayer.hasQuest(actualQuestNo)){
+			if(!epicPlayer.hasQuest(currentQuest)){
 				questPhases.put(epicPlayer, QuestPhase.INTRO_TALK);
 				currentPhase = QuestPhase.INTRO_TALK;
 				continue;
 			}
 			
 			//Not completed quest
-			if(!epicPlayer.getQuestByNumber(actualQuestNo).isCompleted()){
-				sentences = middleSentences.get(actualQuestNo);
+			if(!epicPlayer.getQuestByTag(currentQuest).isCompleted()){
+				sentences = middleSentences.get(currentQuest);
 				epicPlayer.getPlayer().sendMessage(formatMessage(sentences.Random(epicPlayer)));
 				loop = false;
 				break;
@@ -104,10 +103,10 @@ public class QuestEntity {
 			currentPhase = QuestPhase.ENDING_TALK;		
 			continue;
 		case ENDING_TALK:
-			sentences = endingSentences.get(actualQuestNo);
+			sentences = endingSentences.get(currentQuest);
 			epicPlayer.getPlayer().sendMessage(formatMessage(sentences.Next(epicPlayer)));
 			if(sentences.IsLast(epicPlayer)){
-				epicPlayer.completeQuest(epicPlayer.getQuestByNumber(actualQuestNo));
+				epicPlayer.completeQuest(epicPlayer.getQuestByTag(currentQuest));
 				questPhases.put(epicPlayer, QuestPhase.INTRO_TALK);
 			}
 			loop = false;
@@ -120,12 +119,12 @@ public class QuestEntity {
 	}
 	
 	public void SetFirstInteraction(EpicPlayer epicPlayer){
-		if(!currentQuest.containsKey(epicPlayer)) currentQuest.put(epicPlayer, 0);
+		if(!currentQuest.containsKey(epicPlayer)) currentQuest.put(epicPlayer, questList.get(0));
 		if(!questPhases.containsKey(epicPlayer)){
 			QuestPhase phase = QuestPhase.INTRO_TALK;
-			int questNo = this.questList.get(0);
-			if(epicPlayer.hasQuest(questNo)){
-				if(epicPlayer.getQuest(questNo).isCompleted()){
+			String questTag = this.questList.get(0);
+			if(epicPlayer.hasQuest(questTag)){
+				if(epicPlayer.getQuestByTag(questTag).isCompleted()){
 					phase = QuestPhase.ENDING_TALK;
 				}else{
 					phase = QuestPhase.BUSY;

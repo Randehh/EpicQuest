@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -21,11 +22,11 @@ import randy.quests.EpicQuestTask.TaskTypes;
 
 public class EpicPlayer {
 	
-	String playerName;
+	UUID playerID;
 	List<EpicQuest> questList;
-	List<Integer> questCompleted;
+	List<String> questCompleted;
 	int questDailyLeft;
-	List<Integer> questTimer;
+	HashMap<String, Integer> questTimer = new HashMap<String, Integer>();
 	float statMoneyEarned;
 	int statQuestCompleted;
 	int statQuestDropped;
@@ -36,9 +37,9 @@ public class EpicPlayer {
 	public EpicPlayer hasPartyInvitation = null;
 	HashMap<TaskTypes, List<EpicQuestTask>> questTasks = new HashMap<TaskTypes, List<EpicQuestTask>>();
 	
-	public EpicPlayer(String playerName, List<EpicQuest> questList, List<Integer> questCompleted, int questDailyLeft, List<Integer> questTimer, float statMoneyEarned, int statQuestCompleted, int statQuestDropped, int statQuestGet, int statTaskCompleted){
+	public EpicPlayer(UUID playerID, List<EpicQuest> questList, List<String> questCompleted, int questDailyLeft, HashMap<String, Integer> questTimer, float statMoneyEarned, int statQuestCompleted, int statQuestDropped, int statQuestGet, int statTaskCompleted){
 		
-		this.playerName = playerName;
+		this.playerID = playerID;
 		this.questList = questList;
 		this.questCompleted = questCompleted;
 		this.questDailyLeft = questDailyLeft;
@@ -51,16 +52,15 @@ public class EpicPlayer {
 		
 	}
 	
-	public EpicPlayer(String playerName){
+	public EpicPlayer(UUID playerID){
 		
-		this.playerName = playerName;
+		this.playerID = playerID;
 		this.questList = new ArrayList<EpicQuest>();
-		this.questCompleted = new ArrayList<Integer>();
-		questCompleted.add(-1);
+		this.questCompleted = new ArrayList<String>();
 		this.questDailyLeft = EpicSystem.getDailyLimit();
-		List<Integer> tempList = new ArrayList<Integer>();
+		HashMap<String, Integer> tempList = new HashMap<String, Integer>();
 		for(int i = 0; i < (EpicQuestDatabase.getTotalAmountQuests()); i++){
-			tempList.add(0);
+			tempList.put(EpicQuestDatabase.getQuestTags().get(i), 0);
 		}
 		this.questTimer = tempList;
 		this.statMoneyEarned = 0;
@@ -79,13 +79,13 @@ public class EpicPlayer {
 		@SuppressWarnings("deprecation")
 		Player[] playerList = Bukkit.getOnlinePlayers();
 		for(int i = 0; i < playerList.length; i++){
-			if(playerList[i].getName().equals(playerName)){
+			if(playerList[i].getUniqueId().equals(playerID)){
 				return playerList[i];
 			}
 		}
 		return null;
 	}
-	public String getPlayerName() { return playerName; }
+	public UUID getPlayerID() { return playerID; }
 	
 	public EpicParty getParty(){
 		return currentParty;
@@ -132,63 +132,36 @@ public class EpicPlayer {
 	 * 
 	 */
 	public List<EpicQuest> getQuestList(){ return questList; }
-	public List<Integer> getQuestListNumbers() {
-		List<Integer> questNumbers = new ArrayList<Integer>();
-		for(int i = 0; i < questList.size(); i ++){
-			questNumbers.add(questList.get(i).getQuestNo());
-		}
-		return questNumbers;
-	}
 	public EpicQuest getQuest(int questNo){ return questList.get(questNo); }
-	public EpicQuest getQuestByNumber(int questNo){
-		for(int i = 0; i < questList.size(); i++) if(getQuest(i).getQuestNo() == questNo) return getQuest(i);
+	public EpicQuest getQuestByTag(String questTag){
+		for(int i = 0; i < questList.size(); i++) if(getQuest(i).getQuestTag() == questTag) return getQuest(i);
 		return null;
 	}
-	public List<Integer> getQuestsCompleted(){ return questCompleted; }
+	public List<String> getQuestsCompleted(){ return questCompleted; }
 	public int getQuestDailyLeft() { return questDailyLeft; }
-	public List<Integer> getQuestTimerList() { return questTimer; }
+	public HashMap<String, Integer> getQuestTimerMap() { return questTimer; }
 	public List<EpicQuestTask> getTasksByType(TaskTypes type){
 		if(questTasks.containsKey(type)) return questTasks.get(type);
 		return new ArrayList<EpicQuestTask>();
 	}
 	
-	public void setQuestsCompleted(List<Integer> newList){ questCompleted = newList; }
-	public void setQuestTimerList(List<Integer> newList){ questTimer = newList; }
-	public void setQuestTimer(Integer quest, Integer time){ questTimer.set(quest, time); }
+	public void setQuestsCompleted(List<String> newList){ questCompleted = newList; }
+	public void setQuestTimerMap(HashMap<String, Integer> newMap){ questTimer = newMap; }
+	public void setQuestTimer(String quest, Integer time){ questTimer.put(quest, time); }
 	public void setQuestDailyLeft(int questsLeft){ questDailyLeft = questsLeft; }
 	
 	//Quest managing
 	public boolean addQuest(EpicQuest quest){
-		if(canGetQuest(quest.getQuestNo()) == true){
+		if(canGetQuest(quest.getQuestTag()) == true){
 			
 			//Take items first
-			if(hasItemRequirements(quest.getQuestNo())){
-				List<Integer> amountList = EpicQuestDatabase.getQuestItemRequiredAmount(quest.getQuestNo());
-				List<String> idList = EpicQuestDatabase.getQuestItemRequiredID(quest.getQuestNo());
+			if(hasItemRequirements(quest.getQuestTag())){
+				List<ItemStack> itemList = EpicQuestDatabase.getQuestItemsRequired(quest.getQuestTag());
 				Inventory inventory = getPlayer().getInventory();
-					
-				for(int i = 0; i < idList.size(); i++){
-					int amountLeft = amountList.get(i);
-					Material material = Material.matchMaterial(idList.get(i));
-					while(amountLeft >= 1){						
-						ItemStack[] inventoryStacks = inventory.getContents();
-						for(int e = 0; e < inventoryStacks.length; e++){
-							ItemStack currentStack = inventoryStacks[e];
-							if(currentStack != null && currentStack.getType() == material){
-								int currentStackAmount = currentStack.getAmount();
-								if(currentStackAmount >= amountLeft){
-									currentStackAmount -= amountLeft;
-									amountLeft = 0;
-									if(currentStackAmount == 0) inventory.remove(currentStack);
-									else currentStack.setAmount(currentStackAmount);
-									break;
-								}else{
-									amountLeft -= currentStackAmount;
-									inventory.remove(currentStack);
-								}
-								break;
-							}
-						}
+				
+				if(!itemList.isEmpty()){
+					for(ItemStack item : itemList){
+						inventory.remove(item.clone());
 					}
 				}
 			}
@@ -207,7 +180,7 @@ public class EpicPlayer {
 		}else{
 			
 			//If the reason was not having the required items
-			if(!hasItemRequirements(quest.getQuestNo())){
+			if(!hasItemRequirements(quest.getQuestTag())){
 				getPlayer().sendMessage(ChatColor.RED + "You do not have the required items for this quest!");
 			}
 			return false;
@@ -247,7 +220,7 @@ public class EpicPlayer {
 		quest.completeQuest();
 	}
 	public void addQuestRandom(){
-		List<Integer> obtainableQuests = getObtainableQuests();
+		List<String> obtainableQuests = getObtainableQuests();
 		if(!obtainableQuests.isEmpty()){
 			Random generator = new Random();
 			int randomQuest = generator.nextInt(obtainableQuests.size());
@@ -271,26 +244,26 @@ public class EpicPlayer {
 	}
 	
 	//Quest checking
-	public List<Integer> getObtainableQuests(){
-		List<Integer> obtainableQuests = new ArrayList<Integer>();
+	public List<String> getObtainableQuests(){
+		List<String> obtainableQuests = new ArrayList<String>();
 		if(!isQuestListFull()){
-			for(int i = 0; i < EpicQuestDatabase.getTotalAmountQuests(); i++){
-				if(canGetQuest(i)){
-					obtainableQuests.add(i);
+			for(String questTag : EpicQuestDatabase.getQuestTags()){
+				if(canGetQuest(questTag)){
+					obtainableQuests.add(questTag);
 				}
 			}
 		}
 		return obtainableQuests;
 	}
-	public boolean canGetQuest(int questNo){
+	public boolean canGetQuest(String questTag){
 		
-		if(!hasQuest(questNo) &&
-				hasUnlockedQuest(questNo) &&
+		if(!hasQuest(questTag) &&
+				hasUnlockedQuest(questTag) &&
 				hasDailyQuestLeft() &&
-				isTimeOut(questNo) &&
+				isTimeOut(questTag) &&
 				!isQuestListFull() &&
-				hasItemRequirements(questNo) &&
-				isHighEnoughLevel(questNo)){
+				hasItemRequirements(questTag) &&
+				isHighEnoughLevel(questTag)){
 			return true;
 		}
 		return false;
@@ -298,10 +271,10 @@ public class EpicPlayer {
 	public boolean canGetQuest(){
 		if(getObtainableQuests().isEmpty()) { return false; } else { return true; }
 	}
-	public boolean hasQuest(int questNo){
+	public boolean hasQuest(String questTag){
 		
 		for(int i = 0; i < questList.size(); i++){
-			if(questList.get(i).getQuestNo() == questNo){
+			if(questList.get(i).getQuestTag() == questTag){
 				return true;
 			}
 		}
@@ -311,8 +284,8 @@ public class EpicPlayer {
 		if(questList.contains(quest)){ return true; }
 		return false;
 	}
-	public boolean hasUnlockedQuest(int questNo){
-		List<Integer> questLockedList = EpicQuestDatabase.getQuestLocked(questNo);
+	public boolean hasUnlockedQuest(String questTag){
+		List<String> questLockedList = EpicQuestDatabase.getQuestLocked(questTag);
 		
 		if(questCompleted.containsAll(questLockedList)){ return true; }
 		return false;
@@ -321,53 +294,46 @@ public class EpicPlayer {
 		if(questDailyLeft > 0){ return true; }
 		return false;
 	}
-	public boolean isTimeOut(int questNo){
-		if(EpicQuestDatabase.getQuestResetTime(questNo) == -1 && getQuestsCompleted().contains(questNo)) return true;
+	public boolean isTimeOut(String questTag){
+		if(EpicQuestDatabase.getQuestResetTime(questTag) == -1 && getQuestsCompleted().contains(questTag)) return true;
 		
-		checkTimer(questNo, false);
+		checkTimer(questTag, false);
 		
-		if(questTimer.get(questNo) <= 0){ return true; }
+		if(questTimer.get(questTag) <= 0){ return true; }
 		return false;
 	}
 	public boolean isQuestListFull(){
 		if(questList.size() >= EpicSystem.getQuestLimit()){ return true; }
 		return false;
 	}
-	public boolean hasItemRequirements(int questNo){
-		List<Integer> amountList = EpicQuestDatabase.getQuestItemRequiredAmount(questNo);
-		List<String> idList = EpicQuestDatabase.getQuestItemRequiredID(questNo);
-		
+	public boolean hasItemRequirements(String questTag){
+		List<ItemStack> itemList = EpicQuestDatabase.getQuestItemsRequired(questTag);
 		Inventory inventory = getPlayer().getInventory();
-			
-		for(int i = 0; i < idList.size(); i++){
-			if(amountList.get(i) >= 1 &&
-					idList.get(i) != null &&
-					idList.get(i) != ""){
-				Material material = Material.matchMaterial(idList.get(i));
-				if(material == null) return true;
-				if(!inventory.contains(material, amountList.get(i))) return false;
-			}
-			
+		
+		if(itemList.isEmpty()) return true;
+		
+		for(ItemStack item : itemList){
+			if(!inventory.contains(item.getType(), item.getAmount())) return false;
 		}
 		return true;
 	}
-	public boolean isHighEnoughLevel(int questNo){
-		int requiredLevel = EpicQuestDatabase.getQuestLevel(questNo);
+	public boolean isHighEnoughLevel(String questTag){
+		int requiredLevel = EpicQuestDatabase.getQuestLevel(questTag);
 		int playerLevel = getPlayer().getLevel();
 		if(playerLevel >= requiredLevel) return true;
 		return false;
 	}
-	public void checkTimer(int questNo, boolean substractDifference){		
+	public void checkTimer(String questTag, boolean substractDifference){		
 		int timeDifference = EpicSystem.getTime() - EpicSystem.getStartTime();
-		int newQuestTime = questTimer.get(questNo) - timeDifference;
+		int newQuestTime = questTimer.get(questTag) - timeDifference;
 		
 		if(substractDifference){
-			questTimer.set(questNo, newQuestTime);
+			questTimer.put(questTag, newQuestTime);
 		}
 		
 		if(newQuestTime <= 0){
 			newQuestTime = 0;
-			questTimer.set(questNo, 0);
+			questTimer.put(questTag, 0);
 		}
 	}
 	

@@ -36,14 +36,14 @@ public class SignListener implements Listener {
 						event.setLine(1, "Quest:");
 						event.setLine(2, "Random quest!");
 						event.setLine(3, "");
-						EpicSign epicSign = new EpicSign(-1, new Location(null, x, y, z));
+						EpicSign epicSign = new EpicSign("EpicQuest_Internal_Random", new Location(null, x, y, z));
 						EpicSystem.getSignList().add(epicSign);
 						player.sendMessage("Set sign at "+ x + ":"+ y + ":"+ z + " with random quests.");
 					}else{
 						
 						//Specified quest!
-						int quest = Integer.parseInt(event.getLine(2));
-						if(quest <= EpicQuestDatabase.getTotalAmountQuests()){
+						String quest = event.getLine(2);
+						if(EpicQuestDatabase.getQuestTags().contains(quest)){
 							event.setLine(0, "");
 							event.setLine(1, "Quest:");
 							event.setLine(2, EpicQuestDatabase.getQuestName(quest));
@@ -63,7 +63,7 @@ public class SignListener implements Listener {
 					event.setLine(1, "Quest:");
 					event.setLine(2, "Turn in quests here!");
 					event.setLine(3, "");
-					EpicSign epicSign = new EpicSign(-2, new Location(null, x, y, z));
+					EpicSign epicSign = new EpicSign("EpicQuest_Internal_Turnin", new Location(null, x, y, z));
 					EpicSystem.getSignList().add(epicSign);
 					player.sendMessage("Set sign at "+ x + ":"+ y + ":"+ z + " where quests are turned in.");
 				}

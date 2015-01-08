@@ -13,7 +13,7 @@ public class ChatListener implements Listener {
 	@EventHandler
 	public void onAsyncPlayerChat(AsyncPlayerChatEvent event){
 		Player player = event.getPlayer();
-		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getName());
+		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getUniqueId());
 		
 		if(epicPlayer.partyChat){
 			epicPlayer.getParty().sendMessage(epicPlayer, event.getMessage());

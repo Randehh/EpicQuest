@@ -9,7 +9,6 @@ import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -26,22 +25,22 @@ public class EpicQuest {
 	
 	private EpicPlayer epicPlayer;
 	
-	private int questNumber;
+	private String questTag;
 	private List<EpicQuestTask> questTasks = new ArrayList<EpicQuestTask>();
 	
-	public EpicQuest(EpicPlayer epicPlayer, int questNo){
+	public EpicQuest(EpicPlayer epicPlayer, String questTag){
 		
 		this.epicPlayer = epicPlayer;
-		this.questNumber = questNo;
+		this.questTag = questTag;
 		
-		int totalTaskAmount = EpicQuestDatabase.getTaskTotal(questNo);
+		int totalTaskAmount = EpicQuestDatabase.getTaskTotal(questTag);
 		for(int i = 0; i < totalTaskAmount; i ++){	
-			TaskTypes taskType = EpicQuestDatabase.getTaskType(questNo, i);
+			TaskTypes taskType = EpicQuestDatabase.getTaskType(questTag, i);
 			
 			EpicQuestTask task = new EpicQuestTask(
 					taskType,
-					EpicQuestDatabase.getTaskID(questNo, i), 
-					EpicQuestDatabase.getTaskAmount(questNo, i),
+					EpicQuestDatabase.getTaskID(questTag, i), 
+					EpicQuestDatabase.getTaskAmount(questTag, i),
 					this);
 			questTasks.add(task);
 			epicPlayer.addTask(task);
@@ -55,29 +54,18 @@ public class EpicQuest {
 	 */
 	public EpicPlayer getEpicPlayer(){ return epicPlayer; }
 	public List<EpicQuestTask> getTasks(){ return questTasks; }
-	public int getQuestNo(){ return questNumber; }
-	public String getQuestName(){ return EpicQuestDatabase.getQuestName(questNumber); }
-	public String getQuestStart(){ return EpicQuestDatabase.getQuestStartInfo(questNumber); }
-	public String getQuestEnd(){ return EpicQuestDatabase.getQuestEndInfo(questNumber); }
-	public List<String> getQuestWorlds(){ return EpicQuestDatabase.getQuestWorlds(questNumber); }
-	public int getQuestResetTime(){ return EpicQuestDatabase.getQuestResetTime(questNumber); }
-	public int getQuestRewardMoney(){ return EpicQuestDatabase.getRewardMoney(questNumber); }
-	public List<ItemStack> getQuestRewardItem() {
-		List<ItemStack> itemList = new ArrayList<ItemStack>();
-
-		for(int i = 0; i < EpicQuestDatabase.getRewardID(questNumber).size(); i++){
-			String itemID = EpicQuestDatabase.getRewardID(questNumber).get(i);
-			int itemAmount = EpicQuestDatabase.getRewardAmount(questNumber).get(i);
-			if( itemID != null &&
-					itemAmount > 0){
-				itemList.add(new ItemStack(Material.matchMaterial(itemID), itemAmount));
-			}
-		}
-		return itemList;
-	}
-	public String getQuestRewardPermission() { return EpicQuestDatabase.getRewardRank(questNumber); }
-	public String getQuestRewardCommand() { return EpicQuestDatabase.getRewardCommand(questNumber); }
-	public int getQuestRewardHeroesExp() { return EpicQuestDatabase.getRewardHeroesExp(questNumber); }
+	public String getQuestTag(){ return questTag; }
+	public String getQuestName(){ return EpicQuestDatabase.getQuestName(questTag); }
+	public String getQuestStart(){ return EpicQuestDatabase.getQuestStartInfo(questTag); }
+	public String getQuestEnd(){ return EpicQuestDatabase.getQuestEndInfo(questTag); }
+	public List<String> getQuestWorlds(){ return EpicQuestDatabase.getQuestWorlds(questTag); }
+	public int getQuestResetTime(){ return EpicQuestDatabase.getQuestResetTime(questTag); }
+	public int getQuestRewardMoney(){ return EpicQuestDatabase.getRewardMoney(questTag); }
+	public List<ItemStack> getQuestRewardItem() { return EpicQuestDatabase.getRewardItems(questTag); }
+	public String getQuestRewardPermission() { return EpicQuestDatabase.getRewardRank(questTag); }
+	public List<String> getQuestRewardCommand() { return EpicQuestDatabase.getRewardCommand(questTag); }
+	public int getQuestRewardHeroesExp() { return EpicQuestDatabase.getRewardHeroesExp(questTag); }
+	public Boolean getQuestAutoComplete() { return EpicQuestDatabase.getQuestAutoComplete(questTag); }
 	@SuppressWarnings("deprecation")
 	public void completeQuest(){
 		
@@ -99,7 +87,7 @@ public class EpicQuest {
 		//Generate money reward
 		Economy economy = EpicMain.economy;
 		int money = getQuestRewardMoney();
-		if(economy != null && economy.isEnabled()){
+		if(EpicSystem.enabledMoneyRewards()){
 			if(!economy.hasAccount(playerName)){ economy.createPlayerAccount(playerName); }
 			
 			//Add money if there's money to add
@@ -124,12 +112,14 @@ public class EpicQuest {
 		}
 		
 		//Execute command
-		String command = getQuestRewardCommand();
-		if(command != null && !command.equals("no command")){
-			if(command.contains("<player>"))
-				command = command.replaceAll("<player>", player.getName());
+		List<String> commands = getQuestRewardCommand();
+		if(!commands.isEmpty()){
+			for(String command : commands){
+				if(command.contains("<player>"))
+					command = command.replaceAll("<player>", player.getName());
 		
-			Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
+				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
+			}
 		}
 		
 		//Heroes EXP
@@ -143,9 +133,9 @@ public class EpicQuest {
 		//Send ending text
 		player.sendMessage(""+ChatColor.GRAY + ChatColor.ITALIC + getQuestEnd());
 		
-		EpicAnnouncer.SendQuestCompletedText(epicPlayer, this.questNumber);
+		EpicAnnouncer.SendQuestCompletedText(epicPlayer, this.questTag);
 		
-		if(!epicPlayer.getQuestsCompleted().contains(questNumber)) epicPlayer.getQuestsCompleted().add(questNumber);
+		if(!epicPlayer.getQuestsCompleted().contains(questTag)) epicPlayer.getQuestsCompleted().add(questTag);
 		epicPlayer.getQuestList().remove(this);
 	}
 	
@@ -173,8 +163,8 @@ public class EpicQuest {
 			for(EpicQuest quest : player.getQuestList()){
 				for(int i = 0; i < quest.getTaskAmount(); i++){
 					EpicQuestTask task = quest.getTasks().get(i);
-					task.setTaskID(EpicQuestDatabase.getTaskID(quest.getQuestNo(), i));
-					task.setTaskGoal(EpicQuestDatabase.getTaskAmount(quest.getQuestNo(), i));
+					task.setTaskID(EpicQuestDatabase.getTaskID(quest.getQuestTag(), i));
+					task.setTaskGoal(EpicQuestDatabase.getTaskAmount(quest.getQuestTag(), i));
 				}
 			}
 		}

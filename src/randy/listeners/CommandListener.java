@@ -42,8 +42,7 @@ public class CommandListener implements CommandExecutor {
 		if(sender instanceof Player){
 			if(commandName.equalsIgnoreCase("q") || commandName.equalsIgnoreCase("quest")){
 				Player player = (Player) sender;
-				String playername = player.getName();
-				EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(playername);
+				EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getUniqueId());
 
 				List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.EXECUTE_COMMAND);
 
@@ -164,7 +163,7 @@ public class CommandListener implements CommandExecutor {
 
 														invitationTimer.put(invitedEpicPlayer, 15);
 
-														player.sendMessage("" + ChatColor.ITALIC + ChatColor.GREEN + "You invited " + invitedEpicPlayer.getPlayerName() + " to your party.");
+														player.sendMessage("" + ChatColor.ITALIC + ChatColor.GREEN + "You invited " + invitedEpicPlayer.getPlayer().getName() + " to your party.");
 													}else{
 														player.sendMessage(ChatColor.RED + "Your party is already full!");
 													}
@@ -192,7 +191,7 @@ public class CommandListener implements CommandExecutor {
 											epicPlayer.hasPartyInvitation = null;
 
 											invitationPlayer.getPlayer().sendMessage(ChatColor.GREEN + player.getDisplayName() + " has joined your party!");
-											player.sendMessage(ChatColor.GREEN + "You have joined " + invitationPlayer.getPlayerName() + "'s party!");
+											player.sendMessage(ChatColor.GREEN + "You have joined " + invitationPlayer.getPlayer().getName() + "'s party!");
 										}else{
 											epicPlayer.hasPartyInvitation.getParty().addPlayer(epicPlayer);
 											epicPlayer.hasPartyInvitation = null;
@@ -320,7 +319,7 @@ public class CommandListener implements CommandExecutor {
 									int quest = Integer.parseInt(args[1]);
 
 									//Get all available quests
-									List<Integer> availableQuests = epicPlayer.getObtainableQuests();
+									List<String> availableQuests = epicPlayer.getObtainableQuests();
 
 									if(quest <= availableQuests.size()){
 
@@ -464,7 +463,7 @@ public class CommandListener implements CommandExecutor {
 							if(epicPlayer.hasPermission("epicquest.user.questlist")){
 
 								//Get all available quests
-								List<Integer> availableQuests = epicPlayer.getObtainableQuests();
+								List<String> availableQuests = epicPlayer.getObtainableQuests();
 
 								//Seperate the pages
 								int maxpages = 0;
@@ -506,11 +505,10 @@ public class CommandListener implements CommandExecutor {
 						if(epicPlayer.hasPermission("epicquest.user.stats")){
 							if(args.length == 2){
 								Player player2 = Bukkit.getPlayer(args[1]);
-								String player2name = player2.getName();
-								EpicPlayer epicPlayer2 = EpicSystem.getEpicPlayer(player2name);
+								EpicPlayer epicPlayer2 = EpicSystem.getEpicPlayer(player2.getUniqueId());
 
 								if(epicPlayer2 != null){
-									player.sendMessage(ChatColor.YELLOW + "Statistics for player '" + player2name + "'.");
+									player.sendMessage(ChatColor.YELLOW + "Statistics for player '" + player2.getName() + "'.");
 									player.sendMessage(ChatColor.GOLD + "Quests get: " + epicPlayer2.getStatQuestGet() + ".");
 									player.sendMessage(ChatColor.GOLD + "Quests finished: " + epicPlayer2.getStatQuestCompleted() + ".");
 									player.sendMessage(ChatColor.GOLD + "Quests dropped: " + epicPlayer2.getStatQuestDropped() + ".");
@@ -520,7 +518,7 @@ public class CommandListener implements CommandExecutor {
 									player.sendMessage(ChatColor.RED + "That player doesn't exist!");
 								}
 							}else if (args.length == 1){
-								player.sendMessage(ChatColor.YELLOW + "Statistics for player '" + playername + "'.");
+								player.sendMessage(ChatColor.YELLOW + "Statistics for player '" + player.getName() + "'.");
 								player.sendMessage(ChatColor.GOLD + "Quests get: " + epicPlayer.getStatQuestGet() + ".");
 								player.sendMessage(ChatColor.GOLD + "Quests finished: " + epicPlayer.getStatQuestCompleted() + ".");
 								player.sendMessage(ChatColor.GOLD + "Quests dropped: " + epicPlayer.getStatQuestDropped() + ".");
@@ -556,7 +554,7 @@ public class CommandListener implements CommandExecutor {
 							for(int i=0;i<leaderboard.size();i++){
 								EpicPlayer lePlayer = (EpicPlayer)leaderboard.get(i);
 								
-								if(lePlayer.getPlayerName() == player.getDisplayName()) position = i;
+								if(lePlayer.getPlayer().getName() == player.getDisplayName()) position = i;
 							}
 							
 							player.sendMessage(ChatColor.GOLD + "[=======  Leaderboards (Top " + amount +"=======]");
@@ -604,7 +602,7 @@ public class CommandListener implements CommandExecutor {
 									return true;
 								}
 								
-								int quest = Integer.parseInt(args[args.length - 1]);
+								String quest = args[args.length - 1];
 								
 								if(EpicSystem.useCitizens()){
 									PlayerInteractListener.createNewQuestEntity = player;
@@ -675,10 +673,10 @@ public class CommandListener implements CommandExecutor {
 								if(args[2].equalsIgnoreCase("random")){
 									Location loc = player.getTargetBlock(null, 25).getLocation();
 									loc.setWorld(null);
-									EpicSystem.getSignList().add(new EpicSign(-1, loc));
+									EpicSystem.getSignList().add(new EpicSign("EpicQuest_Internal_Random", loc));
 									player.sendMessage("Questblock created that gives random quests.");
 								} else {
-									int quest = Integer.parseInt(args[2]);
+									String quest = args[2];
 									Location loc = player.getTargetBlock(null, 25).getLocation();
 									loc.setWorld(null);
 									EpicSystem.getSignList().add(new EpicSign(quest, loc));
@@ -687,7 +685,7 @@ public class CommandListener implements CommandExecutor {
 							} if(args[1].equalsIgnoreCase("turnin")){
 								Location loc = player.getTargetBlock(null, 25).getLocation();
 								loc.setWorld(null);
-								EpicSystem.getSignList().add(new EpicSign(-2, loc));
+								EpicSystem.getSignList().add(new EpicSign("EpicQuest_Internal_Turnin", loc));
 								player.sendMessage("Questblock created that turns in quests.");
 							}
 						}else{

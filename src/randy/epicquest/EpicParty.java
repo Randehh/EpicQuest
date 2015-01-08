@@ -29,15 +29,15 @@ public class EpicParty {
 		if(player.getParty() == null){
 			player.setParty(this);
 			playerList.add(player);
-			sendMessage(null, ""+ChatColor.ITALIC + ChatColor.GREEN + player.getPlayerName() + " has joined the party!");
+			sendMessage(null, ""+ChatColor.ITALIC + ChatColor.GREEN + player.getPlayer().getName() + " has joined the party!");
 		}
 	}
 	
 	public void removePlayer(EpicPlayer player, boolean kicked){
 		if(playerList.contains(player)){
 			
-			if(kicked) player.getPlayer().sendMessage(ChatColor.RED + "You were kicked out of the party by " + partyLeader.getPlayerName() + ".");
-			else sendMessage(null, ""+ChatColor.ITALIC + ChatColor.RED + player.getPlayerName() + " has left the party.");
+			if(kicked) player.getPlayer().sendMessage(ChatColor.RED + "You were kicked out of the party by " + partyLeader.getPlayer().getName() + ".");
+			else sendMessage(null, ""+ChatColor.ITALIC + ChatColor.RED + player.getPlayer().getName() + " has left the party.");
 			
 			//Disband group if there's one left
 			if(playerList.size() == 2){
@@ -74,7 +74,7 @@ public class EpicParty {
 	
 	public void setPartyLeader(EpicPlayer newLeader){
 		partyLeader = newLeader;
-		sendMessage(null, ""+ChatColor.ITALIC + ChatColor.GREEN + newLeader.getPlayerName() + " is now party leader.");
+		sendMessage(null, ""+ChatColor.ITALIC + ChatColor.GREEN + newLeader.getPlayer().getName() + " is now party leader.");
 	}
 	
 	public int getSize(){
@@ -87,13 +87,13 @@ public class EpicParty {
 	
 	public void sendPartyMembers(EpicPlayer originalPlayer){
 		Player player = originalPlayer.getPlayer();
-		player.sendMessage(ChatColor.ITALIC + partyLeader.getPlayerName() + ChatColor.RESET + ChatColor.GREEN + " (Leader)");
+		player.sendMessage(ChatColor.ITALIC + partyLeader.getPlayer().getName() + ChatColor.RESET + ChatColor.GREEN + " (Leader)");
 		
 		for(int i = 0; i < playerList.size(); i++){
 			
 			EpicPlayer partyMember = playerList.get(i);
 			if(partyMember != partyLeader){
-				player.sendMessage(ChatColor.ITALIC + partyMember.getPlayerName());
+				player.sendMessage(ChatColor.ITALIC + partyMember.getPlayer().getName());
 			}
 		}
 	}
@@ -104,7 +104,7 @@ public class EpicParty {
 				String playerTag;
 				if(epicPlayer == partyLeader) playerTag = "(LDR)";
 				else playerTag = "(MBR)";
-				playerList.get(i).getPlayer().sendMessage(ChatColor.ITALIC + "" + ChatColor.GREEN + playerTag + ChatColor.WHITE + epicPlayer.getPlayerName() + ": " + message);
+				playerList.get(i).getPlayer().sendMessage(ChatColor.ITALIC + "" + ChatColor.GREEN + playerTag + ChatColor.WHITE + epicPlayer.getPlayer().getName() + ": " + message);
 			}
 		}else{
 			for(int i = 0; i < playerList.size(); i++){

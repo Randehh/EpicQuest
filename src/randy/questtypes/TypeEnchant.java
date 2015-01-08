@@ -20,7 +20,7 @@ public class TypeEnchant extends TypeBase implements Listener{
 		
 		//Get player and questlist
 		Player player = (Player)event.getInventory().getHolder();
-		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getName());
+		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getUniqueId());
 		List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.ENCHANT_ITEM);
 		
 		for(EpicQuestTask task : taskList){

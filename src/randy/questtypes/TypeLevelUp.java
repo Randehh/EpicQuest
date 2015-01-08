@@ -18,7 +18,7 @@ public class TypeLevelUp extends TypeBase implements Listener{
 	public void onPlayerLevelChange(PlayerLevelChangeEvent event){
 
 		Player player = event.getPlayer();
-		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getName());
+		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getUniqueId());
 		List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.LEVEL_UP);
 		
 		for(EpicQuestTask task : taskList){
