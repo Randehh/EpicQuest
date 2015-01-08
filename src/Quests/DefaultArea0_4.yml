@@ -1,5 +1,5 @@
 Name: Things Are Heating Up
-Start_Info: Now that you have a workbench, go ahead and create yourself a pickaxe. Use it to gather some stone and coal, then come back to me!
+Start_Info: Go ahead and create a furnace. Then cook your pork so you have some food for the journey!
 End_Info: Be sure to keep some food on you at all times! Are you ready to go to the next village?
 Tasks:
     '0':
@@ -31,3 +31,4 @@ Requirements:
 #    Items:
 #    - 'itemname=amount'
 #    Level: 0
+Auto_Complete: false

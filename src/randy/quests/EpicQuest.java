@@ -65,6 +65,7 @@ public class EpicQuest {
 	public String getQuestRewardPermission() { return EpicQuestDatabase.getRewardRank(questTag); }
 	public List<String> getQuestRewardCommand() { return EpicQuestDatabase.getRewardCommand(questTag); }
 	public int getQuestRewardHeroesExp() { return EpicQuestDatabase.getRewardHeroesExp(questTag); }
+	public Boolean getQuestAutoComplete() { return EpicQuestDatabase.getQuestAutoComplete(questTag); }
 	@SuppressWarnings("deprecation")
 	public void completeQuest(){
 		

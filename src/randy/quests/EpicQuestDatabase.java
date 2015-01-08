@@ -35,7 +35,7 @@ public class EpicQuestDatabase {
 	private static HashMap<String, List<String>> questLocked = new HashMap<String, List<String>>();
 	private static HashMap<String, List<ItemStack>> questItemsRequired = new HashMap<String, List<ItemStack>>();
 	private static HashMap<String, Integer> questLevel = new HashMap<String, Integer>();
-	
+	private static HashMap<String, Boolean> questAutoComplete = new HashMap<String, Boolean>();
 	
 	public static void ClearDatabase(){
 		questName.clear();
@@ -53,6 +53,7 @@ public class EpicQuestDatabase {
 		questLocked.clear();
 		questItemsRequired.clear();
 		questLevel.clear();
+		questAutoComplete.clear();
 	}
 	
 	/*
@@ -152,6 +153,10 @@ public class EpicQuestDatabase {
 		return questTags;
 	}
 	
+	public static Boolean getQuestAutoComplete(String quest){
+		return questAutoComplete.get(quest);
+	}
+	
 	/*
 	 * 
 	 * Setters
@@ -239,5 +244,8 @@ public class EpicQuestDatabase {
 	public static void AddQuestTag(String quest){
 		if(questTags.contains(quest)) return;
 		questTags.add(quest);
+	}
+	public static void setQuestAutoComplete(String quest, Boolean autcomplete){
+		questAutoComplete.put(quest, autcomplete);
 	}
 }

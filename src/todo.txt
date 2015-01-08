@@ -4,3 +4,4 @@ Phases: Kind of like quests in quests... Not sure about this one yet.
 Events: Trigger events when completing tasks, quests and starting quests.
 Stats leaderboards: Just some cool numbers to see who's the most bawsy quester.
 Editing quests in-game: Not sure about this, the plugin is quite extensive.
+Quest auto complete: Complete the quest when all tasks are complete.

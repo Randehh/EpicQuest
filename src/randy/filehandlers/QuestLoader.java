@@ -65,6 +65,8 @@ public class QuestLoader {
     				itemRequirementMaterials.add(Utils.StringToItemStack(item, "="));
     			}
     			EpicQuestDatabase.setQuestItemsRequired(questTag, itemRequirementMaterials);
+    			
+    			EpicQuestDatabase.setQuestAutoComplete(questTag, quest.getBoolean("Auto_Complete"));
         	}
         }
 		System.out.print("[EpicQuest] Done loading " + fileNames.length + " quests.");

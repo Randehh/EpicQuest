@@ -23,3 +23,4 @@ Requirements:
 #    Items:
 #    - 'itemname=amount'
 #    Level: 0
+Auto_Complete: true
