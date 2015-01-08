@@ -1,6 +1,6 @@
 package randy.tests;
 
-import static org.junit.Assert.*;
+/*import static org.junit.Assert.*;
 
 import org.bukkit.entity.Player;
 import org.junit.Before;
@@ -21,3 +21,4 @@ public class CommandTests {
 	}
 
 }
+*/
