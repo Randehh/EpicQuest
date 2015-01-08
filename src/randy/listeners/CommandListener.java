@@ -698,7 +698,7 @@ public class CommandListener implements CommandExecutor {
 					player.sendMessage(ChatColor.GREEN + "EpicQuest is developed by Impossible24 and bigbeno37");
 					player.sendMessage(ChatColor.GREEN + "This version is currently " + ChatColor.YELLOW + String.valueOf(EpicSystem.getVersion()));
 					player.sendMessage("");
-					player.sendMessage(ChatColor.GREEN + "For help with how to use EpicQuest, type in /q help");
+					player.sendMessage(ChatColor.GREEN + "For help with how to use EpicQuest, type in " + ChatColor.WHITE + "/q help");
 				}
 			}
 		}
