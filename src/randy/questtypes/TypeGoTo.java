@@ -2,11 +2,12 @@ package randy.questtypes;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.util.Vector;
 
 import randy.epicquest.EpicPlayer;
 import randy.epicquest.EpicSystem;
@@ -25,9 +26,9 @@ public class TypeGoTo extends TypeBase implements Listener {
 		
 		for(EpicQuestTask task : taskList){
 			String[] locationArray = task.getTaskID().split("=");
-			Vector location = new Vector(Integer.parseInt(locationArray[0]), Integer.parseInt(locationArray[1]), Integer.parseInt(locationArray[2]));
+			Location location = new Location(Bukkit.getWorld(locationArray[0]), Integer.parseInt(locationArray[1]), Integer.parseInt(locationArray[2]), Integer.parseInt(locationArray[3]));
 			
-			if(player.getLocation().toVector().distance(location) < 20){
+			if(player.getLocation().distance(location) < 15){
 				task.ProgressTask(1, epicPlayer);
 			}
 		}
