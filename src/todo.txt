@@ -1,9 +1,6 @@
-Announcer
-Fix collect
-RPG Item
-Phases
-Events
-RPG Item support
-Stats leaderboards
-
-Editing quests in-game
+Fix collect: The collect quest is temporarily taken out. When you complete a quest, the required items of the task are removed from the player's inventory.
+RPG Item: RPG Item quest rewards
+Phases: Kind of like quests in quests... Not sure about this one yet.
+Events: Trigger events when completing tasks, quests and starting quests.
+Stats leaderboards: Just some cool numbers to see who's the most bawsy quester.
+Editing quests in-game: Not sure about this, the plugin is quite extensive.
