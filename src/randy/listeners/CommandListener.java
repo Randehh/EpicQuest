@@ -3,6 +3,7 @@ package randy.listeners;
 import java.util.HashMap;
 import java.util.List;
 
+import me.confuser.barapi.BarAPI;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
@@ -699,6 +700,8 @@ public class CommandListener implements CommandExecutor {
 					player.sendMessage(ChatColor.GREEN + "This version is currently " + ChatColor.YELLOW + String.valueOf(EpicSystem.getVersion()));
 					player.sendMessage("");
 					player.sendMessage(ChatColor.GREEN + "For help with how to use EpicQuest, type in " + ChatColor.WHITE + "/q help");
+					
+					BarAPI.setMessage(player, "Testing");
 				}
 			}
 		}
