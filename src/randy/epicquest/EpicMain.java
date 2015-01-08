@@ -49,7 +49,7 @@ import randy.questtypes.TypeTame;
 
 public class EpicMain extends JavaPlugin{
 	//Set a few variables needed throughout the start-up
-	String pluginversion = "3.4.3";
+	String pluginversion;
 	String pluginname = "EpicQuest";
 	static Plugin epicQuestPlugin = Bukkit.getPluginManager().getPlugin("EpicQuest");
 	public static Permission permission = null;
@@ -99,6 +99,7 @@ public class EpicMain extends JavaPlugin{
 	public void onEnable() {
 		instance = this;
 		this.saveDefaultConfig();
+		pluginversion = this.getDescription().getVersion();
 
 		/*
 		 * Set events
@@ -168,7 +169,7 @@ public class EpicMain extends JavaPlugin{
 
 		//Start timer
 		startTimer();
-
+		
 		System.out.print(pluginname + " version " + pluginversion + " enabled.");
 	}
 
