@@ -701,7 +701,8 @@ public class CommandListener implements CommandExecutor {
 					player.sendMessage("");
 					player.sendMessage(ChatColor.GREEN + "For help with how to use EpicQuest, type in " + ChatColor.WHITE + "/q help");
 					
-					BarAPI.setMessage(player, "Testing");
+					/*Right here is how to trigger that excessive stack trace
+					BarAPI.setMessage(player, "Testing");*/
 				}
 			}
 		}
