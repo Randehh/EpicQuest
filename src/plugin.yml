@@ -9,4 +9,4 @@ commands:
     usage: /<command> help
   q:
     description: Quest stuff
-    usage: /<command> help
+    usage: 

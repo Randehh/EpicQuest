@@ -30,6 +30,7 @@ public class EpicSystem {
 	static int dailyLimit = 10;
 	static int saveTime = 0;
 	static int maxPartySize = 5;
+	private final static double version = 3.5;
 	static boolean usePermissions = false;
 	static boolean useBook = true;
 	static boolean useHeroes = false;
@@ -104,6 +105,10 @@ public class EpicSystem {
 	public static List<Object> getLeaderboard(){
 		//TODO: Create self rearranging List so that index 0 will have EpicPlayer with greatest Quests completed and index (index.length - 1) with lowest
 		return placeHolderForLeaderboard;
+	}
+	
+	public static double getVersion(){
+		return version;
 	}
 	
 	public static void addPlayer(EpicPlayer player){
