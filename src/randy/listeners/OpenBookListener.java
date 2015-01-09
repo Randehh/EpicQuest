@@ -39,7 +39,7 @@ public class OpenBookListener implements Listener{
 		}
 	}
 
-	private static BookMeta SetQuestBookPages(EpicPlayer epicPlayer, BookMeta book){
+	public static BookMeta SetQuestBookPages(EpicPlayer epicPlayer, BookMeta book){
 		
 		//Empty the old book
 		book.setPages(new ArrayList<String>());
@@ -114,6 +114,7 @@ public class OpenBookListener implements Listener{
 		book.addPage(statistics.toString());
 		
 		book.setAuthor("The Almighty One");
+		book.setTitle("Quest Book");
 		
 		epicPlayer.getPlayer().updateInventory();
 		

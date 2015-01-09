@@ -376,8 +376,10 @@ public class CommandListener implements CommandExecutor {
 							if(epicPlayer.hasPermission("epicquest.user.questbook")){
 								
 								//Give quest book
-								if(args.length == 2 && args[2].equalsIgnoreCase("give")){
+								if(args.length == 2 && args[1].equalsIgnoreCase("give")){
 									epicPlayer.giveQuestBook();
+									player.sendMessage(ChatColor.GREEN + "You have been given a Questbook.");
+									return true;
 								}
 
 								//Get quest list

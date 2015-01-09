@@ -120,10 +120,8 @@ public class EpicPlayer {
 		}
 		
 		ItemStack book = new ItemStack(Material.WRITTEN_BOOK, 1);
-		BookMeta bookMeta = (BookMeta)book.getItemMeta();
-		bookMeta.setTitle("Quest Book");
-		book.setItemMeta(bookMeta);
-		getPlayer().getInventory().addItem(book);
+		inventory.addItem(book);
+		OpenBookListener.UpdateBook(this);
 	}
 	
 	/*

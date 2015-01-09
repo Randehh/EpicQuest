@@ -26,6 +26,7 @@ import randy.filehandlers.FileChecker;
 import randy.filehandlers.ConfigLoader;
 import randy.filehandlers.SaveLoader;
 import randy.listeners.CommandListener;
+import randy.listeners.DeathListener;
 import randy.listeners.InventoryDragListener;
 import randy.listeners.ItemDropListener;
 import randy.listeners.OpenBookListener;
@@ -78,6 +79,7 @@ public class EpicMain extends JavaPlugin{
 	private final TypeTalkToVillager talkToVillagerListener = new TypeTalkToVillager();
 	private final TypeGoTo goToListener = new TypeGoTo();
 	private final TypeClickBlock clickBlockListener = new TypeClickBlock();
+	private final DeathListener deathListener = new DeathListener();
 
 	//Party timers
 	Timer timer = new Timer();
@@ -128,6 +130,7 @@ public class EpicMain extends JavaPlugin{
 		getServer().getPluginManager().registerEvents(talkToVillagerListener, this);
 		getServer().getPluginManager().registerEvents(goToListener, this);
 		getServer().getPluginManager().registerEvents(clickBlockListener, this);
+		getServer().getPluginManager().registerEvents(deathListener, this);
 		
 		this.getCommand("q").setExecutor(new CommandListener(invitationTimer, economy, this));
 
