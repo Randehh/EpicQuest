@@ -67,9 +67,10 @@ public class QuestEntity {
 	
 	public void NextInteraction(EpicPlayer epicPlayer){
 		String currentQuest = this.currentQuest.get(epicPlayer);
-		
 		QuestPhase currentPhase = questPhases.get(epicPlayer);
 		SentenceBatch sentences = null;
+		
+		//epicPlayer.getPlayer().sendMessage("Player info. Quest: " + currentQuest + ", Phase: " + currentPhase.toString());
 		boolean loop = true;
 		while(loop){
 		switch(currentPhase){

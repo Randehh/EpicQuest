@@ -356,12 +356,14 @@ public class SaveLoader {
 				}
 				
 				//Set player stuff
-				Object[] players = save.getConfigurationSection("Players").getKeys(false).toArray();
-				for(Object idObj : players){
-					UUID id = UUID.fromString((String)idObj);
-					EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(id);
-					qEntity.currentQuest.put(epicPlayer, save.getString("Players."+id.toString()+".CurrentQuest"));
-					qEntity.questPhases.put(epicPlayer, QuestPhase.valueOf(save.getString("Players."+id.toString()+".QuestPhase")));
+				if(save.contains("Players")){
+					Object[] players = save.getConfigurationSection("Players").getKeys(false).toArray();
+					for(Object idObj : players){
+						UUID id = UUID.fromString((String)idObj);
+						EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(id);
+						qEntity.currentQuest.put(epicPlayer, save.getString("Players."+id.toString()+".CurrentQuest"));
+						qEntity.questPhases.put(epicPlayer, QuestPhase.valueOf(save.getString("Players."+id.toString()+".QuestPhase")));
+					}
 				}
         	}
         }
