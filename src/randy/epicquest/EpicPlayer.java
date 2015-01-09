@@ -286,6 +286,7 @@ public class EpicPlayer {
 	}
 	public boolean hasUnlockedQuest(String questTag){
 		List<String> questLockedList = EpicQuestDatabase.getQuestLocked(questTag);
+		if(questLockedList.isEmpty()) return true;
 		
 		if(questCompleted.containsAll(questLockedList)){ return true; }
 		return false;

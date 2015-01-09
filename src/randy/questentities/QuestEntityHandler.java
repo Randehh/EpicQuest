@@ -7,7 +7,6 @@ import java.util.List;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
-import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -17,6 +16,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Villager;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.ChatColor;
 
 import randy.epicquest.EpicSystem;
 import randy.filehandlers.SaveLoader;

@@ -3,7 +3,6 @@ package randy.listeners;
 import java.util.HashMap;
 import java.util.List;
 
-import me.confuser.barapi.BarAPI;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
@@ -696,10 +695,10 @@ public class CommandListener implements CommandExecutor {
 					}
 				}else{
 					player.sendMessage(ChatColor.GOLD + "[-------Welcome to EpicQuest!-------]");
-					player.sendMessage(ChatColor.GREEN + "EpicQuest is developed by Impossible24 and bigbeno37");
+					player.sendMessage(ChatColor.GREEN + "EpicQuest is developed by Randy Schouten (Impossible24) with some additional code by bigbeno37");
 					player.sendMessage(ChatColor.GREEN + "This version is currently " + ChatColor.YELLOW + String.valueOf(EpicSystem.getVersion()));
 					player.sendMessage("");
-					player.sendMessage(ChatColor.GREEN + "For help with how to use EpicQuest, type in " + ChatColor.WHITE + "/q help");
+					player.sendMessage(ChatColor.GREEN + "For help with how to use EpicQuest, use " + ChatColor.WHITE + "'/q help'");
 					
 					/*Right here is how to trigger that excessive stack trace
 					BarAPI.setMessage(player, "Testing");*/
