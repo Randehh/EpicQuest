@@ -33,6 +33,7 @@ import randy.listeners.ChatListener;
 import randy.listeners.PlayerInteractListener;
 import randy.listeners.PlayerJoinListener;
 import randy.listeners.SignListener;
+import randy.questentities.QuestEntity;
 import randy.questentities.QuestEntityHandler;
 import randy.questtypes.TypeClickBlock;
 import randy.questtypes.TypeCraftItem;
@@ -164,6 +165,11 @@ public class EpicMain extends JavaPlugin{
 		if(players.length > 0){
 			for(int i = 0; i < players.length; i++){
 				SaveLoader.loadPlayer(players[i].getUniqueId());
+				
+				//Set basic stuff for villager
+				for(QuestEntity qEntity : QuestEntityHandler.GetQuestEntityList()){
+					qEntity.SetFirstInteraction(EpicSystem.getEpicPlayer(players[i]));
+				}
 			}
 		}
 

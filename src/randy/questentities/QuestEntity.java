@@ -66,6 +66,10 @@ public class QuestEntity {
 	}
 	
 	public void NextInteraction(EpicPlayer epicPlayer){
+		//Just in case somehow the players doesn't have a quest, assume the player didn't talk to the NPC yet
+		if(!currentQuest.containsKey(epicPlayer) || 
+				(currentQuest.containsKey(epicPlayer) && currentQuest.get(epicPlayer) == null)) currentQuest.put(epicPlayer, questList.get(0));
+		
 		String currentQuest = this.currentQuest.get(epicPlayer);
 		QuestPhase currentPhase = questPhases.get(epicPlayer);
 		SentenceBatch sentences = null;
@@ -120,7 +124,8 @@ public class QuestEntity {
 	}
 	
 	public void SetFirstInteraction(EpicPlayer epicPlayer){
-		if(!currentQuest.containsKey(epicPlayer)) currentQuest.put(epicPlayer, questList.get(0));
+		if(!currentQuest.containsKey(epicPlayer) || 
+				(currentQuest.containsKey(epicPlayer) && currentQuest.get(epicPlayer) == null)) currentQuest.put(epicPlayer, questList.get(0));
 		if(!questPhases.containsKey(epicPlayer)){
 			QuestPhase phase = QuestPhase.INTRO_TALK;
 			String questTag = this.questList.get(0);
