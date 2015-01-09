@@ -512,7 +512,8 @@ public class CommandListener implements CommandExecutor {
 									player.sendMessage(ChatColor.GOLD + "Quests get: " + epicPlayer2.getStatQuestGet() + ".");
 									player.sendMessage(ChatColor.GOLD + "Quests finished: " + epicPlayer2.getStatQuestCompleted() + ".");
 									player.sendMessage(ChatColor.GOLD + "Quests dropped: " + epicPlayer2.getStatQuestDropped() + ".");
-									player.sendMessage(ChatColor.GOLD + economy.currencyNamePlural() + " earned: " + epicPlayer2.getStatMoneyEarned() + ".");
+									if(EpicSystem.enabledMoneyRewards())
+										player.sendMessage(ChatColor.GOLD + economy.currencyNamePlural() + " earned: " + epicPlayer2.getStatMoneyEarned() + ".");
 									player.sendMessage(ChatColor.GOLD + "Tasks completed: " + epicPlayer2.getStatTaskCompleted() + ".");
 								}else{
 									player.sendMessage(ChatColor.RED + "That player doesn't exist!");
@@ -522,7 +523,8 @@ public class CommandListener implements CommandExecutor {
 								player.sendMessage(ChatColor.GOLD + "Quests get: " + epicPlayer.getStatQuestGet() + ".");
 								player.sendMessage(ChatColor.GOLD + "Quests finished: " + epicPlayer.getStatQuestCompleted() + ".");
 								player.sendMessage(ChatColor.GOLD + "Quests dropped: " + epicPlayer.getStatQuestDropped() + ".");
-								player.sendMessage(ChatColor.GOLD + economy.currencyNamePlural() + " earned: " + epicPlayer.getStatMoneyEarned() + ".");
+								if(EpicSystem.enabledMoneyRewards())
+									player.sendMessage(ChatColor.GOLD + economy.currencyNamePlural() + " earned: " + epicPlayer.getStatMoneyEarned() + ".");
 								player.sendMessage(ChatColor.GOLD + "Tasks completed: " + epicPlayer.getStatTaskCompleted() + ".");
 							}
 						}else{
@@ -699,6 +701,7 @@ public class CommandListener implements CommandExecutor {
 					player.sendMessage(ChatColor.GREEN + "This version is currently " + ChatColor.YELLOW + String.valueOf(EpicSystem.getVersion()));
 					player.sendMessage("");
 					player.sendMessage(ChatColor.GREEN + "For help with how to use EpicQuest, use " + ChatColor.WHITE + "'/q help'");
+					return true;
 					
 					/*Right here is how to trigger that excessive stack trace
 					BarAPI.setMessage(player, "Testing");*/
