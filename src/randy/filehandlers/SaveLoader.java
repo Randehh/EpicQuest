@@ -16,10 +16,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
-import randy.epicquest.EpicAnnouncer;
-import randy.epicquest.EpicPlayer;
-import randy.epicquest.EpicSign;
-import randy.epicquest.EpicSystem;
+import randy.engine.EpicAnnouncer;
+import randy.engine.EpicPlayer;
+import randy.engine.EpicSign;
+import randy.engine.EpicSystem;
 import randy.epicquest.EpicMain;
 import randy.questentities.QuestEntity;
 import randy.questentities.SentenceBatch;

@@ -21,6 +21,8 @@ import org.bukkit.util.Vector;
 
 import com.herocraftonline.heroes.Heroes;
 
+import randy.engine.EpicPlayer;
+import randy.engine.EpicSystem;
 import randy.filehandlers.QuestLoader;
 import randy.filehandlers.FileChecker;
 import randy.filehandlers.ConfigLoader;

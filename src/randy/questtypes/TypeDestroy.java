@@ -9,9 +9,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
-import randy.epicquest.EpicPlayer;
-import randy.epicquest.EpicSign;
-import randy.epicquest.EpicSystem;
+import randy.engine.EpicPlayer;
+import randy.engine.EpicSign;
+import randy.engine.EpicSystem;
 import randy.quests.EpicQuestTask;
 import randy.quests.EpicQuestTask.TaskTypes;
 

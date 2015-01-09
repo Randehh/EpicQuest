@@ -13,9 +13,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
+import randy.engine.EpicPlayer;
+import randy.engine.EpicSystem;
 import randy.epicquest.EpicMain;
-import randy.epicquest.EpicPlayer;
-import randy.epicquest.EpicSystem;
 import randy.quests.EpicQuest;
 
 public class OpenBookListener implements Listener{

@@ -13,11 +13,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import randy.engine.EpicParty;
+import randy.engine.EpicPlayer;
+import randy.engine.EpicSign;
+import randy.engine.EpicSystem;
 import randy.epicquest.EpicMain;
-import randy.epicquest.EpicParty;
-import randy.epicquest.EpicPlayer;
-import randy.epicquest.EpicSign;
-import randy.epicquest.EpicSystem;
 import randy.filehandlers.QuestLoader;
 import randy.questentities.QuestEntityHandler;
 import randy.quests.EpicQuest;

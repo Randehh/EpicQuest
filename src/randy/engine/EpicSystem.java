@@ -1,4 +1,4 @@
-package randy.epicquest;
+package randy.engine;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,7 +19,6 @@ public class EpicSystem {
 	
 	public static HashMap<UUID, Player> idMap = new HashMap<UUID, Player>();
 	private static List<EpicPlayer> playerList = new ArrayList<EpicPlayer>();
-	private static List<Object> placeHolderForLeaderboard = new ArrayList<Object>();
 	public static List<EpicSign> signList = new ArrayList<EpicSign>();
 	private static ArrayList<Vector> blockedList = new ArrayList<Vector>();
 	public static HashMap<Location, EpicPlayer> furnaceList = new HashMap<Location, EpicPlayer>();
@@ -104,7 +103,8 @@ public class EpicSystem {
 	
 	public static List<Object> getLeaderboard(){
 		//TODO: Create self rearranging List so that index 0 will have EpicPlayer with greatest Quests completed and index (index.length - 1) with lowest
-		return placeHolderForLeaderboard;
+		
+		return new ArrayList<Object>();
 	}
 	
 	public static double getVersion(){

@@ -9,8 +9,8 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
+import randy.engine.EpicSystem;
 import randy.epicquest.EpicMain;
-import randy.epicquest.EpicSystem;
 
 public class DeathListener implements Listener {
 	

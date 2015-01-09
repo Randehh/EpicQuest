@@ -8,8 +8,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
-import randy.epicquest.EpicPlayer;
-import randy.epicquest.EpicSystem;
+import randy.engine.EpicPlayer;
+import randy.engine.EpicSystem;
 import randy.questentities.QuestEntityHandler;
 import randy.quests.EpicQuestTask;
 import randy.quests.EpicQuestTask.TaskTypes;

@@ -10,8 +10,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import randy.epicquest.EpicPlayer;
-import randy.epicquest.EpicSystem;
+import randy.engine.EpicPlayer;
+import randy.engine.EpicSystem;
 import randy.quests.EpicQuest;
 
 public class QuestEntity {

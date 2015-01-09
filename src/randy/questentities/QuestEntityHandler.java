@@ -18,7 +18,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.ChatColor;
 
-import randy.epicquest.EpicSystem;
+import randy.engine.EpicSystem;
 import randy.filehandlers.SaveLoader;
 
 public class QuestEntityHandler {
