@@ -94,6 +94,7 @@ public class CommandListener implements CommandExecutor {
 								player.sendMessage(ChatColor.GOLD + "/q help <number> - Displays a help page.");
 								player.sendMessage(ChatColor.GOLD + "/q give <questnumber> - Gives you a quest, quest number optional from questlist.");
 								player.sendMessage(ChatColor.GOLD + "/q questbook <page> - Displays all the quests you have.");
+								player.sendMessage(ChatColor.GOLD + "/q questbook give - Puts a questbook item in your inventory.");
 								player.sendMessage(ChatColor.GOLD + "/q questlist <page> - Displays available to you.");
 								player.sendMessage(ChatColor.GOLD + "/q info <questnumber> - Display info on the quest.");
 								player.sendMessage(ChatColor.GOLD + "/q stats <playername> - Display stats on the player.");
@@ -373,6 +374,11 @@ public class CommandListener implements CommandExecutor {
 					if(args[0].equalsIgnoreCase("questbook") || args[0].equalsIgnoreCase("qb")){
 						if(args.length == 1 || args.length == 2){
 							if(epicPlayer.hasPermission("epicquest.user.questbook")){
+								
+								//Give quest book
+								if(args.length == 2 && args[2].equalsIgnoreCase("give")){
+									epicPlayer.giveQuestBook();
+								}
 
 								//Get quest list
 								List<EpicQuest> list = epicPlayer.getQuestList();
