@@ -366,6 +366,7 @@ public class SaveLoader {
 					}
 				}
         	}
+        	System.out.print("[EpicQuest] Loaded " + fileNames.length + " Quest Givers.");
         }
 	}
 

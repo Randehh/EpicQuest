@@ -190,15 +190,20 @@ public class EpicMain extends JavaPlugin{
 		return (permission != null);
 	}
 
-	private boolean setupEconomy(){
-		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-		if (economyProvider != null && economyProvider.getProvider().isEnabled()) {
-			economy = economyProvider.getProvider();
-		}
-		
-		//Economy not used or found
-		EpicSystem.setEnabledMoneyRewards(false);
-		return (economy != null);
+	private void setupEconomy(){
+		Bukkit.getScheduler().scheduleSyncDelayedTask(EpicMain.getInstance(), new Runnable(){
+			@Override
+			public void run() {
+				RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+				if (economyProvider != null && economyProvider.getProvider().isEnabled()) {
+					economy = economyProvider.getProvider();
+				}
+
+				//Economy not used or found
+				EpicSystem.setEnabledMoneyRewards(false);
+				System.out.print("[EpicQuest] Couldn't find an economy plugin through Vault, deactivated currency rewards.");
+			}
+		}, 50);
 	}
 
 	private boolean setupHeroes(){
