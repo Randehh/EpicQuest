@@ -15,9 +15,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import randy.epicquest.EpicPlayer;
-import randy.epicquest.EpicSign;
-import randy.epicquest.EpicSystem;
+import randy.engine.EpicPlayer;
+import randy.engine.EpicSign;
+import randy.engine.EpicSystem;
 import randy.questentities.QuestEntity;
 import randy.questentities.QuestEntityHandler;
 import randy.quests.EpicQuest;

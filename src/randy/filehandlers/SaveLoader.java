@@ -16,10 +16,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
-import randy.epicquest.EpicAnnouncer;
-import randy.epicquest.EpicPlayer;
-import randy.epicquest.EpicSign;
-import randy.epicquest.EpicSystem;
+import randy.engine.EpicAnnouncer;
+import randy.engine.EpicPlayer;
+import randy.engine.EpicSign;
+import randy.engine.EpicSystem;
 import randy.epicquest.EpicMain;
 import randy.questentities.QuestEntity;
 import randy.questentities.SentenceBatch;
@@ -356,14 +356,17 @@ public class SaveLoader {
 				}
 				
 				//Set player stuff
-				Object[] players = save.getConfigurationSection("Players").getKeys(false).toArray();
-				for(Object idObj : players){
-					UUID id = UUID.fromString((String)idObj);
-					EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(id);
-					qEntity.currentQuest.put(epicPlayer, save.getString("Players."+id.toString()+".CurrentQuest"));
-					qEntity.questPhases.put(epicPlayer, QuestPhase.valueOf(save.getString("Players."+id.toString()+".QuestPhase")));
+				if(save.contains("Players")){
+					Object[] players = save.getConfigurationSection("Players").getKeys(false).toArray();
+					for(Object idObj : players){
+						UUID id = UUID.fromString((String)idObj);
+						EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(id);
+						qEntity.currentQuest.put(epicPlayer, save.getString("Players."+id.toString()+".CurrentQuest"));
+						qEntity.questPhases.put(epicPlayer, QuestPhase.valueOf(save.getString("Players."+id.toString()+".QuestPhase")));
+					}
 				}
         	}
+        	System.out.print("[EpicQuest] Loaded " + fileNames.length + " Quest Givers.");
         }
 	}
 

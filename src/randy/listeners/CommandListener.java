@@ -13,11 +13,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import randy.engine.EpicParty;
+import randy.engine.EpicPlayer;
+import randy.engine.EpicSign;
+import randy.engine.EpicSystem;
 import randy.epicquest.EpicMain;
-import randy.epicquest.EpicParty;
-import randy.epicquest.EpicPlayer;
-import randy.epicquest.EpicSign;
-import randy.epicquest.EpicSystem;
 import randy.filehandlers.QuestLoader;
 import randy.questentities.QuestEntityHandler;
 import randy.quests.EpicQuest;
@@ -94,6 +94,7 @@ public class CommandListener implements CommandExecutor {
 								player.sendMessage(ChatColor.GOLD + "/q help <number> - Displays a help page.");
 								player.sendMessage(ChatColor.GOLD + "/q give <questnumber> - Gives you a quest, quest number optional from questlist.");
 								player.sendMessage(ChatColor.GOLD + "/q questbook <page> - Displays all the quests you have.");
+								player.sendMessage(ChatColor.GOLD + "/q questbook give - Puts a questbook item in your inventory.");
 								player.sendMessage(ChatColor.GOLD + "/q questlist <page> - Displays available to you.");
 								player.sendMessage(ChatColor.GOLD + "/q info <questnumber> - Display info on the quest.");
 								player.sendMessage(ChatColor.GOLD + "/q stats <playername> - Display stats on the player.");
@@ -373,6 +374,13 @@ public class CommandListener implements CommandExecutor {
 					if(args[0].equalsIgnoreCase("questbook") || args[0].equalsIgnoreCase("qb")){
 						if(args.length == 1 || args.length == 2){
 							if(epicPlayer.hasPermission("epicquest.user.questbook")){
+								
+								//Give quest book
+								if(args.length == 2 && args[1].equalsIgnoreCase("give")){
+									epicPlayer.giveQuestBook();
+									player.sendMessage(ChatColor.GREEN + "You have been given a Questbook.");
+									return true;
+								}
 
 								//Get quest list
 								List<EpicQuest> list = epicPlayer.getQuestList();
@@ -512,7 +520,8 @@ public class CommandListener implements CommandExecutor {
 									player.sendMessage(ChatColor.GOLD + "Quests get: " + epicPlayer2.getStatQuestGet() + ".");
 									player.sendMessage(ChatColor.GOLD + "Quests finished: " + epicPlayer2.getStatQuestCompleted() + ".");
 									player.sendMessage(ChatColor.GOLD + "Quests dropped: " + epicPlayer2.getStatQuestDropped() + ".");
-									player.sendMessage(ChatColor.GOLD + economy.currencyNamePlural() + " earned: " + epicPlayer2.getStatMoneyEarned() + ".");
+									if(EpicSystem.enabledMoneyRewards())
+										player.sendMessage(ChatColor.GOLD + economy.currencyNamePlural() + " earned: " + epicPlayer2.getStatMoneyEarned() + ".");
 									player.sendMessage(ChatColor.GOLD + "Tasks completed: " + epicPlayer2.getStatTaskCompleted() + ".");
 								}else{
 									player.sendMessage(ChatColor.RED + "That player doesn't exist!");
@@ -522,7 +531,8 @@ public class CommandListener implements CommandExecutor {
 								player.sendMessage(ChatColor.GOLD + "Quests get: " + epicPlayer.getStatQuestGet() + ".");
 								player.sendMessage(ChatColor.GOLD + "Quests finished: " + epicPlayer.getStatQuestCompleted() + ".");
 								player.sendMessage(ChatColor.GOLD + "Quests dropped: " + epicPlayer.getStatQuestDropped() + ".");
-								player.sendMessage(ChatColor.GOLD + economy.currencyNamePlural() + " earned: " + epicPlayer.getStatMoneyEarned() + ".");
+								if(EpicSystem.enabledMoneyRewards())
+									player.sendMessage(ChatColor.GOLD + economy.currencyNamePlural() + " earned: " + epicPlayer.getStatMoneyEarned() + ".");
 								player.sendMessage(ChatColor.GOLD + "Tasks completed: " + epicPlayer.getStatTaskCompleted() + ".");
 							}
 						}else{
@@ -699,6 +709,7 @@ public class CommandListener implements CommandExecutor {
 					player.sendMessage(ChatColor.GREEN + "This version is currently " + ChatColor.YELLOW + String.valueOf(EpicSystem.getVersion()));
 					player.sendMessage("");
 					player.sendMessage(ChatColor.GREEN + "For help with how to use EpicQuest, use " + ChatColor.WHITE + "'/q help'");
+					return true;
 					
 					/*Right here is how to trigger that excessive stack trace
 					BarAPI.setMessage(player, "Testing");*/

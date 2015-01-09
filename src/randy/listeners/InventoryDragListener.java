@@ -7,7 +7,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.FurnaceInventory;
 
-import randy.epicquest.EpicSystem;
+import randy.engine.EpicSystem;
 
 public class InventoryDragListener implements Listener{	
 	@EventHandler

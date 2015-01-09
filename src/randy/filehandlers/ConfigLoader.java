@@ -6,7 +6,7 @@ import java.io.IOException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import randy.epicquest.EpicSystem;
+import randy.engine.EpicSystem;
 
 public class ConfigLoader {
 

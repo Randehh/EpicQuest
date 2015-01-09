@@ -13,9 +13,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
+import randy.engine.EpicPlayer;
+import randy.engine.EpicSystem;
 import randy.epicquest.EpicMain;
-import randy.epicquest.EpicPlayer;
-import randy.epicquest.EpicSystem;
 import randy.quests.EpicQuest;
 
 public class OpenBookListener implements Listener{
@@ -39,7 +39,7 @@ public class OpenBookListener implements Listener{
 		}
 	}
 
-	private static BookMeta SetQuestBookPages(EpicPlayer epicPlayer, BookMeta book){
+	public static BookMeta SetQuestBookPages(EpicPlayer epicPlayer, BookMeta book){
 		
 		//Empty the old book
 		book.setPages(new ArrayList<String>());
@@ -114,6 +114,7 @@ public class OpenBookListener implements Listener{
 		book.addPage(statistics.toString());
 		
 		book.setAuthor("The Almighty One");
+		book.setTitle("Quest Book");
 		
 		epicPlayer.getPlayer().updateInventory();
 		

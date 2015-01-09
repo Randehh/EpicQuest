@@ -8,8 +8,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 
-import randy.epicquest.EpicSign;
-import randy.epicquest.EpicSystem;
+import randy.engine.EpicSign;
+import randy.engine.EpicSystem;
 import randy.quests.EpicQuestDatabase;
 
 public class SignListener implements Listener {

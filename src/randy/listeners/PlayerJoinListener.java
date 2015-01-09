@@ -7,8 +7,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import randy.epicquest.EpicPlayer;
-import randy.epicquest.EpicSystem;
+import randy.engine.EpicPlayer;
+import randy.engine.EpicSystem;
 import randy.filehandlers.SaveLoader;
 import randy.questentities.QuestEntity;
 import randy.questentities.QuestEntityHandler;

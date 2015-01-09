@@ -15,8 +15,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
-import randy.epicquest.EpicPlayer;
-import randy.epicquest.EpicSystem;
+import randy.engine.EpicPlayer;
+import randy.engine.EpicSystem;
 import randy.questentities.QuestEntityHandler;
 import randy.quests.EpicQuestTask;
 import randy.quests.EpicQuestTask.TaskTypes;

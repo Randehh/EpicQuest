@@ -4,8 +4,8 @@ import me.confuser.barapi.BarAPI;
 
 import org.bukkit.ChatColor;
 
-import randy.epicquest.EpicPlayer;
-import randy.epicquest.EpicSystem;
+import randy.engine.EpicPlayer;
+import randy.engine.EpicSystem;
 
 public class EpicQuestTask {
 	

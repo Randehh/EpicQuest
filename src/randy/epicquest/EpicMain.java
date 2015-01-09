@@ -21,11 +21,14 @@ import org.bukkit.util.Vector;
 
 import com.herocraftonline.heroes.Heroes;
 
+import randy.engine.EpicPlayer;
+import randy.engine.EpicSystem;
 import randy.filehandlers.QuestLoader;
 import randy.filehandlers.FileChecker;
 import randy.filehandlers.ConfigLoader;
 import randy.filehandlers.SaveLoader;
 import randy.listeners.CommandListener;
+import randy.listeners.DeathListener;
 import randy.listeners.InventoryDragListener;
 import randy.listeners.ItemDropListener;
 import randy.listeners.OpenBookListener;
@@ -33,6 +36,7 @@ import randy.listeners.ChatListener;
 import randy.listeners.PlayerInteractListener;
 import randy.listeners.PlayerJoinListener;
 import randy.listeners.SignListener;
+import randy.questentities.QuestEntity;
 import randy.questentities.QuestEntityHandler;
 import randy.questtypes.TypeClickBlock;
 import randy.questtypes.TypeCraftItem;
@@ -77,6 +81,7 @@ public class EpicMain extends JavaPlugin{
 	private final TypeTalkToVillager talkToVillagerListener = new TypeTalkToVillager();
 	private final TypeGoTo goToListener = new TypeGoTo();
 	private final TypeClickBlock clickBlockListener = new TypeClickBlock();
+	private final DeathListener deathListener = new DeathListener();
 
 	//Party timers
 	Timer timer = new Timer();
@@ -127,6 +132,7 @@ public class EpicMain extends JavaPlugin{
 		getServer().getPluginManager().registerEvents(talkToVillagerListener, this);
 		getServer().getPluginManager().registerEvents(goToListener, this);
 		getServer().getPluginManager().registerEvents(clickBlockListener, this);
+		getServer().getPluginManager().registerEvents(deathListener, this);
 		
 		this.getCommand("q").setExecutor(new CommandListener(invitationTimer, economy, this));
 
@@ -164,6 +170,11 @@ public class EpicMain extends JavaPlugin{
 		if(players.length > 0){
 			for(int i = 0; i < players.length; i++){
 				SaveLoader.loadPlayer(players[i].getUniqueId());
+				
+				//Set basic stuff for villager
+				for(QuestEntity qEntity : QuestEntityHandler.GetQuestEntityList()){
+					qEntity.SetFirstInteraction(EpicSystem.getEpicPlayer(players[i]));
+				}
 			}
 		}
 
@@ -184,15 +195,20 @@ public class EpicMain extends JavaPlugin{
 		return (permission != null);
 	}
 
-	private boolean setupEconomy(){
-		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-		if (economyProvider != null && economyProvider.getProvider().isEnabled()) {
-			economy = economyProvider.getProvider();
-		}
-		
-		//Economy not used or found
-		EpicSystem.setEnabledMoneyRewards(false);
-		return (economy != null);
+	private void setupEconomy(){
+		Bukkit.getScheduler().scheduleSyncDelayedTask(EpicMain.getInstance(), new Runnable(){
+			@Override
+			public void run() {
+				RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+				if (economyProvider != null && economyProvider.getProvider().isEnabled()) {
+					economy = economyProvider.getProvider();
+				}
+
+				//Economy not used or found
+				EpicSystem.setEnabledMoneyRewards(false);
+				System.out.print("[EpicQuest] Couldn't find an economy plugin through Vault, deactivated currency rewards.");
+			}
+		}, 50);
 	}
 
 	private boolean setupHeroes(){

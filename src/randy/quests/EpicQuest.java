@@ -15,9 +15,9 @@ import org.bukkit.inventory.PlayerInventory;
 
 import com.herocraftonline.heroes.characters.Hero;
 
-import randy.epicquest.EpicAnnouncer;
-import randy.epicquest.EpicPlayer;
-import randy.epicquest.EpicSystem;
+import randy.engine.EpicAnnouncer;
+import randy.engine.EpicPlayer;
+import randy.engine.EpicSystem;
 import randy.epicquest.EpicMain;
 import randy.quests.EpicQuestTask.TaskTypes;
 

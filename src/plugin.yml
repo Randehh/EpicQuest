@@ -1,6 +1,6 @@
 name: EpicQuest
 main: randy.epicquest.EpicMain
-version: 3.5
+version: 3.5.2
 depend: [Vault]
 softdepend: [Heroes, Citizens, BarAPI]
 commands:
@@ -9,4 +9,4 @@ commands:
     usage: /<command> help
   q:
     description: Quest stuff
-    usage: 
+    usage: /<command> help

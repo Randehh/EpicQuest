@@ -3,7 +3,7 @@ package randy.questtypes;
 import java.util.ArrayList;
 import java.util.List;
 
-import randy.epicquest.EpicPlayer;
+import randy.engine.EpicPlayer;
 
 public class DamageTag {
 	

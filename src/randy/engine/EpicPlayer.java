@@ -1,4 +1,4 @@
-package randy.epicquest;
+package randy.engine;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -120,10 +120,8 @@ public class EpicPlayer {
 		}
 		
 		ItemStack book = new ItemStack(Material.WRITTEN_BOOK, 1);
-		BookMeta bookMeta = (BookMeta)book.getItemMeta();
-		bookMeta.setTitle("Quest Book");
-		book.setItemMeta(bookMeta);
-		getPlayer().getInventory().addItem(book);
+		inventory.addItem(book);
+		OpenBookListener.UpdateBook(this);
 	}
 	
 	/*
@@ -134,7 +132,7 @@ public class EpicPlayer {
 	public List<EpicQuest> getQuestList(){ return questList; }
 	public EpicQuest getQuest(int questNo){ return questList.get(questNo); }
 	public EpicQuest getQuestByTag(String questTag){
-		for(int i = 0; i < questList.size(); i++) if(getQuest(i).getQuestTag() == questTag) return getQuest(i);
+		for(int i = 0; i < questList.size(); i++) if(getQuest(i).getQuestTag().equals(questTag)) return getQuest(i);
 		return null;
 	}
 	public List<String> getQuestsCompleted(){ return questCompleted; }
@@ -272,9 +270,8 @@ public class EpicPlayer {
 		if(getObtainableQuests().isEmpty()) { return false; } else { return true; }
 	}
 	public boolean hasQuest(String questTag){
-		
 		for(int i = 0; i < questList.size(); i++){
-			if(questList.get(i).getQuestTag() == questTag){
+			if(questList.get(i).getQuestTag().equalsIgnoreCase(questTag)){
 				return true;
 			}
 		}
