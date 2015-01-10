@@ -23,7 +23,7 @@ public class DeathListener implements Listener {
 		for(ItemStack item : event.getDrops()){
 			if(item != null && item.getType() == Material.WRITTEN_BOOK){
 				BookMeta bookMeta = (BookMeta)item.getItemMeta();
-				if(bookMeta.getTitle().equals("Quest Book")){
+				if(bookMeta.hasTitle() && bookMeta.getTitle().equals("Quest Book")){
 					itemToRemove = item;
 				}
 			}

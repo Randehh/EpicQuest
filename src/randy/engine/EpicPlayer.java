@@ -101,7 +101,7 @@ public class EpicPlayer {
 				ItemStack item = inventory.getContents()[i];
 				if(item != null && item.getType() == Material.WRITTEN_BOOK){
 					BookMeta bookMeta = (BookMeta)item.getItemMeta();
-					if(bookMeta.getTitle().equals("Quest Book")) return;
+					if(bookMeta.hasTitle() && bookMeta.getTitle().equals("Quest Book")) return;
 				}
 			}
 		}

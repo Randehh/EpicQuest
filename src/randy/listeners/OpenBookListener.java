@@ -31,7 +31,7 @@ public class OpenBookListener implements Listener{
 		if(inHand != null && inHand.getType() == Material.WRITTEN_BOOK){
 			
 			BookMeta book = (BookMeta)inHand.getItemMeta();
-			if(book.getTitle().equalsIgnoreCase("Quest Book")){
+			if(book.hasTitle() && book.getTitle().equalsIgnoreCase("Quest Book")){
 				
 				//Open zeh quest book!
 				inHand.setItemMeta(SetQuestBookPages(epicPlayer, book));

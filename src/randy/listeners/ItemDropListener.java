@@ -14,7 +14,7 @@ public class ItemDropListener  implements Listener{
 		ItemStack droppedItem = event.getItemDrop().getItemStack();
 		if(droppedItem.getType() == Material.WRITTEN_BOOK){
 			BookMeta book = (BookMeta)droppedItem.getItemMeta();
-			if(book.getTitle().equalsIgnoreCase("Quest Book")){
+			if(book.hasTitle() && book.getTitle().equalsIgnoreCase("Quest Book")){
 				event.setCancelled(true);
 			}
 		}
