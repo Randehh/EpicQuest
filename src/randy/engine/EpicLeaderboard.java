@@ -50,7 +50,9 @@ public class EpicLeaderboard {
 		return lowestID;
 	}
 	
-	//Quests completed
+	/*
+	 * QUESTS COMPLETED
+	 */
 	public static List<String> getTopQuestsCompleted(){
 		return getTopScores(questsCompleted);
 	}
@@ -62,13 +64,15 @@ public class EpicLeaderboard {
 		}
 		
 		UUID lowestID = getLowestScore(questsCompleted);
-		if(playerScore < questsCompleted.get(lowestID)){
+		if(playerScore > questsCompleted.get(lowestID)){
 			if(questsCompleted.size() == 3) questsCompleted.remove(lowestID);
 			questsCompleted.put(ePlayer.getPlayerID(), playerScore);
 		}
 	}
 	
-	//Tasks completed
+	/*
+	 * TASKS COMPLETED
+	 */
 	public static List<String> getTopTasksCompleted(){		
 		return getTopScores(tasksCompleted);
 	}
@@ -80,13 +84,15 @@ public class EpicLeaderboard {
 		}
 		
 		UUID lowestID = getLowestScore(tasksCompleted);
-		if(playerScore < tasksCompleted.get(lowestID)){
+		if(playerScore > tasksCompleted.get(lowestID)){
 			if(tasksCompleted.size() == 3) tasksCompleted.remove(lowestID);
 			tasksCompleted.put(ePlayer.getPlayerID(), playerScore);
 		}
 	}
 	
-	//Money earned
+	/*
+	 * MONEY EARNED
+	 */
 	public static List<String> getTopMoneyEarned(){		
 		return getTopScores(moneyEarned);
 	}
@@ -98,7 +104,7 @@ public class EpicLeaderboard {
 		}
 		
 		UUID lowestID = getLowestScore(moneyEarned);
-		if(playerScore < moneyEarned.get(lowestID)){
+		if(playerScore > moneyEarned.get(lowestID)){
 			if(moneyEarned.size() == 3) moneyEarned.remove(lowestID);
 			moneyEarned.put(ePlayer.getPlayerID(), playerScore);
 		}

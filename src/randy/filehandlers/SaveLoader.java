@@ -17,6 +17,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
 import randy.engine.EpicAnnouncer;
+import randy.engine.EpicLeaderboard;
 import randy.engine.EpicPlayer;
 import randy.engine.EpicSign;
 import randy.engine.EpicSystem;
@@ -50,6 +51,9 @@ public class SaveLoader {
 	static File announcerfile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "announcer.yml");
 	static FileConfiguration announcer = YamlConfiguration.loadConfiguration(announcerfile);
 
+	static File leaderboardfile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "leaderboard.yml");
+	static FileConfiguration leaderboard = YamlConfiguration.loadConfiguration(leaderboardfile);
+	
 	/*
 	 * Save players
 	 */
@@ -88,6 +92,30 @@ public class SaveLoader {
 			}
 		}
 		signFile.save(signfile);
+		
+		//Leaderboards
+		if(!EpicLeaderboard.questsCompleted.isEmpty()){
+			List<String> list = new ArrayList<String>();
+			for(UUID id : EpicLeaderboard.questsCompleted.keySet()){
+				list.add(id.toString()+"="+EpicLeaderboard.questsCompleted.get(id));
+			}
+			leaderboard.set("Quests_Completed", list);
+		}
+		if(!EpicLeaderboard.tasksCompleted.isEmpty()){
+			List<String> list = new ArrayList<String>();
+			for(UUID id : EpicLeaderboard.tasksCompleted.keySet()){
+				list.add(id.toString()+"="+EpicLeaderboard.tasksCompleted.get(id));
+			}
+			leaderboard.set("Tasks_Completed", list);
+		}
+		if(!EpicLeaderboard.moneyEarned.isEmpty()){
+			List<String> list = new ArrayList<String>();
+			for(UUID id : EpicLeaderboard.moneyEarned.keySet()){
+				list.add(id.toString()+"="+EpicLeaderboard.moneyEarned.get(id));
+			}
+			leaderboard.set("Money_Earned", list);
+		}
+		leaderboard.save(leaderboardfile);
 
 		ArrayList<Vector> blocklist = EpicSystem.getBlockList();
 		if(!blocklist.isEmpty()){
@@ -124,9 +152,9 @@ public class SaveLoader {
 				savePlayer(epicPlayer);
 			}			
 
-			System.out.print("[EpicQuest]: saved "  + playersToSave.size() + " player(s).");
+			System.out.print("[EpicQuest] Saved "  + playersToSave.size() + " player(s).");
 		}else{
-			System.out.print("There are no players to save");
+			System.out.print("[EpicQuest] There are no players to save");
 		}
 	}
 	
@@ -309,6 +337,20 @@ public class SaveLoader {
 		for(String line : announcer.getStringList("Quest_Completed")){
 			String[] split = line.split("=");
 			EpicAnnouncer.questCompletedText.put(split[0], split[1]);
+		}
+		
+		//Leaderboards
+		for(String line : leaderboard.getStringList("Quests_Completed")){
+			String[] split = line.split("=");
+			EpicLeaderboard.questsCompleted.put(UUID.fromString(split[0]), Float.parseFloat(split[1]));
+		}
+		for(String line : leaderboard.getStringList("Tasks_Completed")){
+			String[] split = line.split("=");
+			EpicLeaderboard.tasksCompleted.put(UUID.fromString(split[0]), Float.parseFloat(split[1]));
+		}
+		for(String line : leaderboard.getStringList("Money_Earned")){
+			String[] split = line.split("=");
+			EpicLeaderboard.moneyEarned.put(UUID.fromString(split[0]), Float.parseFloat(split[1]));
 		}
 		
 		//Villagers

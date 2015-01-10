@@ -18,6 +18,7 @@ public class FileChecker {
 	static File blockfile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "block.yml");
 	static File signfile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "signs.yml");
 	static File announcerfile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "announcer.yml");
+	static File leaderboardfile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "leaderboard.yml");
 	
 	/*
 	 * Check files
@@ -57,6 +58,10 @@ public class FileChecker {
 		if(!signfile.exists()){
 			signfile.createNewFile();
 			System.out.print("EpicQuest could not find the signs file. Creating.");
+		}
+		if(!leaderboardfile.exists()){
+			leaderboardfile.createNewFile();
+			System.out.print("EpicQuest could not find the leaderboard file. Creating.");
 		}
 		return true;
 	}

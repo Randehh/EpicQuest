@@ -567,11 +567,11 @@ public class CommandListener implements CommandExecutor {
 								return true;
 							}
 							
-							player.sendMessage(ChatColor.GOLD + "[=======  Leaderboards (Top " + topScores.size() +") =======]");
+							player.sendMessage(ChatColor.GOLD + "[======= " + ChatColor.WHITE + "Leaderboards (Top " + topScores.size() +") " + ChatColor.GOLD + "=======]");
 							for(int i = 0; i < topScores.size(); i++){
-								player.sendMessage(ChatColor.GOLD + "  " + (i + 1) + ")  " + topScores.get(i));
+								player.sendMessage(ChatColor.GOLD + "  " + (i + 1) + ")  " + ChatColor.RED + ChatColor.ITALIC + topScores.get(i));
 							}
-							player.sendMessage(ChatColor.GOLD + "[===================================]");
+							player.sendMessage(ChatColor.GOLD + "[==================================]");
 						}else{
 							player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
 						}
@@ -657,6 +657,7 @@ public class CommandListener implements CommandExecutor {
 					if(args[0].equalsIgnoreCase("save")){
 						if(epicPlayer.hasPermission("epicquest.admin.save")){
 							plugin.saveAll(false);
+							player.sendMessage(ChatColor.GREEN + "Succesfully saved all data.");
 						}else{
 							player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
 						}
