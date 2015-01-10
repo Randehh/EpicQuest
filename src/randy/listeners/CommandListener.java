@@ -117,7 +117,9 @@ public class CommandListener implements CommandExecutor {
 
 								}else if(Integer.parseInt(args[1]) == 3){
 									player.sendMessage(ChatColor.GOLD + "[=======  Help list (3/3) =======]");
-									player.sendMessage(ChatColor.GOLD + "/q leaderboard");
+									player.sendMessage(ChatColor.GOLD + "/q leaderboard questcompleted - Shows leaderboard for most quests completed.");
+									player.sendMessage(ChatColor.GOLD + "/q leaderboard taskcompleted - Shows leaderboard for most tasks completed.");
+									player.sendMessage(ChatColor.GOLD + "/q leaderboard moneyearned - Shows leaderboard for most money earned.");
 									player.sendMessage(ChatColor.GOLD + "[=======================]");
 								}
 							}
