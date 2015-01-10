@@ -101,9 +101,8 @@ public class EpicParty {
 	public void sendMessage(EpicPlayer epicPlayer, String message){
 		if(epicPlayer != null){
 			for(int i = 0; i < playerList.size(); i++){
-				String playerTag;
+				String playerTag = "";
 				if(epicPlayer == partyLeader) playerTag = "(LDR)";
-				else playerTag = "(MBR)";
 				playerList.get(i).getPlayer().sendMessage(ChatColor.ITALIC + "" + ChatColor.GREEN + playerTag + ChatColor.WHITE + epicPlayer.getPlayer().getName() + ": " + message);
 			}
 		}else{

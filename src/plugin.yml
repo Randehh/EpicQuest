@@ -6,5 +6,9 @@ softdepend: [Heroes, Citizens, BarAPI]
 commands:
   q:
     description: Quest stuff
-    usage: /<command> help
+    usage: /<command>
     aliases: quest
+  q help:
+    description: Quest help
+    usage: /<command> help
+    aliases: quest help
