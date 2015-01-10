@@ -96,8 +96,8 @@ public class EpicQuest {
 				String moneyname = economy.currencyNamePlural();
 				if(money == 1){ moneyname = economy.currencyNameSingular(); }
 				
+				epicPlayer.playerStatistics.AddMoneyEarned(money);
 				player.sendMessage(ChatColor.GREEN + "You received " + money + " " + moneyname + ".");
-				epicPlayer.modifyStatMoneyEarned(money);
 			}
 		}
 		
@@ -134,6 +134,8 @@ public class EpicQuest {
 		player.sendMessage(""+ChatColor.GRAY + ChatColor.ITALIC + getQuestEnd());
 		
 		EpicAnnouncer.SendQuestCompletedText(epicPlayer, this.questTag);
+		
+		epicPlayer.playerStatistics.AddQuestsCompleted(1);
 		
 		if(!epicPlayer.getQuestsCompleted().contains(questTag)) epicPlayer.getQuestsCompleted().add(questTag);
 		epicPlayer.getQuestList().remove(this);

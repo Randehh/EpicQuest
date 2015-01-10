@@ -44,6 +44,7 @@ public class EpicQuestTask {
 
 	public void ProgressTask(int amount, EpicPlayer player){
 		taskCurrent += amount;
+		player.playerStatistics.AddTasksCompleted(1);
 		
 		if(player != null && SendText()){
 			if(EpicSystem.useBarAPI()){

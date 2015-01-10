@@ -20,6 +20,7 @@ import randy.engine.EpicAnnouncer;
 import randy.engine.EpicPlayer;
 import randy.engine.EpicSign;
 import randy.engine.EpicSystem;
+import randy.engine.PlayerStatistics;
 import randy.epicquest.EpicMain;
 import randy.questentities.QuestEntity;
 import randy.questentities.SentenceBatch;
@@ -241,11 +242,11 @@ public class SaveLoader {
 		save.set("Timed_Quests", timerQuestTags);
 
 		//Save stats
-		save.set("Stats.Money_Earned", epicPlayer.getStatMoneyEarned());
-		save.set("Stats.Quests_Completed", epicPlayer.getStatQuestCompleted());
-		save.set("Stats.Quests_Dropped", epicPlayer.getStatQuestDropped());
-		save.set("Stats.Quests_Get", epicPlayer.getStatQuestGet());
-		save.set("Stats.Tasks_Completed", epicPlayer.getStatTaskCompleted());
+		save.set("Stats.Money_Earned", epicPlayer.playerStatistics.GetMoneyEarned());
+		save.set("Stats.Quests_Completed", epicPlayer.playerStatistics.GetQuestsCompleted());
+		save.set("Stats.Quests_Dropped", epicPlayer.playerStatistics.GetQuestsDropped());
+		save.set("Stats.Quests_Get", epicPlayer.playerStatistics.GetQuestsGet());
+		save.set("Stats.Tasks_Completed", epicPlayer.playerStatistics.GetTasksCompleted());
 
 		//Set daily limit
 		save.set("Daily_Left", epicPlayer.getQuestDailyLeft());
@@ -417,11 +418,12 @@ public class SaveLoader {
 
 
 			//Load stats
-			epicPlayer.modifyStatMoneyEarned(save.getInt("Stats.Money_Earned", 0));
-			epicPlayer.modifyStatQuestCompleted(save.getInt("Stats.Quests_Completed", 0));
-			epicPlayer.modifyStatQuestDropped(save.getInt("Stats.Dropped", 0));
-			epicPlayer.modifyStatQuestGet(save.getInt("Stats.Quests_Get", 0));
-			epicPlayer.modifyStatTaskCompleted(save.getInt("Stats.Tasks_Completed", 0));
+			epicPlayer.playerStatistics = new PlayerStatistics(epicPlayer,
+					(float)save.getDouble("Stats.Money_Earned", 0), 
+					save.getInt("Stats.Quests_Completed", 0), 
+					save.getInt("Stats.Dropped", 0), 
+					save.getInt("Stats.Quests_Get", 0), 
+					save.getInt("Stats.Tasks_Completed", 0));
 
 			//Load daily limit
 			epicPlayer.setQuestDailyLeft(save.getInt("Daily_Left", EpicSystem.getDailyLimit()));

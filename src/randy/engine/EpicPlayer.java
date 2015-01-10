@@ -27,29 +27,20 @@ public class EpicPlayer {
 	List<String> questCompleted;
 	int questDailyLeft;
 	HashMap<String, Integer> questTimer = new HashMap<String, Integer>();
-	float statMoneyEarned;
-	int statQuestCompleted;
-	int statQuestDropped;
-	int statQuestGet;
-	int statTaskCompleted;
 	EpicParty currentParty;
 	public boolean partyChat = false;
 	public EpicPlayer hasPartyInvitation = null;
 	HashMap<TaskTypes, List<EpicQuestTask>> questTasks = new HashMap<TaskTypes, List<EpicQuestTask>>();
+	public PlayerStatistics playerStatistics;
 	
-	public EpicPlayer(UUID playerID, List<EpicQuest> questList, List<String> questCompleted, int questDailyLeft, HashMap<String, Integer> questTimer, float statMoneyEarned, int statQuestCompleted, int statQuestDropped, int statQuestGet, int statTaskCompleted){
+	public EpicPlayer(UUID playerID, List<EpicQuest> questList, List<String> questCompleted, int questDailyLeft, HashMap<String, Integer> questTimer, PlayerStatistics playerStatistics){
 		
 		this.playerID = playerID;
 		this.questList = questList;
 		this.questCompleted = questCompleted;
 		this.questDailyLeft = questDailyLeft;
 		this.questTimer = questTimer;
-		this.statMoneyEarned = statMoneyEarned;
-		this.statQuestCompleted = statQuestCompleted;
-		this.statQuestDropped = statQuestDropped;
-		this.statQuestGet = statQuestGet;
-		this.statTaskCompleted = statTaskCompleted;
-		
+		this.playerStatistics = playerStatistics;
 	}
 	
 	public EpicPlayer(UUID playerID){
@@ -63,11 +54,7 @@ public class EpicPlayer {
 			tempList.put(EpicQuestDatabase.getQuestTags().get(i), 0);
 		}
 		this.questTimer = tempList;
-		this.statMoneyEarned = 0;
-		this.statQuestCompleted = 0;
-		this.statQuestDropped = 0;
-		this.statQuestGet = 0;
-		this.statTaskCompleted = 0;
+		this.playerStatistics = new PlayerStatistics(this,0,0,0,0,0);
 	}
 
 	/*
@@ -165,7 +152,7 @@ public class EpicPlayer {
 			}
 			
 			questList.add(quest);
-			modifyStatQuestGet(1);
+			playerStatistics.AddQuestsGet(1);
 			
 			getPlayer().sendMessage(""+ChatColor.GOLD + quest.getQuestName());
 			getPlayer().sendMessage(""+ChatColor.GRAY + ChatColor.ITALIC + quest.getQuestStart());
@@ -208,7 +195,7 @@ public class EpicPlayer {
 		if(!completeableQuests.isEmpty()){
 			for(int i = 0; i < completeableQuests.size(); i++){
 				completeableQuests.get(i).completeQuest();
-				modifyStatQuestCompleted(1);
+				playerStatistics.AddQuestsCompleted(1);
 			}
 		}else{
 			getPlayer().sendMessage(ChatColor.RED + "There are no quests to complete!");
@@ -334,23 +321,4 @@ public class EpicPlayer {
 			questTimer.put(questTag, 0);
 		}
 	}
-	
-	/*
-	 * 
-	 * Stats
-	 * 
-	 */
-	public float getStatMoneyEarned(){ return statMoneyEarned; }
-	public int getStatQuestCompleted() { return statQuestCompleted; }
-	public int getStatQuestDropped(){ return statQuestDropped; }
-	public int getStatQuestGet() { return statQuestGet; }
-	public int getStatTaskCompleted(){ return statTaskCompleted; }
-	
-	//Stat modifying
-	public void modifyStatMoneyEarned(float amount){ statMoneyEarned += amount; }
-	public void modifyStatQuestCompleted(int amount){ statQuestCompleted += amount; }
-	public void modifyStatQuestDropped(int amount){ statQuestDropped += amount; }
-	public void modifyStatQuestGet(int amount){ statQuestGet += amount; }
-	public void modifyStatTaskCompleted(int amount){ statTaskCompleted += amount; }
-
 }

@@ -105,12 +105,12 @@ public class OpenBookListener implements Listener{
 		
 		StringBuilder statistics = new StringBuilder();
 		statistics.append(""+ ChatColor.BLACK + ChatColor.ITALIC + "Statistics\n\n");
-		statistics.append(ChatColor.RED + "Quests get: " + epicPlayer.getStatQuestGet() + "\n");
-		statistics.append(ChatColor.RED + "Quests finished: " + epicPlayer.getStatQuestCompleted() + "\n");
-		statistics.append(ChatColor.RED + "Quests dropped: " + epicPlayer.getStatQuestDropped() + "\n");
+		statistics.append(ChatColor.RED + "Quests get: " + epicPlayer.playerStatistics.GetQuestsGet() + "\n");
+		statistics.append(ChatColor.RED + "Quests finished: " + epicPlayer.playerStatistics.GetQuestsCompleted() + "\n");
+		statistics.append(ChatColor.RED + "Quests dropped: " + epicPlayer.playerStatistics.GetQuestsDropped() + "\n");
 		if(EpicSystem.enabledMoneyRewards())
-			statistics.append(ChatColor.RED + EpicMain.economy.currencyNamePlural() + " earned: " + (int)epicPlayer.getStatMoneyEarned() + "\n");
-		statistics.append(ChatColor.RED + "Tasks completed: " + epicPlayer.getStatTaskCompleted());
+			statistics.append(ChatColor.RED + EpicMain.economy.currencyNamePlural() + " earned: " + (int)epicPlayer.playerStatistics.GetMoneyEarned() + "\n");
+		statistics.append(ChatColor.RED + "Tasks completed: " + epicPlayer.playerStatistics.GetTasksCompleted());
 		book.addPage(statistics.toString());
 		
 		book.setAuthor("The Almighty One");

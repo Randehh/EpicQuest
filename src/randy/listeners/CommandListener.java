@@ -13,6 +13,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import randy.engine.EpicLeaderboard;
 import randy.engine.EpicParty;
 import randy.engine.EpicPlayer;
 import randy.engine.EpicSign;
@@ -38,7 +39,7 @@ public class CommandListener implements CommandExecutor {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String commandName, String[] args){
+	public boolean onCommand(CommandSender sender, Command command, String commandName, String[] args){		
 		if(sender instanceof Player){
 			if(commandName.equalsIgnoreCase("q") || commandName.equalsIgnoreCase("quest")){
 				Player player = (Player) sender;
@@ -355,7 +356,7 @@ public class CommandListener implements CommandExecutor {
 
 									//Get quest
 									player.sendMessage(ChatColor.GRAY + "Quest '" + quest.getQuestName() + "' succesfully dropped.");
-									epicPlayer.modifyStatQuestDropped(1);
+									epicPlayer.playerStatistics.AddQuestsDropped(1);
 									epicPlayer.removeQuest(quest);
 
 								}else{
@@ -511,30 +512,25 @@ public class CommandListener implements CommandExecutor {
 					 */
 					if(args[0].equalsIgnoreCase("stats")){
 						if(epicPlayer.hasPermission("epicquest.user.stats")){
+							
+							EpicPlayer statPlayer = epicPlayer;
+							
 							if(args.length == 2){
 								Player player2 = Bukkit.getPlayer(args[1]);
-								EpicPlayer epicPlayer2 = EpicSystem.getEpicPlayer(player2.getUniqueId());
-
-								if(epicPlayer2 != null){
-									player.sendMessage(ChatColor.YELLOW + "Statistics for player '" + player2.getName() + "'.");
-									player.sendMessage(ChatColor.GOLD + "Quests get: " + epicPlayer2.getStatQuestGet() + ".");
-									player.sendMessage(ChatColor.GOLD + "Quests finished: " + epicPlayer2.getStatQuestCompleted() + ".");
-									player.sendMessage(ChatColor.GOLD + "Quests dropped: " + epicPlayer2.getStatQuestDropped() + ".");
-									if(EpicSystem.enabledMoneyRewards())
-										player.sendMessage(ChatColor.GOLD + economy.currencyNamePlural() + " earned: " + epicPlayer2.getStatMoneyEarned() + ".");
-									player.sendMessage(ChatColor.GOLD + "Tasks completed: " + epicPlayer2.getStatTaskCompleted() + ".");
-								}else{
-									player.sendMessage(ChatColor.RED + "That player doesn't exist!");
+								statPlayer = EpicSystem.getEpicPlayer(player2.getUniqueId());
+								if(statPlayer == null){
+									player.sendMessage(ChatColor.RED + "That player couldn't be found.");
+									return true;
 								}
-							}else if (args.length == 1){
-								player.sendMessage(ChatColor.YELLOW + "Statistics for player '" + player.getName() + "'.");
-								player.sendMessage(ChatColor.GOLD + "Quests get: " + epicPlayer.getStatQuestGet() + ".");
-								player.sendMessage(ChatColor.GOLD + "Quests finished: " + epicPlayer.getStatQuestCompleted() + ".");
-								player.sendMessage(ChatColor.GOLD + "Quests dropped: " + epicPlayer.getStatQuestDropped() + ".");
-								if(EpicSystem.enabledMoneyRewards())
-									player.sendMessage(ChatColor.GOLD + economy.currencyNamePlural() + " earned: " + epicPlayer.getStatMoneyEarned() + ".");
-								player.sendMessage(ChatColor.GOLD + "Tasks completed: " + epicPlayer.getStatTaskCompleted() + ".");
 							}
+							
+							player.sendMessage(ChatColor.YELLOW + "Statistics for player '" + statPlayer.getPlayer().getName() + "'.");
+							player.sendMessage(ChatColor.GOLD + "Quests get: " + statPlayer.playerStatistics.GetQuestsGet() + ".");
+							player.sendMessage(ChatColor.GOLD + "Quests finished: " + statPlayer.playerStatistics.GetQuestsCompleted() + ".");
+							player.sendMessage(ChatColor.GOLD + "Quests dropped: " + statPlayer.playerStatistics.GetQuestsDropped() + ".");
+							if(EpicSystem.enabledMoneyRewards())
+								player.sendMessage(ChatColor.GOLD + economy.currencyNamePlural() + " earned: " + statPlayer.playerStatistics.GetMoneyEarned() + ".");
+							player.sendMessage(ChatColor.GOLD + "Tasks completed: " + statPlayer.playerStatistics.GetTasksCompleted() + ".");
 						}else{
 							player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
 						}
@@ -547,34 +543,37 @@ public class CommandListener implements CommandExecutor {
 					
 					if(args[0].equalsIgnoreCase("leaderboard")){
 						if(epicPlayer.hasPermission("epicquest.user.leaderboard")){
-							String amount;
-							Object[] top3 = null;
-							List<Object> leaderboard = EpicSystem.getLeaderboard();
-							int position = 0;
-							
-							if(leaderboard.size() >= 3){ amount = "3"; }else{ amount = String.valueOf(leaderboard.size()); } 
-							if(amount == "3"){
-								top3 = new Object[]{leaderboard.get(0), leaderboard.get(1), leaderboard.get(2)};
-							}else if(amount == "2"){
-								top3 = new Object[]{leaderboard.get(0), leaderboard.get(1), "-----------"};
+							List<String> topScores = null;
+							if(args.length == 2){
+								if(args[1].equalsIgnoreCase("questcompleted")){
+									topScores = EpicLeaderboard.getTopQuestsCompleted();
+								}else if(args[1].equalsIgnoreCase("taskcompleted")){
+									topScores = EpicLeaderboard.getTopTasksCompleted();
+								}else if(args[1].equalsIgnoreCase("moneyearned")){
+									topScores = EpicLeaderboard.getTopMoneyEarned();
+								}else{
+									player.sendMessage(ChatColor.RED + "/q leaderboard <questcompleted/taskcompleted/moneyearned>");
+									return true;
+								}
 							}else{
-								top3 = new Object[]{leaderboard.get(0), "-----------", "-----------"};
+								player.sendMessage(ChatColor.RED + "/q leaderboard <questcompleted/taskcompleted/moneyearned>");
+								return true;
 							}
 							
-							for(int i=0;i<leaderboard.size();i++){
-								EpicPlayer lePlayer = (EpicPlayer)leaderboard.get(i);
-								
-								if(lePlayer.getPlayer().getName() == player.getDisplayName()) position = i;
+							if(topScores.isEmpty()){
+								player.sendMessage(ChatColor.RED + "There is no score in this section yet!");
+								return true;
 							}
 							
-							player.sendMessage(ChatColor.GOLD + "[=======  Leaderboards (Top " + amount +"=======]");
-							player.sendMessage(ChatColor.GOLD + "     1) " + top3[0]);
-							player.sendMessage(ChatColor.GOLD + "     2) " + top3[1]);
-							player.sendMessage(ChatColor.GOLD + "     3) " + top3[2]);
+							player.sendMessage(ChatColor.GOLD + "[=======  Leaderboards (Top " + topScores.size() +") =======]");
+							for(int i = 0; i < topScores.size(); i++){
+								player.sendMessage(ChatColor.GOLD + "  " + (i + 1) + ")  " + topScores.get(i));
+							}
 							player.sendMessage(ChatColor.GOLD + "[===================================]");
-							player.sendMessage(ChatColor.GOLD + "");
-							player.sendMessage(ChatColor.GOLD + "Your current position is " + String.valueOf(position) + ".");
+						}else{
+							player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
 						}
+						return true;
 					}					
 
 					/*
