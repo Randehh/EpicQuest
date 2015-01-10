@@ -202,11 +202,11 @@ public class EpicMain extends JavaPlugin{
 				RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
 				if (economyProvider != null && economyProvider.getProvider().isEnabled()) {
 					economy = economyProvider.getProvider();
+				}else{
+					//Economy not used or found
+					EpicSystem.setEnabledMoneyRewards(false);
+					System.out.print("[EpicQuest] Couldn't find an economy plugin through Vault, deactivated currency rewards.");
 				}
-
-				//Economy not used or found
-				EpicSystem.setEnabledMoneyRewards(false);
-				System.out.print("[EpicQuest] Couldn't find an economy plugin through Vault, deactivated currency rewards.");
 			}
 		}, 50);
 	}
