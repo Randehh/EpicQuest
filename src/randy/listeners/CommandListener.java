@@ -475,6 +475,10 @@ public class CommandListener implements CommandExecutor {
 
 								//Get all available quests
 								List<String> availableQuests = epicPlayer.getObtainableQuests();
+								if(availableQuests.isEmpty()){
+									player.sendMessage(ChatColor.RED + "There are no more quests available for you!");
+									return true;
+								}
 
 								//Seperate the pages
 								int maxpages = 0;
