@@ -325,7 +325,7 @@ public class CommandListener implements CommandExecutor {
 									//Get all available quests
 									List<String> availableQuests = epicPlayer.getObtainableQuests();
 
-									if(quest <= availableQuests.size()){
+									if(quest <= availableQuests.size() - 1){
 
 										//Give quest
 										epicPlayer.addQuest(new EpicQuest(epicPlayer, availableQuests.get(quest)));
