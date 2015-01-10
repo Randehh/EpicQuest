@@ -441,7 +441,7 @@ public class SaveLoader {
 					List<EpicQuestTask> taskList = epicQuest.getTasks();
 					for(int taskNumber = 0; taskNumber < taskList.size(); taskNumber++){
 						int amount = save.getInt("Quest."+questTag+"."+taskNumber);
-						taskList.get(taskNumber).ProgressTask(amount, null);
+						taskList.get(taskNumber).ProgressTask(amount, epicPlayer);
 					}	
 					epicPlayer.getQuestList().add(epicQuest);
 				}		
