@@ -24,6 +24,7 @@ import com.herocraftonline.heroes.Heroes;
 import randy.commands.CommandListener;
 import randy.engine.EpicPlayer;
 import randy.engine.EpicSystem;
+import randy.engine.Utils;
 import randy.filehandlers.QuestLoader;
 import randy.filehandlers.FileChecker;
 import randy.filehandlers.ConfigLoader;
@@ -101,7 +102,6 @@ public class EpicMain extends JavaPlugin{
 		System.out.print("[" + pluginname + "] succesfully disabled.");
 	}
 
-	@SuppressWarnings("deprecation")
 	public void onEnable() {
 		instance = this;
 		this.saveDefaultConfig();
@@ -167,7 +167,7 @@ public class EpicMain extends JavaPlugin{
 		SaveLoader.load();
 
 		//Check all players and see if it is first start
-		Player[] players = getServer().getOnlinePlayers();
+		Player[] players = Utils.getOnlinePlayers();
 		if(players.length > 0){
 			for(int i = 0; i < players.length; i++){
 				SaveLoader.loadPlayer(players[i].getUniqueId());
@@ -325,7 +325,9 @@ public class EpicMain extends JavaPlugin{
 			if(isShutDown){
 				EpicSystem.getPlayerList().clear();
 			}
-		} catch (IOException | InvalidConfigurationException e) {
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InvalidConfigurationException e){
 			e.printStackTrace();
 		}
 	}
