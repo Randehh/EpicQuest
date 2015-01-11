@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -63,8 +62,7 @@ public class EpicPlayer {
 	 * 
 	 */
 	public Player getPlayer(){
-		@SuppressWarnings("deprecation")
-		Player[] playerList = Bukkit.getOnlinePlayers();
+		Player[] playerList = Utils.getOnlinePlayers();
 		for(int i = 0; i < playerList.length; i++){
 			if(playerList[i].getUniqueId().equals(playerID)){
 				return playerList[i];

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -12,6 +11,7 @@ import org.bukkit.entity.Player;
 
 import randy.engine.EpicPlayer;
 import randy.engine.EpicSystem;
+import randy.engine.Utils;
 import randy.quests.EpicQuest;
 
 public class QuestEntity {
@@ -37,7 +37,6 @@ public class QuestEntity {
 		this.entity = entity;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public void SetBasics(String questTag){
 		List<String> questList = new ArrayList<String>();
 		questList.add(questTag);
@@ -55,7 +54,7 @@ public class QuestEntity {
 		this.questList = questList;
 
 		//Set basic vars for every online player
-		Player[] players = Bukkit.getOnlinePlayers();
+		Player[] players = Utils.getOnlinePlayers();
 		for(int i = 0; i < players.length; i++){
 			EpicPlayer ep = EpicSystem.getEpicPlayer(players[i]);
 			SetFirstInteraction(ep);
