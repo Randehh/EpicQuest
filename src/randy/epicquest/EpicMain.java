@@ -325,7 +325,9 @@ public class EpicMain extends JavaPlugin{
 			if(isShutDown){
 				EpicSystem.getPlayerList().clear();
 			}
-		} catch (IOException | InvalidConfigurationException e) {
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InvalidConfigurationException e){
 			e.printStackTrace();
 		}
 	}
