@@ -1,0 +1,18 @@
+language: java
+jdk:
+  - oraclejdk7
+  - oraclejdk8
+  - openjdk7
+  - openjdk6
+before_deploy:
+  - mvn install
+deploy:
+  provider: releases
+  api-key: "cd6c0d2555335daa815f5065d61e090deb8d38fd"
+  file: "target/epicquest3-3.5.2.jar"
+  skip_cleanup: true
+  on:
+    tags: true
+    all_branches: true
+after_deploy:
+  - mvn clean
