@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>epicquest3</groupId>
   <artifactId>epicquest3</artifactId>
-  <version>3.5.2</version>
+  <version>3.5.3</version>
   
   <build>
     <pluginManagement>
