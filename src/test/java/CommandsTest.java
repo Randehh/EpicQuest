@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class CommandsTest {
-
+	//TODO: Add working tests
 	@Before
 	public void setUp() throws Exception {
 	}
