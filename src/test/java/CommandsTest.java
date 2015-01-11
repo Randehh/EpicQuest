@@ -1,4 +1,4 @@
-package randy.tests;
+package test.java;
 
 import static org.junit.Assert.*;
 
