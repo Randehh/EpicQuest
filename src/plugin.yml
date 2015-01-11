@@ -4,9 +4,11 @@ version: 3.5.2
 depend: [Vault]
 softdepend: [Heroes, Citizens, BarAPI]
 commands:
-  quest:
-    description: Quest stuff
-    usage: /<command> help
   q:
     description: Quest stuff
+    usage: /<command>
+    aliases: quest
+  q help:
+    description: Quest help
     usage: /<command> help
+    aliases: quest help

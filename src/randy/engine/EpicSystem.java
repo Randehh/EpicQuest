@@ -101,10 +101,10 @@ public class EpicSystem {
 		return idMap.get(id);
 	}
 	
-	public static List<Object> getLeaderboard(){
+	public static List<String> getLeaderboard(){
 		//TODO: Create self rearranging List so that index 0 will have EpicPlayer with greatest Quests completed and index (index.length - 1) with lowest
 		
-		return new ArrayList<Object>();
+		return new ArrayList<String>();
 	}
 	
 	public static double getVersion(){

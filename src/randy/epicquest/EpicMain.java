@@ -21,13 +21,13 @@ import org.bukkit.util.Vector;
 
 import com.herocraftonline.heroes.Heroes;
 
+import randy.commands.CommandListener;
 import randy.engine.EpicPlayer;
 import randy.engine.EpicSystem;
 import randy.filehandlers.QuestLoader;
 import randy.filehandlers.FileChecker;
 import randy.filehandlers.ConfigLoader;
 import randy.filehandlers.SaveLoader;
-import randy.listeners.CommandListener;
 import randy.listeners.DeathListener;
 import randy.listeners.InventoryDragListener;
 import randy.listeners.ItemDropListener;
@@ -82,6 +82,7 @@ public class EpicMain extends JavaPlugin{
 	private final TypeGoTo goToListener = new TypeGoTo();
 	private final TypeClickBlock clickBlockListener = new TypeClickBlock();
 	private final DeathListener deathListener = new DeathListener();
+	public final CommandListener commandListener = new CommandListener();
 
 	//Party timers
 	Timer timer = new Timer();
@@ -134,8 +135,8 @@ public class EpicMain extends JavaPlugin{
 		getServer().getPluginManager().registerEvents(clickBlockListener, this);
 		getServer().getPluginManager().registerEvents(deathListener, this);
 		
-		this.getCommand("q").setExecutor(new CommandListener(invitationTimer, economy, this));
-
+		this.getCommand("q").setExecutor(commandListener);
+		
 		/*
 		 * Check all files before trying to load the plugin
 		 */
@@ -202,11 +203,11 @@ public class EpicMain extends JavaPlugin{
 				RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
 				if (economyProvider != null && economyProvider.getProvider().isEnabled()) {
 					economy = economyProvider.getProvider();
+				}else{
+					//Economy not used or found
+					EpicSystem.setEnabledMoneyRewards(false);
+					System.out.print("[EpicQuest] Couldn't find an economy plugin through Vault, deactivated currency rewards.");
 				}
-
-				//Economy not used or found
-				EpicSystem.setEnabledMoneyRewards(false);
-				System.out.print("[EpicQuest] Couldn't find an economy plugin through Vault, deactivated currency rewards.");
 			}
 		}, 50);
 	}

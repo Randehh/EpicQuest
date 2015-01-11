@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 
 import randy.engine.EpicPlayer;
 import randy.engine.EpicSystem;
+import randy.epicquest.EpicMain;
 
 public class EpicQuestTask {
 	
@@ -40,10 +41,17 @@ public class EpicQuestTask {
 		this.taskID = taskID;
 		this.taskGoal = taskGoal;
 		this.quest = quest;
+		
+		if(taskType == TaskTypes.EXECUTE_COMMAND){
+			String command = taskID;
+			if(command.contains(" ")) command = taskID.split(" ")[0];
+			EpicMain.getInstance().getCommand(command).setExecutor(EpicMain.getInstance().commandListener);
+		}
 	}
 
 	public void ProgressTask(int amount, EpicPlayer player){
 		taskCurrent += amount;
+		player.playerStatistics.AddTasksCompleted(1);
 		
 		if(player != null && SendText()){
 			if(EpicSystem.useBarAPI()){
