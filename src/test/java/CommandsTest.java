@@ -1,4 +1,4 @@
-package test.java;
+/*package test.java;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -37,3 +37,4 @@ public class CommandsTest {
 	}
 
 }
+*/
