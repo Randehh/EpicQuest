@@ -15,7 +15,13 @@ import randy.quests.EpicQuestTask.TaskTypes;
 
 public class CommandListener implements CommandExecutor {
 
+	EpicPlayer epicPlayer;
+	
 	public CommandListener() {
+	}
+	
+	public CommandListener(EpicPlayer epicPlayer){
+		this.epicPlayer = epicPlayer;
 	}
 
 	//This sends a message right away, so you don't need to copy paste it all the time
@@ -31,10 +37,10 @@ public class CommandListener implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String commandName, String[] args){
 		
 		//Check if the player did a command to finish a quest first
-		if(sender instanceof Player){
+		if(sender instanceof Player && epicPlayer != null){
 
 			Player player = (Player) sender;
-			EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getUniqueId());
+			epicPlayer = EpicSystem.getEpicPlayer(player.getUniqueId());
 
 			List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.EXECUTE_COMMAND);
 
