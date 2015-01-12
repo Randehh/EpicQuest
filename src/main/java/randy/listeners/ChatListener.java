@@ -11,11 +11,11 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 public class ChatListener implements Listener {
 
 	@EventHandler
-	public void onAsyncPlayerChat(AsyncPlayerChatEvent event){
+	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
 		Player player = event.getPlayer();
 		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getUniqueId());
-		
-		if(epicPlayer.partyChat){
+
+		if (epicPlayer.partyChat) {
 			epicPlayer.getParty().sendMessage(epicPlayer, event.getMessage());
 			event.setCancelled(true);
 		}

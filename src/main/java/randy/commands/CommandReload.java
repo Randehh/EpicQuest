@@ -13,17 +13,21 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class CommandReload {
-	public static void Execute(CommandSender sender, Command command, String commandName, String[] args){
-		if(!(sender instanceof Player)) return;
-		Player player = (Player)sender;
+	public static void Execute(CommandSender sender, Command command,
+			String commandName, String[] args) {
+		if (!(sender instanceof Player))
+			return;
+		Player player = (Player) sender;
 		EpicPlayer ePlayer = EpicSystem.getEpicPlayer(player);
-		
-		if(!CommandListener.hasPermission(ePlayer, "epicquest.admin.reload")) return;
-		
+
+		if (!CommandListener.hasPermission(ePlayer, "epicquest.admin.reload"))
+			return;
+
 		EpicQuestDatabase.ClearDatabase();
 		QuestLoader.loadQuests();
 		EpicQuest.ResetQuestTaskInfo();
 		QuestEntityHandler.Reload();
-		player.sendMessage(ChatColor.GREEN + "Succesfully reloaded the quest database and Quest Givers.");
+		player.sendMessage(ChatColor.GREEN
+				+ "Succesfully reloaded the quest database and Quest Givers.");
 	}
 }

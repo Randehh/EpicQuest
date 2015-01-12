@@ -14,24 +14,27 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerJoinListener implements Listener {
-	
+
 	@EventHandler
-	public void onPlayerJoin(PlayerJoinEvent event){
+	public void onPlayerJoin(PlayerJoinEvent event) {
 		SaveLoader.loadPlayer(event.getPlayer().getUniqueId());
-		
-		//Set basic stuff for villager
+
+		// Set basic stuff for villager
 		List<QuestEntity> entityList = QuestEntityHandler.GetQuestEntityList();
-		for(int i = 0; i < entityList.size(); i++){
-			entityList.get(i).SetFirstInteraction(EpicSystem.getEpicPlayer(event.getPlayer()));
+		for (int i = 0; i < entityList.size(); i++) {
+			entityList.get(i).SetFirstInteraction(
+					EpicSystem.getEpicPlayer(event.getPlayer()));
 		}
-		
-		EpicSystem.idMap.put(event.getPlayer().getUniqueId(), event.getPlayer());
+
+		EpicSystem.idMap
+				.put(event.getPlayer().getUniqueId(), event.getPlayer());
 	}
-	
+
 	@EventHandler
-	public void onPlayerQuit(PlayerQuitEvent event){
-		if(EpicSystem.getEpicPlayer(event.getPlayer().getUniqueId()) != null){
-			EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(event.getPlayer().getUniqueId());
+	public void onPlayerQuit(PlayerQuitEvent event) {
+		if (EpicSystem.getEpicPlayer(event.getPlayer().getUniqueId()) != null) {
+			EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(event.getPlayer()
+					.getUniqueId());
 			SaveLoader.savePlayer(epicPlayer);
 		}
 		EpicSystem.idMap.remove(event.getPlayer());

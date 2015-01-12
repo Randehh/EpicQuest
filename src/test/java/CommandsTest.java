@@ -17,7 +17,7 @@ public class CommandsTest {
 	Player player;
 	EpicPlayer epicPlayer;
 	CommandListener listener;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		player = Mockito.mock(Player.class);
@@ -26,14 +26,23 @@ public class CommandsTest {
 	}
 
 	@Test
-	public void testSlashQ() {		
+	public void testSlashQ() {
 		listener.onCommand(player, null, "q", new String[0]);
-		
-		Mockito.verify(player).sendMessage(ChatColor.GOLD + "[-------Welcome to EpicQuest!-------]");
-		Mockito.verify(player).sendMessage(ChatColor.GREEN + "EpicQuest is developed by Randy Schouten (Impossible24) with some additional code by bigbeno37");
-		Mockito.verify(player).sendMessage(ChatColor.GREEN + "This version is currently " + ChatColor.YELLOW + String.valueOf(EpicSystem.getVersion()));
+
+		Mockito.verify(player).sendMessage(
+				ChatColor.GOLD + "[-------Welcome to EpicQuest!-------]");
+		Mockito.verify(player)
+				.sendMessage(
+						ChatColor.GREEN
+								+ "EpicQuest is developed by Randy Schouten (Impossible24) with some additional code by bigbeno37");
+		Mockito.verify(player).sendMessage(
+				ChatColor.GREEN + "This version is currently "
+						+ ChatColor.YELLOW
+						+ String.valueOf(EpicSystem.getVersion()));
 		Mockito.verify(player).sendMessage("");
-		Mockito.verify(player).sendMessage(ChatColor.GREEN + "For help with how to use EpicQuest, use " + ChatColor.WHITE + "'/q help'");
+		Mockito.verify(player).sendMessage(
+				ChatColor.GREEN + "For help with how to use EpicQuest, use "
+						+ ChatColor.WHITE + "'/q help'");
 	}
 
 }

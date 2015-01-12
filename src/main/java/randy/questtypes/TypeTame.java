@@ -12,21 +12,22 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTameEvent;
 
-public class TypeTame extends TypeBase implements Listener{
+public class TypeTame extends TypeBase implements Listener {
 
 	@EventHandler
-	public void onEntityTame(EntityTameEvent event){
+	public void onEntityTame(EntityTameEvent event) {
 
-		Player player = (Player)event.getOwner();
+		Player player = (Player) event.getOwner();
 		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getUniqueId());
-		List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.TAME_MOB);
-		
-		for(EpicQuestTask task : taskList){
-			//Check if correct entity was tamed
+		List<EpicQuestTask> taskList = epicPlayer
+				.getTasksByType(TaskTypes.TAME_MOB);
+
+		for (EpicQuestTask task : taskList) {
+			// Check if correct entity was tamed
 			String entitytamed = event.getEntityType().name();
 			String entityneeded = task.getTaskID();
-			
-			if(entitytamed.equalsIgnoreCase(entityneeded)){	
+
+			if (entitytamed.equalsIgnoreCase(entityneeded)) {
 				task.ProgressTask(1, epicPlayer);
 			}
 		}
