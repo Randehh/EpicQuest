@@ -2,8 +2,6 @@
 
 EpicQuest is an easy to use yet highly customizable quest plugin. Immerse your players into Minecraft with a commandless questing experience through villagers, bounty signs and a book to show your progress!
 
-**Quests Villagers Tips WARNING! If you are upgrading to 3.1, be sure to read the changelog! Your plugin will BREAK if you don't!**
-
 ##Features:
 * Multiple tasks per quest
 * Multiple quests at the same time
@@ -85,4 +83,6 @@ reload | Reload quests from the quests file | epicquest.admin.reload
 ####[Sharing Quests](http://dev.bukkit.org/server-mods/epicquest/pages/quest-sharing/)
 
 ##Contribute!
-Feel like you want to help EpicQuest improve? Simply clone the repo and away you go. I'll be more than happy to accept fork requests as long as it's a beneficial contribution towards EpicQuest; however, even a small change, even like changing up the README.md or fixing a slight bug will do just fine! Be sure to update your repo before starting on something!
+Feel like you want to help EpicQuest grow and become more than what it is now? Simply clone the repo and import it to your favourite IDE with Maven integrated and away you go! Whatever contribution, regardless of how big or small will be appreciated and thus don't be afraid to submit a pull request.
+
+For instructions on how to use Maven with Eclipse, [check out this guide here](http://theopentutorials.com/tutorials/eclipse/installing-m2eclipse-maven-plugin-for-eclipse/). For other IDE's, you will need to look up how to use Maven with your respective IDE.
