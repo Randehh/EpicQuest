@@ -37,7 +37,7 @@ public class CommandListener implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String commandName, String[] args){
 		
 		//Check if the player did a command to finish a quest first
-		if(sender instanceof Player && epicPlayer != null){
+		if(sender instanceof Player && epicPlayer == null){
 
 			Player player = (Player) sender;
 			epicPlayer = EpicSystem.getEpicPlayer(player.getUniqueId());
