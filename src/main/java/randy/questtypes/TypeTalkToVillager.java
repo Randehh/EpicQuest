@@ -14,21 +14,22 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
-public class TypeTalkToVillager  extends TypeBase implements Listener{
+public class TypeTalkToVillager extends TypeBase implements Listener {
 
 	@EventHandler
-	public void onPlayerInteractEntity(PlayerInteractEntityEvent event){
+	public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
 
 		Player player = event.getPlayer();
 		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getUniqueId());
-		List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.TALK_TO_VILLAGER);
+		List<EpicQuestTask> taskList = epicPlayer
+				.getTasksByType(TaskTypes.TALK_TO_VILLAGER);
 		Entity entity = event.getRightClicked();
 
-		for(EpicQuestTask task : taskList){
+		for (EpicQuestTask task : taskList) {
 			String entityName = QuestEntityHandler.getEntityName(entity);
 			String entityNeeded = task.getTaskID();
 
-			if(entityName.equalsIgnoreCase(entityNeeded)){
+			if (entityName.equalsIgnoreCase(entityNeeded)) {
 				task.ProgressTask(1, epicPlayer);
 			}
 		}

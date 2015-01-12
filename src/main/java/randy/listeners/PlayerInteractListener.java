@@ -21,46 +21,51 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-public class PlayerInteractListener implements Listener{
-	
+public class PlayerInteractListener implements Listener {
+
 	public static Player createNewQuestEntity = null;
 	public static String createNewQuestEntityQuest = null;
 
 	@EventHandler
-	public void onPlayerInteract(PlayerInteractEvent event){
+	public void onPlayerInteract(PlayerInteractEvent event) {
 
-		//Get player and the action
+		// Get player and the action
 		Player player = event.getPlayer();
 		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getUniqueId());
-		if(event.getAction() == Action.RIGHT_CLICK_BLOCK){
+		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 
-			//Get the block and check if it's a sign
+			// Get the block and check if it's a sign
 			List<EpicSign> signList = EpicSystem.getSignList();
 			BlockState block = event.getClickedBlock().getState();
-			for(int i = 0; i < signList.size(); i++){
+			for (int i = 0; i < signList.size(); i++) {
 				EpicSign sign = signList.get(i);
 				Location signLoc = sign.getLocation();
 				Location blockLoc = block.getLocation();
 				blockLoc.setWorld(null);
 
-				if(signLoc.equals(blockLoc)){
-					if(sign.getQuest() == "EpicQuest_Internal_Random"){
-						if(epicPlayer.canGetQuest()){
+				if (signLoc.equals(blockLoc)) {
+					if (sign.getQuest() == "EpicQuest_Internal_Random") {
+						if (epicPlayer.canGetQuest()) {
 							epicPlayer.addQuestRandom();
-						}else{
-							player.sendMessage(ChatColor.RED + "There are no more quests available.");
+						} else {
+							player.sendMessage(ChatColor.RED
+									+ "There are no more quests available.");
 						}
-					} else if(sign.getQuest() == "EpicQuest_Internal_Turnin"){
-						if(!epicPlayer.getCompleteableQuest().isEmpty()){
+					} else if (sign.getQuest() == "EpicQuest_Internal_Turnin") {
+						if (!epicPlayer.getCompleteableQuest().isEmpty()) {
 							epicPlayer.completeAllQuests();
-						}else{
-							player.sendMessage(ChatColor.RED + "There are no quests to turn in.");
+						} else {
+							player.sendMessage(ChatColor.RED
+									+ "There are no quests to turn in.");
 						}
 					} else {
-						if(epicPlayer.getObtainableQuests().contains(sign.getQuest())){
-							epicPlayer.addQuest(new EpicQuest(epicPlayer, sign.getQuest()));
-						}else{
-							player.sendMessage(ChatColor.RED + "You can't get that quest.");
+						if (epicPlayer.getObtainableQuests().contains(
+								sign.getQuest())) {
+							epicPlayer.addQuest(new EpicQuest(epicPlayer, sign
+									.getQuest()));
+						} else {
+							player.sendMessage(ChatColor.RED
+									+ "You can't get that quest.");
 						}
 					}
 				}
@@ -69,17 +74,20 @@ public class PlayerInteractListener implements Listener{
 	}
 
 	@EventHandler
-	public void onPlayerInteractEntity(PlayerInteractEntityEvent event){
+	public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
 		Entity entity = event.getRightClicked();
 		Player player = event.getPlayer();
-		
-		if(createNewQuestEntity != null && createNewQuestEntity == player){
-			if(CitizensAPI.getNPCRegistry().isNPC(entity)){
+
+		if (createNewQuestEntity != null && createNewQuestEntity == player) {
+			if (CitizensAPI.getNPCRegistry().isNPC(entity)) {
 				QuestEntity qEntity = new QuestEntity(entity);
 				qEntity.SetBasics(createNewQuestEntityQuest);
-				player.sendMessage(ChatColor.GREEN + QuestEntityHandler.getEntityName(entity) + " is now a quest giver.");
-			}else{
-				player.sendMessage(ChatColor.RED + "That isn't a citizens NPC. Try again.");
+				player.sendMessage(ChatColor.GREEN
+						+ QuestEntityHandler.getEntityName(entity)
+						+ " is now a quest giver.");
+			} else {
+				player.sendMessage(ChatColor.RED
+						+ "That isn't a citizens NPC. Try again.");
 			}
 			createNewQuestEntity = null;
 			return;
@@ -87,8 +95,9 @@ public class PlayerInteractListener implements Listener{
 
 		EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getUniqueId());
 
-		if(QuestEntityHandler.entityList.containsKey(entity)){
-			QuestEntityHandler.GetQuestEntity(entity).NextInteraction(epicPlayer);
+		if (QuestEntityHandler.entityList.containsKey(entity)) {
+			QuestEntityHandler.GetQuestEntity(entity).NextInteraction(
+					epicPlayer);
 			event.setCancelled(true);
 		}
 	}
