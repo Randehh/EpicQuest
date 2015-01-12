@@ -1,5 +1,5 @@
 name: EpicQuest
-main: randy.epicquest.EpicMain
+main: main.java.randy.epicquest.EpicMain
 version: 3.5.2
 depend: [Vault]
 softdepend: [Heroes, Citizens, BarAPI]

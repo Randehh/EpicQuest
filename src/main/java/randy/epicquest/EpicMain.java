@@ -48,7 +48,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
-
 import com.herocraftonline.heroes.Heroes;
 
 public class EpicMain extends JavaPlugin{
@@ -180,6 +179,14 @@ public class EpicMain extends JavaPlugin{
 
 		//Start timer
 		startTimer();
+		
+		//Start streaming metrics data
+		/*try {
+	        MetricsLite metrics = new MetricsLite(this);
+	        metrics.start();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }*/
 		
 		System.out.print(pluginname + " version " + pluginversion + " enabled.");
 	}
