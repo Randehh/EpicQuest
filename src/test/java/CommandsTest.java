@@ -1,5 +1,9 @@
 package test.java;
 
+import main.java.randy.commands.CommandListener;
+import main.java.randy.engine.EpicPlayer;
+import main.java.randy.engine.EpicSystem;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.junit.Before;
@@ -7,10 +11,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import randy.commands.CommandListener;
-import randy.engine.EpicPlayer;
-import randy.engine.EpicSystem;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CommandsTest {
