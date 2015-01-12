@@ -37,25 +37,26 @@ public class CommandListener implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String commandName, String[] args){
 		
 		//Check if the player did a command to finish a quest first
-		if(sender instanceof Player && epicPlayer == null){
-
-			Player player = (Player) sender;
-			epicPlayer = EpicSystem.getEpicPlayer(player.getUniqueId());
-
-			List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.EXECUTE_COMMAND);
-
-			if(!taskList.isEmpty()){
-				StringBuilder fullCommand = new StringBuilder();
-				fullCommand.append(commandName);
-				for(String arg : args){
-					fullCommand.append(" ");
-					fullCommand.append(arg);
-				}
-
-
-				for(EpicQuestTask task : taskList){
-					if(task.getTaskID().equalsIgnoreCase(fullCommand.toString())){
-						task.ProgressTask(1, epicPlayer);
+		if(sender instanceof Player){
+			if(epicPlayer != null){
+				Player player = (Player) sender;
+				epicPlayer = EpicSystem.getEpicPlayer(player.getUniqueId());
+	
+				List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.EXECUTE_COMMAND);
+	
+				if(!taskList.isEmpty()){
+					StringBuilder fullCommand = new StringBuilder();
+					fullCommand.append(commandName);
+					for(String arg : args){
+						fullCommand.append(" ");
+						fullCommand.append(arg);
+					}
+	
+	
+					for(EpicQuestTask task : taskList){
+						if(task.getTaskID().equalsIgnoreCase(fullCommand.toString())){
+							task.ProgressTask(1, epicPlayer);
+						}
 					}
 				}
 			}
