@@ -45,6 +45,11 @@
             <id>Plugin-Metrics</id>
             <url>http://repo.mcstats.org/content/repositories/public</url>
         </repository>
+        
+        <repository>
+  			<id>dakani</id>
+  			<url>http://repo.dakanilabs.com/content/repositories/public</url>
+		</repository>
     </repositories>
   
     <dependencies>
@@ -82,6 +87,12 @@
 			<groupId>me.confuser</groupId>
 			<artifactId>BarAPI</artifactId>
 			<version>3.0</version>
+		</dependency>
+		
+		<dependency>
+  			<groupId>lib.PatPeter.SQLibrary</groupId>
+  			<artifactId>SQLibrary</artifactId>
+  			<version>7.1</version>
 		</dependency>
 		
 		<dependency>
