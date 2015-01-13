@@ -72,11 +72,6 @@
             <id>Plugin-Metrics</id>
             <url>http://repo.mcstats.org/content/repositories/public</url>
         </repository>
-        
-        <repository>
-  			<id>dakani</id>
-  			<url>http://repo.dakanilabs.com/content/repositories/public</url>
-		</repository>
     </repositories>
   
     <dependencies>
@@ -121,12 +116,6 @@
             <artifactId>metrics</artifactId>
             <version>R7</version>
         </dependency>
-		
-		<dependency>
-  			<groupId>lib.PatPeter.SQLibrary</groupId>
-  			<artifactId>SQLibrary</artifactId>
-  			<version>7.1</version>
-		</dependency>
 		
 		<dependency>
 			<groupId>junit</groupId>

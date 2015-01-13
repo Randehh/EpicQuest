@@ -1,4 +1,4 @@
-package main.java.randy.filehandlers;
+/*package main.java.randy.filehandlers;
 
 import java.io.File;
 import java.util.logging.Logger;
@@ -105,5 +105,7 @@ public class DatabaseHandler {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}*/
-}
+	}
+}*/
+
+//TODO: Add database handling
