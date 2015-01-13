@@ -161,6 +161,7 @@ public class EpicMain extends JavaPlugin{
 		setupHeroes();
 		setupCitizens();
 		setupBarAPI();
+		setupSQLibrary();
 
 		SaveLoader.load();
 
@@ -250,6 +251,19 @@ public class EpicMain extends JavaPlugin{
 		if(Bukkit.getPluginManager().getPlugin("BarAPI") == null || !Bukkit.getPluginManager().getPlugin("BarAPI").isEnabled()){
 			System.out.print("[EpicQuest]: BarAPI is enabled in the config, but isn't found! Disabling BarAPI support.");
 			EpicSystem.setUseBarAPI(false);
+			return false;
+		}else{
+			System.out.print("[EpicQuest]: Successfully hooked into BarAPI!");
+		}
+		return true;
+	}
+	
+	private boolean setupSQLibrary(){
+		if(!EpicSystem.useSQLDatabase()) return true;
+
+		if(Bukkit.getPluginManager().getPlugin("SQLibrary") == null || !Bukkit.getPluginManager().getPlugin("SQLibrary").isEnabled()){
+			System.out.print("[EpicQuest]: SQLibrary is enabled in the config, but isn't found! Using yml as player storage.");
+			EpicSystem.setUseSQLDatabase(false);
 			return false;
 		}else{
 			System.out.print("[EpicQuest]: Successfully hooked into BarAPI!");
