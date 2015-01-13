@@ -34,7 +34,7 @@ public class TypeClickBlock extends TypeBase implements Listener {
 						Integer.parseInt(locArray[2]));
 				
 				if(event.getClickedBlock().getLocation().equals(loc)){
-					task.ProgressTask(1, epicPlayer);
+					task.ProgressTask(1, epicPlayer, true);
 				}
 			}
 		}

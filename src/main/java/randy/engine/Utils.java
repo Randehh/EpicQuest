@@ -15,6 +15,7 @@ public class Utils {
 		return new ItemStack(Material.getMaterial(split[0]), Integer.parseInt(split[1]));
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static Player[] getOnlinePlayers(){
 		List<Player> playersList = new ArrayList<Player>();
 		

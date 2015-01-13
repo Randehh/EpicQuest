@@ -29,7 +29,7 @@ public class TypeTalkToVillager  extends TypeBase implements Listener{
 			String entityNeeded = task.getTaskID();
 
 			if(entityName.equalsIgnoreCase(entityNeeded)){
-				task.ProgressTask(1, epicPlayer);
+				task.ProgressTask(1, epicPlayer, true);
 			}
 		}
 	}

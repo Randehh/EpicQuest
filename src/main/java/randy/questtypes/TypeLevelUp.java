@@ -25,7 +25,7 @@ public class TypeLevelUp extends TypeBase implements Listener{
 			int oldlevel = event.getOldLevel();
 			int newlevel = event.getNewLevel();
 			if(newlevel > oldlevel){
-				task.ProgressTask(1, epicPlayer);
+				task.ProgressTask(1, epicPlayer, true);
 			}
 		}
 	}

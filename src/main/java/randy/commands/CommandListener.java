@@ -55,7 +55,7 @@ public class CommandListener implements CommandExecutor {
 	
 					for(EpicQuestTask task : taskList){
 						if(task.getTaskID().equalsIgnoreCase(fullCommand.toString())){
-							task.ProgressTask(1, epicPlayer);
+							task.ProgressTask(1, epicPlayer, true);
 						}
 					}
 				}

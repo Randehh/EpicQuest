@@ -69,7 +69,7 @@ public class TypeKill extends TypeBase implements Listener{
 			List<EpicQuestTask> taskList = player.getTasksByType(TaskTypes.KILL_MOB);
 			for(EpicQuestTask task : taskList){				
 				if(entityname.equalsIgnoreCase(task.getTaskID())){
-					task.ProgressTask(1, player);
+					task.ProgressTask(1, player, true);
 				}
 			}
 			
@@ -77,7 +77,7 @@ public class TypeKill extends TypeBase implements Listener{
 			taskList = player.getTasksByType(TaskTypes.KILL_ANY_PLAYER);
 			for(EpicQuestTask task : taskList){				
 				if(entity instanceof Player){
-					task.ProgressTask(1, player);
+					task.ProgressTask(1, player, true);
 				}
 			}
 			
@@ -85,7 +85,7 @@ public class TypeKill extends TypeBase implements Listener{
 			taskList = player.getTasksByType(TaskTypes.KILL_PLAYER);
 			for(EpicQuestTask task : taskList){				
 				if(entity instanceof Player && ((Player)entity).getName().equalsIgnoreCase(task.getTaskID())){
-					task.ProgressTask(1, player);
+					task.ProgressTask(1, player, true);
 				}
 			}
 			
@@ -93,7 +93,7 @@ public class TypeKill extends TypeBase implements Listener{
 			taskList = player.getTasksByType(TaskTypes.KILL_ANY_MOB);
 			for(EpicQuestTask task : taskList){				
 				if(!(entity instanceof Player)){
-					task.ProgressTask(1, player);
+					task.ProgressTask(1, player, true);
 				}
 			}
 			
@@ -105,7 +105,7 @@ public class TypeKill extends TypeBase implements Listener{
 					if(entity.getCustomName() != null) name = entity.getCustomName();
 					name = ChatColor.stripColor(name);
 					if(name.equalsIgnoreCase(task.getTaskID())){
-						task.ProgressTask(1, player);
+						task.ProgressTask(1, player, true);
 					}
 				}
 			}

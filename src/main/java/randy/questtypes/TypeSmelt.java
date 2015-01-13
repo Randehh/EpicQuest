@@ -26,7 +26,7 @@ public class TypeSmelt extends TypeBase implements Listener{
 			Material itemNeeded = Material.matchMaterial(task.getTaskID());
 			
 			if(itemID == itemNeeded){
-				task.ProgressTask(1, epicPlayer);
+				task.ProgressTask(1, epicPlayer, true);
 			}
 		}
 	}

@@ -27,7 +27,7 @@ public class TypeCraftItem extends TypeBase implements Listener{
 			String itemNeeded = task.getTaskID();
 			
 			if(itemID == Material.matchMaterial(itemNeeded)){
-				task.ProgressTask(1, epicPlayer);
+				task.ProgressTask(1, epicPlayer, true);
 			}
 		}
 	}

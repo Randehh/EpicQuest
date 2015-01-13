@@ -35,7 +35,7 @@ public class TypePlace extends TypeBase implements Listener{
 			String blockneeded = task.getTaskID();
 
 			if(blockPlaced == Material.matchMaterial(blockneeded)){
-				task.ProgressTask(1, epicPlayer);
+				task.ProgressTask(1, epicPlayer, true);
 				EpicSystem.getBlockList().add(block.getLocation().toVector());
 			}
 		}
