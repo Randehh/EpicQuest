@@ -22,6 +22,7 @@ import org.bukkit.inventory.meta.BookMeta;
 public class EpicPlayer {
 	
 	UUID playerID;
+	String playerName;
 	List<EpicQuest> questList;
 	List<String> questCompleted;
 	int questDailyLeft;
@@ -71,6 +72,8 @@ public class EpicPlayer {
 		return null;
 	}
 	public UUID getPlayerID() { return playerID; }
+	public String getPlayerName() { return playerName; }
+	public void setPlayerName(String playerName) { this.playerName = playerName; }
 	
 	public EpicParty getParty(){
 		return currentParty;

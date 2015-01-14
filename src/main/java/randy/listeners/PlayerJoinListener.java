@@ -25,6 +25,8 @@ public class PlayerJoinListener implements Listener {
 			entityList.get(i).SetFirstInteraction(EpicSystem.getEpicPlayer(event.getPlayer()));
 		}
 		
+		EpicSystem.getEpicPlayer(event.getPlayer()).setPlayerName(event.getPlayer().getName());
+		
 		EpicSystem.idMap.put(event.getPlayer().getUniqueId(), event.getPlayer());
 	}
 	

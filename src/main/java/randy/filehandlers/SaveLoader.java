@@ -150,8 +150,6 @@ public class SaveLoader {
 				// Get the file of the player which has to be saved
 				EpicPlayer epicPlayer = playersToSave.get(i);
 				savePlayer(epicPlayer);
-				
-				System.out.print(epicPlayer.getPlayerID());
 			}			
 
 			System.out.print("[EpicQuest] Saved "  + playersToSave.size() + " player(s).");
