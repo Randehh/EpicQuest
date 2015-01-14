@@ -58,7 +58,7 @@ public class PlayerInteractListener implements Listener{
 						}
 					} else {
 						if(epicPlayer.getObtainableQuests().contains(sign.getQuest())){
-							epicPlayer.addQuest(new EpicQuest(epicPlayer, sign.getQuest()));
+							epicPlayer.addQuest(new EpicQuest(sign.getQuest()));
 						}else{
 							player.sendMessage(ChatColor.RED + "You can't get that quest.");
 						}

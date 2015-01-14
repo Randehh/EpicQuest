@@ -435,7 +435,7 @@ public class SaveLoader {
 				for(String questTag : questList){
 
 					//Create the EpicQuests
-					EpicQuest epicQuest = new EpicQuest(epicPlayer, questTag);
+					EpicQuest epicQuest = new EpicQuest(questTag);
 
 					//Load task progress
 					List<EpicQuestTask> taskList = epicQuest.getTasks();
@@ -444,6 +444,7 @@ public class SaveLoader {
 						taskList.get(taskNumber).ProgressTask(amount, epicPlayer, false);
 					}	
 					epicPlayer.getQuestList().add(epicQuest);
+					epicQuest.setEpicPlayer(epicPlayer);
 				}		
 			}
 

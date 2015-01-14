@@ -81,7 +81,7 @@ public class QuestEntity {
 			sentences = openingSentences.get(currentQuest);
 			epicPlayer.getPlayer().sendMessage(formatMessage(sentences.Next(epicPlayer)));
 			if(sentences.IsLast(epicPlayer)){
-				epicPlayer.addQuest(new EpicQuest(epicPlayer, currentQuest));
+				epicPlayer.addQuest(new EpicQuest(currentQuest));
 				questPhases.put(epicPlayer, QuestPhase.BUSY);
 			}
 			loop = false;

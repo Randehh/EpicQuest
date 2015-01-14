@@ -38,7 +38,7 @@ public class CommandGive {
 				return;
 			}
 			
-			ePlayer.addQuest(new EpicQuest(ePlayer, availableQuests.get(quest)));
+			ePlayer.addQuest(new EpicQuest(availableQuests.get(quest)));
 			return;
 		}
 	}

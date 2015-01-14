@@ -138,7 +138,9 @@ public class EpicPlayer {
 	
 	//Quest managing
 	public boolean addQuest(EpicQuest quest){
-		if(canGetQuest(quest.getQuestTag()) == true){
+		if(canGetQuest(quest.getQuestTag())){
+			
+			quest.setEpicPlayer(this);
 			
 			//Take items first
 			if(hasItemRequirements(quest.getQuestTag())){
@@ -210,7 +212,7 @@ public class EpicPlayer {
 		if(!obtainableQuests.isEmpty()){
 			Random generator = new Random();
 			int randomQuest = generator.nextInt(obtainableQuests.size());
-			EpicQuest quest = new EpicQuest(this, obtainableQuests.get(randomQuest));
+			EpicQuest quest = new EpicQuest(obtainableQuests.get(randomQuest));
 			addQuest(quest);
 		}
 	}
@@ -241,8 +243,7 @@ public class EpicPlayer {
 		}
 		return obtainableQuests;
 	}
-	public boolean canGetQuest(String questTag){
-		
+	public boolean canGetQuest(String questTag){		
 		if(!hasQuest(questTag) &&
 				hasUnlockedQuest(questTag) &&
 				hasDailyQuestLeft() &&
@@ -252,6 +253,7 @@ public class EpicPlayer {
 				isHighEnoughLevel(questTag)){
 			return true;
 		}
+		
 		return false;
 	}
 	public boolean canGetQuest(){
@@ -281,7 +283,7 @@ public class EpicPlayer {
 		return false;
 	}
 	public boolean isTimeOut(String questTag){
-		if(EpicQuestDatabase.getQuestResetTime(questTag) == -1 && getQuestsCompleted().contains(questTag)) return true;
+		if(EpicQuestDatabase.getQuestResetTime(questTag) == -1 && getQuestsCompleted().contains(questTag)) return false;
 		
 		checkTimer(questTag, false);
 		

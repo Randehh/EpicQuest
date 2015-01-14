@@ -27,11 +27,12 @@ public class EpicQuest {
 	private String questTag;
 	private List<EpicQuestTask> questTasks = new ArrayList<EpicQuestTask>();
 	
-	public EpicQuest(EpicPlayer epicPlayer, String questTag){
-		
-		this.epicPlayer = epicPlayer;
+	public EpicQuest(String questTag){
 		this.questTag = questTag;
-		
+	}
+	
+	public void setEpicPlayer(EpicPlayer epicPlayer){
+		this.epicPlayer = epicPlayer;
 		int totalTaskAmount = EpicQuestDatabase.getTaskTotal(questTag);
 		for(int i = 0; i < totalTaskAmount; i ++){	
 			TaskTypes taskType = EpicQuestDatabase.getTaskType(questTag, i);

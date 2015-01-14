@@ -5,10 +5,6 @@ depend: [Vault]
 softdepend: [Heroes, Citizens, BarAPI]
 commands:
   q:
-    description: Quest stuff
+    description: Quest commands
     usage: /<command>
     aliases: quest
-  q help:
-    description: Quest help
-    usage: /<command> help
-    aliases: quest help
