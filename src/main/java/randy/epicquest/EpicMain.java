@@ -185,11 +185,11 @@ public class EpicMain extends JavaPlugin{
 		
 		//Start streaming metrics data
 		try {
-	        	Metrics metrics = new Metrics(this);
-		        metrics.start();
+			Metrics metrics = new Metrics(this);
+		    metrics.start();
 		} catch (IOException e) {
-	        	e.printStackTrace();
-	        }
+			e.printStackTrace();
+	    }
 		
 		System.out.print(pluginname + " version " + pluginversion + " enabled.");
 	}

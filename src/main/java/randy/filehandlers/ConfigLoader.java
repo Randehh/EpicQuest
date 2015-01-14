@@ -96,12 +96,13 @@ public class ConfigLoader {
 			EpicSystem.setEnabledAnnouncer(configuration.getBoolean("Enable_Announcer"));
 		}
 		
-		if(!configuration.contains("Use_SQL_Database")){
-			configuration.set("Use_SQL_Database", true);
+		/*if(!configuration.contains("Use_SQL_Database")){
+			configuration.set("Use_SQL_Database", false);
 			EpicSystem.setUseSQLDatabase(false);
 		}else{
 			EpicSystem.setUseSQLDatabase(configuration.getBoolean("Use_SQL_Database"));
-		}
+		}*/
+		EpicSystem.setUseSQLDatabase(false);
 		
 		try {
 			configuration.save(configfile);
