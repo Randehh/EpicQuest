@@ -26,6 +26,7 @@ public class QuestEntity {
 	public HashMap<String, SentenceBatch> openingSentences = new HashMap<String, SentenceBatch>();
 	public HashMap<String, SentenceBatch> middleSentences = new HashMap<String, SentenceBatch>();
 	public HashMap<String, SentenceBatch> endingSentences = new HashMap<String, SentenceBatch>();
+	public SentenceBatch neutralSentences;
 	public List<String> questList = new ArrayList<String>();
 	
 	public HashMap<EpicPlayer, String> currentQuest = new HashMap<EpicPlayer, String>();
@@ -47,10 +48,13 @@ public class QuestEntity {
 		middleList.add("Come back to me when you are done.");
 		List<String> endingList = new ArrayList<String>();
 		endingList.add("Awesome, thanks a bunch!");
+		List<String> neutralList = new ArrayList<String>();
+		neutralList.add("How ya doin'?");
 
 		openingSentences.put(questList.get(0), new SentenceBatch(openingList));
 		middleSentences.put(questList.get(0), new SentenceBatch(middleList));
 		endingSentences.put(questList.get(0), new SentenceBatch(endingList));
+		neutralSentences = new SentenceBatch(neutralList);
 		this.questList = questList;
 
 		//Set basic vars for every online player
@@ -78,6 +82,12 @@ public class QuestEntity {
 		while(loop){
 		switch(currentPhase){
 		case INTRO_TALK:
+			if(!canGetQuest(epicPlayer)){
+				sentences = neutralSentences;
+				epicPlayer.getPlayer().sendMessage(formatMessage(sentences.Random(epicPlayer)));
+				return;
+			}
+			
 			sentences = openingSentences.get(currentQuest);
 			epicPlayer.getPlayer().sendMessage(formatMessage(sentences.Next(epicPlayer)));
 			if(sentences.IsLast(epicPlayer)){
@@ -120,6 +130,10 @@ public class QuestEntity {
 			break;
 		}
 		}
+	}
+	
+	private boolean canGetQuest(EpicPlayer ePlayer){
+		return ePlayer.canGetQuest(this.currentQuest.get(ePlayer));
 	}
 	
 	public void SetFirstInteraction(EpicPlayer epicPlayer){

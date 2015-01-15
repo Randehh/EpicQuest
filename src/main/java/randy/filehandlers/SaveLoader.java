@@ -198,6 +198,7 @@ public class SaveLoader {
 						save.set("MiddleSentences."+quest, qEntity.middleSentences.get(quest).getSentences());
 						save.set("EndingSentences."+quest, qEntity.endingSentences.get(quest).getSentences());
 					}
+					save.set("NeutralSentences", qEntity.neutralSentences.getSentences());
 				}
 				
 				//Save player stuff
@@ -396,6 +397,12 @@ public class SaveLoader {
 					qEntity.openingSentences.put(quest, new SentenceBatch(save.getStringList("OpeningSentences."+quest)));
 					qEntity.middleSentences.put(quest, new SentenceBatch(save.getStringList("MiddleSentences."+quest)));
 					qEntity.endingSentences.put(quest, new SentenceBatch(save.getStringList("EndingSentences."+quest)));
+				}
+				qEntity.neutralSentences = new SentenceBatch(save.getStringList("NeutralSentences"));
+				if(qEntity.neutralSentences.sentences.isEmpty()){ //In case the sentences are empty for pre 3.5.4 quest entities
+					List<String> neutralList = new ArrayList<String>();
+					neutralList.add("How ya doin'?");
+					qEntity.neutralSentences = new SentenceBatch(neutralList);
 				}
 				
 				//Set player stuff
