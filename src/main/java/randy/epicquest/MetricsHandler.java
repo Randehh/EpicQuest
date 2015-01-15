@@ -37,6 +37,7 @@ public class MetricsHandler {
 		setTaskAmount();
 		setRewardTypes();
 		setOptions();
+		setTest();
 	}
 
 	public static void incrementTaskType(TaskTypes type){
@@ -52,6 +53,22 @@ public class MetricsHandler {
 	public static void Reset(){
 		questTypeAmount.clear();
 		rewardTypeAmount.clear();
+	}
+	
+	private static void setTest() {
+		Graph graph = metrics.createGraph("Test");
+		graph.addPlotter(new Metrics.Plotter("Herp"){
+            @Override
+            public int getValue() {
+                    return 4;
+            }
+		});
+		graph.addPlotter(new Metrics.Plotter("Derp"){
+            @Override
+            public int getValue() {
+                    return 6;
+            }
+		});
 	}
 
 	private static void setQuestAmount(){

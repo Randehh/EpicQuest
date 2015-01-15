@@ -6,7 +6,9 @@ import java.util.List;
 
 import main.java.randy.engine.Utils;
 import main.java.randy.quests.EpicQuestDatabase;
+import main.java.randy.quests.EpicQuestReward;
 import main.java.randy.quests.EpicQuestTask;
+import main.java.randy.quests.EpicQuestReward.RewardTypes;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -36,7 +38,8 @@ public class QuestLoader {
     			EpicQuestDatabase.setQuestLevel(questTag, quest.getInt("Requirements.Level"));
     			
     			//Get reward info
-    			EpicQuestDatabase.setRewardMoney(questTag, quest.getInt("Rewards.Money"));
+    			List<EpicQuestReward> questRewards = new ArrayList<EpicQuestReward>();
+    			questRewards.add(new EpicQuestReward(RewardTypes.MONEY, quest.getInt("Rewards.Money", 0)));
     			
     			//'WOOD_SWORD=1'
     			List<String> itemRewardList = quest.getStringList("Rewards.Item");
@@ -44,10 +47,11 @@ public class QuestLoader {
     			for(String item : itemRewardList){
     				itemRewards.add(Utils.StringToItemStack(item, "="));
     			}
-    			EpicQuestDatabase.setRewardItems(questTag, itemRewards);
+    			questRewards.add(new EpicQuestReward(RewardTypes.ITEM, itemRewards));
     			
-    			EpicQuestDatabase.setRewardCommand(questTag, quest.getStringList("Rewards.Command"));
-    			EpicQuestDatabase.setRewardHeroesExp(questTag, quest.getInt("Rewards.HeroesExp", 0));
+    			questRewards.add(new EpicQuestReward(RewardTypes.COMMAND, quest.getStringList("Rewards.Command")));
+    			questRewards.add(new EpicQuestReward(RewardTypes.HEROES_EXP, quest.getInt("Rewards.HeroesExp", 0)));
+    			questRewards.add(new EpicQuestReward(RewardTypes.RANK, quest.getString("Rewards.Permission_Group")));
     			
     			//Get tasks info
     			int taskamount = quest.getConfigurationSection("Tasks").getKeys(false).size();

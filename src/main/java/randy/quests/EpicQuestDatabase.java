@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import main.java.randy.epicquest.MetricsHandler;
-import main.java.randy.quests.EpicQuestReward.RewardTypes;
 import main.java.randy.quests.EpicQuestTask.TaskTypes;
 
 import org.bukkit.inventory.ItemStack;
@@ -26,11 +25,7 @@ public class EpicQuestDatabase {
 	private static HashMap<String, Integer> questTaskAmount = new HashMap<String, Integer>();
 	
 	//Rewards
-	private static HashMap<String, Integer> questRewardMoney = new HashMap<String, Integer>();
-	private static HashMap<String, List<ItemStack>> questRewardItems = new HashMap<String, List<ItemStack>>();
-	private static HashMap<String, String> questRewardRank = new HashMap<String, String>();
-	private static HashMap<String, List<String>> questRewardCommand = new HashMap<String, List<String>>();
-	private static HashMap<String, Integer> questRewardHeroesExp = new HashMap<String, Integer>();
+	private static HashMap<String, List<EpicQuestReward>> questRewards = new HashMap<String, List<EpicQuestReward>>();
 	
 	//Misc
 	private static HashMap<String, Integer> questResetTime = new HashMap<String, Integer>();
@@ -47,10 +42,7 @@ public class EpicQuestDatabase {
 		questTaskType.clear();
 		questTaskID.clear();
 		questTaskAmount.clear();
-		questRewardMoney.clear();
-		questRewardItems.clear();
-		questRewardRank.clear();
-		questRewardCommand.clear();
+		questRewards.clear();
 		questResetTime.clear();
 		questLocked.clear();
 		questItemsRequired.clear();
@@ -108,29 +100,8 @@ public class EpicQuestDatabase {
 	/*
 	 * Rewards funtions
 	 */
-	public static Integer getRewardMoney(String quest){
-		MetricsHandler.incrementRewardType(RewardTypes.MONEY);
-		return questRewardMoney.get(quest);
-	}
-	
-	public static List<ItemStack> getRewardItems(String quest){
-		MetricsHandler.incrementRewardType(RewardTypes.ITEM);
-		return questRewardItems.get(quest);
-	}
-	
-	public static String getRewardRank(String quest){
-		MetricsHandler.incrementRewardType(RewardTypes.RANK);
-		return questRewardRank.get(quest);
-	}
-	
-	public static List<String> getRewardCommand(String quest){
-		MetricsHandler.incrementRewardType(RewardTypes.COMMAND);
-		return questRewardCommand.get(quest);
-	}
-	
-	public static int getRewardHeroesExp(String quest){
-		MetricsHandler.incrementRewardType(RewardTypes.HEROES_EXP);
-		return questRewardHeroesExp.get(quest);
+	public static List<EpicQuestReward> getRewards(String quest){
+		return questRewards.get(quest);
 	}
 	
 	/*
@@ -210,25 +181,10 @@ public class EpicQuestDatabase {
 	
 	/*
 	 * Rewards funtions
-	 */
-	public static void setRewardMoney(String quest, Integer amount){
-		questRewardMoney.put(quest, amount);
-	}
-	
-	public static void setRewardItems(String quest, List<ItemStack> items){
-		questRewardItems.put(quest, items);
-	}
-	
-	public static void setRewardRank(String quest, String rank){
-		questRewardRank.put(quest, rank);
-	}
-	
-	public static void setRewardCommand(String quest, List<String> commands){
-		questRewardCommand.put(quest, commands);
-	}
-	
-	public static void setRewardHeroesExp(String quest, Integer amount){
-		questRewardHeroesExp.put(quest, amount);
+	 */	
+	public static void setRewards(String quest, List<EpicQuestReward> rewards){
+		for(EpicQuestReward reward : rewards) MetricsHandler.incrementRewardType(reward.type);
+		questRewards.put(quest, rewards);
 	}
 	
 	/*
