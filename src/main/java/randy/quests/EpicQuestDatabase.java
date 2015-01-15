@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import main.java.randy.epicquest.MetricsHandler;
+import main.java.randy.quests.EpicQuestReward.RewardTypes;
 import main.java.randy.quests.EpicQuestTask.TaskTypes;
 
 import org.bukkit.inventory.ItemStack;
@@ -42,7 +44,7 @@ public class EpicQuestDatabase {
 		questStartInfo.clear();
 		questEndInfo.clear();
 		questWorlds.clear();
-		questTaskType.clear();;
+		questTaskType.clear();
 		questTaskID.clear();
 		questTaskAmount.clear();
 		questRewardMoney.clear();
@@ -107,22 +109,27 @@ public class EpicQuestDatabase {
 	 * Rewards funtions
 	 */
 	public static Integer getRewardMoney(String quest){
+		MetricsHandler.incrementRewardType(RewardTypes.MONEY);
 		return questRewardMoney.get(quest);
 	}
 	
 	public static List<ItemStack> getRewardItems(String quest){
+		MetricsHandler.incrementRewardType(RewardTypes.ITEM);
 		return questRewardItems.get(quest);
 	}
 	
 	public static String getRewardRank(String quest){
+		MetricsHandler.incrementRewardType(RewardTypes.RANK);
 		return questRewardRank.get(quest);
 	}
 	
 	public static List<String> getRewardCommand(String quest){
+		MetricsHandler.incrementRewardType(RewardTypes.COMMAND);
 		return questRewardCommand.get(quest);
 	}
 	
 	public static int getRewardHeroesExp(String quest){
+		MetricsHandler.incrementRewardType(RewardTypes.HEROES_EXP);
 		return questRewardHeroesExp.get(quest);
 	}
 	
@@ -188,8 +195,9 @@ public class EpicQuestDatabase {
 	/*
 	 * Tasks functions
 	 */
-	public static void setTaskType(String quest, Integer task, String type){
-		questTaskType.put(quest+"."+task, EpicQuestTask.getTaskTypeFromText(type));
+	public static void setTaskType(String quest, Integer task, TaskTypes type){
+		questTaskType.put(quest+"."+task, type);
+		MetricsHandler.incrementTaskType(type);
 	}
 	
 	public static void setTaskID(String quest, Integer task, String id){

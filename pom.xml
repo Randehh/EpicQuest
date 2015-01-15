@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>randy</groupId>
   <artifactId>EpicQuest</artifactId>
-  <version>3.5.3</version>
+  <version>3.5.4</version>
   
   <build>
         <plugins>

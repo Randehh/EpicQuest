@@ -6,6 +6,7 @@ import java.util.List;
 
 import main.java.randy.engine.Utils;
 import main.java.randy.quests.EpicQuestDatabase;
+import main.java.randy.quests.EpicQuestTask;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -51,7 +52,7 @@ public class QuestLoader {
     			//Get tasks info
     			int taskamount = quest.getConfigurationSection("Tasks").getKeys(false).size();
     			for(int e = 0; e < taskamount; e++){
-    				EpicQuestDatabase.setTaskType(questTag, e, quest.getString("Tasks."+e+".Type"));
+    				EpicQuestDatabase.setTaskType(questTag, e, EpicQuestTask.getTaskTypeFromText(quest.getString("Tasks."+e+".Type")));
     				EpicQuestDatabase.setTaskID(questTag, e, quest.getString("Tasks."+e+".id"));
     				EpicQuestDatabase.setTaskAmount(questTag, e, quest.getInt("Tasks."+e+".Amount"));
     			}

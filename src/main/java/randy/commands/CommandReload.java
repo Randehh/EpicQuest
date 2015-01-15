@@ -2,6 +2,7 @@ package main.java.randy.commands;
 
 import main.java.randy.engine.EpicPlayer;
 import main.java.randy.engine.EpicSystem;
+import main.java.randy.epicquest.MetricsHandler;
 import main.java.randy.filehandlers.QuestLoader;
 import main.java.randy.questentities.QuestEntityHandler;
 import main.java.randy.quests.EpicQuest;
@@ -21,6 +22,7 @@ public class CommandReload {
 		if(!CommandListener.hasPermission(ePlayer, "epicquest.admin.reload")) return;
 		
 		EpicQuestDatabase.ClearDatabase();
+		MetricsHandler.Reset();
 		QuestLoader.loadQuests();
 		EpicQuest.ResetQuestTaskInfo();
 		QuestEntityHandler.Reload();
