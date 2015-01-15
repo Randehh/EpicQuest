@@ -183,7 +183,10 @@ public class EpicQuestDatabase {
 	 * Rewards funtions
 	 */	
 	public static void setRewards(String quest, List<EpicQuestReward> rewards){
-		for(EpicQuestReward reward : rewards) MetricsHandler.incrementRewardType(reward.type);
+		for(EpicQuestReward reward : rewards){
+			if(reward.isEmpty()) continue;
+			MetricsHandler.incrementRewardType(reward.type);
+		}
 		questRewards.put(quest, rewards);
 	}
 	

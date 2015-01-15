@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import main.java.randy.engine.Utils;
+import main.java.randy.epicquest.MetricsHandler;
 import main.java.randy.quests.EpicQuestDatabase;
 import main.java.randy.quests.EpicQuestReward;
 import main.java.randy.quests.EpicQuestTask;
@@ -52,6 +53,7 @@ public class QuestLoader {
     			questRewards.add(new EpicQuestReward(RewardTypes.COMMAND, quest.getStringList("Rewards.Command")));
     			questRewards.add(new EpicQuestReward(RewardTypes.HEROES_EXP, quest.getInt("Rewards.HeroesExp", 0)));
     			questRewards.add(new EpicQuestReward(RewardTypes.RANK, quest.getString("Rewards.Permission_Group")));
+    			EpicQuestDatabase.setRewards(questTag, questRewards);
     			
     			//Get tasks info
     			int taskamount = quest.getConfigurationSection("Tasks").getKeys(false).size();
@@ -60,7 +62,7 @@ public class QuestLoader {
     				EpicQuestDatabase.setTaskID(questTag, e, quest.getString("Tasks."+e+".id"));
     				EpicQuestDatabase.setTaskAmount(questTag, e, quest.getInt("Tasks."+e+".Amount"));
     			}
-    			
+    			MetricsHandler.taskAmount += taskamount;
     			EpicQuestDatabase.setQuestWorlds(questTag, quest.getStringList("Requirements.Worlds"));
     			
     			//Get item requirement
@@ -74,6 +76,7 @@ public class QuestLoader {
     			EpicQuestDatabase.setQuestAutoComplete(questTag, quest.getBoolean("Auto_Complete"));
         	}
         }
+        MetricsHandler.questAmount = fileNames.length;
 		System.out.print("[EpicQuest] Done loading " + fileNames.length + " quests.");
 	}
 }
