@@ -133,7 +133,7 @@ public class QuestEntity {
 	}
 	
 	private boolean canGetQuest(EpicPlayer ePlayer){
-		return ePlayer.canGetQuest(this.currentQuest.get(ePlayer));
+		return ePlayer.canGetQuest(this.currentQuest.get(ePlayer), true);
 	}
 	
 	public void SetFirstInteraction(EpicPlayer epicPlayer){

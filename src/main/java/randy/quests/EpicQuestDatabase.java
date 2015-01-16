@@ -7,8 +7,6 @@ import java.util.List;
 import main.java.randy.epicquest.MetricsHandler;
 import main.java.randy.quests.EpicQuestTask.TaskTypes;
 
-import org.bukkit.inventory.ItemStack;
-
 public class EpicQuestDatabase {
 	
 	private static List<String> questTags = new ArrayList<String>();
@@ -17,7 +15,6 @@ public class EpicQuestDatabase {
 	private static HashMap<String, String> questName = new HashMap<String, String>();
 	private static HashMap<String, String> questStartInfo = new HashMap<String, String>();
 	private static HashMap<String, String> questEndInfo = new HashMap<String, String>();
-	private static HashMap<String, List<String>> questWorlds = new HashMap<String, List<String>>();
 	
 	//Tasks
 	private static HashMap<String, TaskTypes> questTaskType = new HashMap<String, TaskTypes>();
@@ -27,26 +24,21 @@ public class EpicQuestDatabase {
 	//Rewards
 	private static HashMap<String, List<EpicQuestReward>> questRewards = new HashMap<String, List<EpicQuestReward>>();
 	
-	//Misc
+	//Requirements
+	private static HashMap<String, List<EpicQuestRequirement>> questRequirements = new HashMap<String, List<EpicQuestRequirement>>();
 	private static HashMap<String, Integer> questResetTime = new HashMap<String, Integer>();
-	private static HashMap<String, List<String>> questLocked = new HashMap<String, List<String>>();
-	private static HashMap<String, List<ItemStack>> questItemsRequired = new HashMap<String, List<ItemStack>>();
-	private static HashMap<String, Integer> questLevel = new HashMap<String, Integer>();
+	
+	//Misc
 	private static HashMap<String, Boolean> questAutoComplete = new HashMap<String, Boolean>();
 	
 	public static void ClearDatabase(){
 		questName.clear();
 		questStartInfo.clear();
 		questEndInfo.clear();
-		questWorlds.clear();
 		questTaskType.clear();
 		questTaskID.clear();
 		questTaskAmount.clear();
 		questRewards.clear();
-		questResetTime.clear();
-		questLocked.clear();
-		questItemsRequired.clear();
-		questLevel.clear();
 		questAutoComplete.clear();
 	}
 	
@@ -71,8 +63,8 @@ public class EpicQuestDatabase {
 		return questEndInfo.get(quest);
 	}
 	
-	public static List<String> getQuestWorlds(String quest){
-		return questWorlds.get(quest);
+	public static List<EpicQuestRequirement> getQuestRequirements(String quest){
+		return questRequirements.get(quest);
 	}
 	
 	
@@ -107,24 +99,8 @@ public class EpicQuestDatabase {
 	/*
 	 * Misc functions
 	 */
-	public static Integer getQuestResetTime(String quest){
-		return questResetTime.get(quest);
-	}
-	
-	public static List<String> getQuestLocked(String quest){
-		return questLocked.get(quest);
-	}
-	
 	public static Integer getTotalAmountQuests(){
 		return questTags.size();
-	}
-	
-	public static List<ItemStack> getQuestItemsRequired(String quest){
-		return questItemsRequired.get(quest);
-	}
-	
-	public static Integer getQuestLevel(String quest){
-		return questLevel.get(quest);
 	}
 	
 	public static List<String> getQuestTags(){
@@ -133,6 +109,10 @@ public class EpicQuestDatabase {
 	
 	public static Boolean getQuestAutoComplete(String quest){
 		return questAutoComplete.get(quest);
+	}
+	
+	public static Integer getQuestResetTime(String quest){
+		return questResetTime.get(quest);
 	}
 	
 	/*
@@ -155,13 +135,13 @@ public class EpicQuestDatabase {
 	public static void setQuestEndInfo(String quest, String info){
 		questEndInfo.put(quest, info);
 	}
-	
-	public static void setQuestWorlds(String quest, List<String> worlds){
-		questWorlds.put(quest, worlds);
-	}
-	
-	
-	
+	public static void setRequirements(String quest, List<EpicQuestRequirement> requirements){
+		for(EpicQuestRequirement requirement : requirements){
+			if(requirement.isEmpty()) continue;
+			//MetricsHandler.incrementRewardType(reward.type);
+		}
+		questRequirements.put(quest, requirements);
+	}	
 	
 	/*
 	 * Tasks functions
@@ -193,26 +173,14 @@ public class EpicQuestDatabase {
 	/*
 	 * Misc functions
 	 */
-	public static void setQuestResetTime(String quest, Integer time){
-		questResetTime.put(quest, time);
-	}
-	
-	public static void setQuestLocked(String quest, List<String> quests){
-		questLocked.put(quest, quests);
-	}
-	
-	public static void setQuestItemsRequired(String quest, List<ItemStack> items){
-		questItemsRequired.put(quest, items);
-	}
-	
-	public static void setQuestLevel(String quest, Integer level){
-		questLevel.put(quest, level);
-	}
 	public static void AddQuestTag(String quest){
 		if(questTags.contains(quest)) return;
 		questTags.add(quest);
 	}
 	public static void setQuestAutoComplete(String quest, Boolean autcomplete){
 		questAutoComplete.put(quest, autcomplete);
+	}
+	public static void setQuestResetTime(String quest, Integer time){
+		questResetTime.put(quest, time);
 	}
 }

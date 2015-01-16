@@ -49,8 +49,6 @@ public class EpicQuest {
 	public String getQuestName(){ return EpicQuestDatabase.getQuestName(questTag); }
 	public String getQuestStart(){ return EpicQuestDatabase.getQuestStartInfo(questTag); }
 	public String getQuestEnd(){ return EpicQuestDatabase.getQuestEndInfo(questTag); }
-	public List<String> getQuestWorlds(){ return EpicQuestDatabase.getQuestWorlds(questTag); }
-	public int getQuestResetTime(){ return EpicQuestDatabase.getQuestResetTime(questTag); }
 	public List<EpicQuestReward> getQuestRewards(){ return EpicQuestDatabase.getRewards(questTag); }
 	public Boolean getQuestAutoComplete() { return EpicQuestDatabase.getQuestAutoComplete(questTag); }
 	public void completeQuest(){
