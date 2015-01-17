@@ -30,6 +30,7 @@ public class EpicQuestDatabase {
 	
 	//Misc
 	private static HashMap<String, Boolean> questAutoComplete = new HashMap<String, Boolean>();
+	private static HashMap<String, List<String>> questTurninQuestEntities = new HashMap<String, List<String>>();
 	
 	public static void ClearDatabase(){
 		questName.clear();
@@ -115,6 +116,10 @@ public class EpicQuestDatabase {
 		return questResetTime.get(quest);
 	}
 	
+	public static List<String> getQuestTurninQuestEntities(String quest){
+		return questTurninQuestEntities.get(quest);
+	}
+	
 	/*
 	 * 
 	 * Setters
@@ -182,5 +187,8 @@ public class EpicQuestDatabase {
 	}
 	public static void setQuestResetTime(String quest, Integer time){
 		questResetTime.put(quest, time);
+	}
+	public static List<String> setQuestTurninQuestEntities(String quest, List<String> entities){
+		return questTurninQuestEntities.put(quest, entities);
 	}
 }

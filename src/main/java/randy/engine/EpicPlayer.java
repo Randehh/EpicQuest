@@ -12,6 +12,8 @@ import main.java.randy.quests.EpicQuestDatabase;
 import main.java.randy.quests.EpicQuestRequirement;
 import main.java.randy.quests.EpicQuestTask;
 import main.java.randy.quests.EpicQuestTask.TaskTypes;
+import main.java.randy.questentities.QuestEntity;
+import main.java.randy.questentities.QuestEntityHandler;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -214,7 +216,16 @@ public class EpicPlayer {
 	public List<EpicQuest> getCompleteableQuest(){
 		List<EpicQuest> tempList = new ArrayList<EpicQuest>();
 		for(int i = 0; i < questList.size(); i++){
-			if(questList.get(i).isCompleted()){ 
+			if(questList.get(i).isCompleted() && EpicQuestDatabase.getQuestTurninQuestEntities(questList.get(i).getQuestTag()).isEmpty()){ 
+				tempList.add(questList.get(i));
+			}
+		}
+		return tempList;
+	}
+	public List<EpicQuest> getCompleteableQuest(QuestEntity entity){
+		List<EpicQuest> tempList = new ArrayList<EpicQuest>();
+		for(int i = 0; i < questList.size(); i++){
+			if(questList.get(i).isCompleted() && EpicQuestDatabase.getQuestTurninQuestEntities(questList.get(i).getQuestTag()).contains(QuestEntityHandler.getEntityName(entity.entity))){ 
 				tempList.add(questList.get(i));
 			}
 		}

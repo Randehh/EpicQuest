@@ -29,3 +29,5 @@ Requirements:
 #    - 'itemname=amount'
 #    Level: 0
 Auto_Complete: false
+#Turnin_Quest_Entities:
+#- 'Guide'

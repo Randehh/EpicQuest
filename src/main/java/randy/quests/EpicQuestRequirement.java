@@ -70,13 +70,14 @@ public class EpicQuestRequirement {
 		case RESET_TIME:
 			int time = (Integer)requirement;
 			if(time == -1 && ePlayer.getQuestsCompleted().contains(questTag)){
-				if(sendMessage) player.sendMessage(ChatColor.RED + "You can't do this quest anymore.");
+				//if(sendMessage) player.sendMessage(ChatColor.RED + "You can't do this quest anymore.");
 				return false;		
 			}
-			if(EpicSystem.getGlobalTime() - ePlayer.getQuestTimerMap().get(questTag) <= time){
+			int elapsedTime = (ePlayer.getQuestTimerMap().get(questTag) - EpicSystem.getGlobalTime()) * -1;
+			if(elapsedTime >= time){
 				return true; 
 			}else{
-				if(sendMessage) player.sendMessage(ChatColor.RED + "You need to wait " + (time - (EpicSystem.getGlobalTime() - ePlayer.getQuestTimerMap().get(questTag))) + " more seconds to do this quest again.");
+				if(sendMessage) player.sendMessage(ChatColor.RED + "You need to wait " + (time - elapsedTime) + " more seconds to do this quest again.");
 				return false;		
 			}
 		default:

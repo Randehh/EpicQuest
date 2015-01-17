@@ -78,6 +78,8 @@ public class QuestLoader {
     			MetricsHandler.taskAmount += taskamount;
     			
     			EpicQuestDatabase.setQuestAutoComplete(questTag, quest.getBoolean("Auto_Complete"));
+    			
+    			EpicQuestDatabase.setQuestTurninQuestEntities(questTag, quest.getStringList("Turnin_Quest_Entities"));
         	}
         }
         MetricsHandler.questAmount = fileNames.length;

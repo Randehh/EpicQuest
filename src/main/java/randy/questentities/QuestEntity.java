@@ -73,6 +73,15 @@ public class QuestEntity {
 		if(!currentQuest.containsKey(epicPlayer) || 
 				(currentQuest.containsKey(epicPlayer) && currentQuest.get(epicPlayer) == null)) currentQuest.put(epicPlayer, questList.get(0));
 		
+		//Check for quests the player can complete first
+		List<EpicQuest> completableQuests = epicPlayer.getCompleteableQuest(this);
+		if(!completableQuests.isEmpty()){
+			for(EpicQuest quest : completableQuests){
+				quest.completeQuest();
+			}
+			return;
+		}
+		
 		String currentQuest = this.currentQuest.get(epicPlayer);
 		QuestPhase currentPhase = questPhases.get(epicPlayer);
 		SentenceBatch sentences = null;
@@ -121,7 +130,7 @@ public class QuestEntity {
 			epicPlayer.getPlayer().sendMessage(formatMessage(sentences.Next(epicPlayer)));
 			if(sentences.IsLast(epicPlayer)){
 				epicPlayer.completeQuest(epicPlayer.getQuestByTag(currentQuest));
-				questPhases.put(epicPlayer, QuestPhase.INTRO_TALK);
+				NextQuest(epicPlayer);
 			}
 			loop = false;
 			break;
@@ -133,7 +142,19 @@ public class QuestEntity {
 	}
 	
 	private boolean canGetQuest(EpicPlayer ePlayer){
-		return ePlayer.canGetQuest(this.currentQuest.get(ePlayer), true);
+		return ePlayer.canGetQuest(this.currentQuest.get(ePlayer), false);
+	}
+	
+	private void NextQuest(EpicPlayer epicPlayer){
+		for(int i = 0; i < questList.size() - 1; i++){
+			if(questList.get(i).equals(currentQuest.get(epicPlayer))){
+				int quest = i;
+				if(quest == questList.size()) quest = 0;
+				else quest++;
+				currentQuest.put(epicPlayer, questList.get(quest));
+			}
+		}
+		questPhases.put(epicPlayer, QuestPhase.INTRO_TALK);
 	}
 	
 	public void SetFirstInteraction(EpicPlayer epicPlayer){

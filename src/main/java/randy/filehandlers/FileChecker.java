@@ -14,7 +14,6 @@ public class FileChecker {
 	static File playersfolder = new File("plugins" + File.separator + "EpicQuest" + File.separator + "Players");
 	static File entitiesfolder = new File("plugins" + File.separator + "EpicQuest" + File.separator + "QuestEntities");
 	static File questsfolder = new File("plugins" + File.separator + "EpicQuest" + File.separator + "Quests");
-	static File questfile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "quests.yml");
 	static File blockfile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "block.yml");
 	static File signfile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "signs.yml");
 	static File announcerfile = new File("plugins" + File.separator + "EpicQuest" + File.separator + "announcer.yml");
@@ -44,9 +43,6 @@ public class FileChecker {
 			EpicMain.getInstance().saveResource("Quests" + File.separator + "DefaultArea1_0.yml", false);
 			EpicMain.getInstance().saveResource("Quests" + File.separator + "DefaultArea1_1.yml", false);
 			EpicMain.getInstance().saveResource("Quests" + File.separator + "DefaultArea1_2.yml", false);
-		}
-		if(!questfile.exists()){
-			EpicMain.getInstance().saveResource("quests.yml", false);
 		}
 		if(!announcerfile.exists()){
 			EpicMain.getInstance().saveResource("announcer.yml", false);
