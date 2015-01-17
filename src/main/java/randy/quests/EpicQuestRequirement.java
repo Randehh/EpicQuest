@@ -70,7 +70,7 @@ public class EpicQuestRequirement {
 		case RESET_TIME:
 			int time = (Integer)requirement;
 			if(time == -1 && ePlayer.getQuestsCompleted().contains(questTag)){
-				if(sendMessage) player.sendMessage(ChatColor.RED + "You can't do this quest anymore.");
+				//if(sendMessage) player.sendMessage(ChatColor.RED + "You can't do this quest anymore.");
 				return false;		
 			}
 			if(EpicSystem.getGlobalTime() - ePlayer.getQuestTimerMap().get(questTag) <= time){
