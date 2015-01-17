@@ -199,22 +199,31 @@ public class EpicMain extends JavaPlugin{
 	 * Vault functions
 	 */
 	private boolean setupPermissions(){
+		if(!EpicSystem.usePermissions()) return true;
 		RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
-		if (permissionProvider != null) {
+		if (permissionProvider != null && permissionProvider.getProvider().isEnabled()) {
 			permission = permissionProvider.getProvider();
+			System.out.print("[EpicQuest]: Successfully hooked into Permissions!");
+		}else{
+			EpicSystem.setUsePermissions(false);
+			System.out.print("[EpicQuest]: Permissions is enabled in the config, but isn't found! Disabling Permissions support.");
 		}
 		return (permission != null);
 	}
 
-	private void setupEconomy(){
+	private boolean setupEconomy(){
+		if(!EpicSystem.enabledMoneyRewards()) return true;
 		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
 		if (economyProvider != null && economyProvider.getProvider().isEnabled()) {
+			System.out.print("[EpicQuest]: Succesfully hooked into Economy!");
 			economy = economyProvider.getProvider();
+			return false;
 		}else{
 			//Economy not used or found
 			EpicSystem.setEnabledMoneyRewards(false);
-			System.out.print("[EpicQuest] Couldn't find an economy plugin through Vault, deactivated currency rewards.");
+			System.out.print("[EpicQuest]: Economy is enabled in the config, but isn't found! Disabling Economy support.");
 		}
+		return true;
 	}
 
 	private boolean setupHeroes(){

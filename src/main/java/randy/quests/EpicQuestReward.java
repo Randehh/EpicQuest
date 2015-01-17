@@ -106,6 +106,7 @@ public class EpicQuestReward {
 			if(commands.isEmpty()) return true;
 			return false;
 		case HEROES_EXP:
+			if(!EpicSystem.useHeroes()) return true;
 			int heroesExp = (Integer)reward;
 			if(heroesExp <= 0) return true;
 			return false;
@@ -114,10 +115,12 @@ public class EpicQuestReward {
 			if(itemList.isEmpty()) return true;
 			return false;
 		case MONEY:
+			if(!EpicSystem.enabledMoneyRewards()) return true;
 			int money = (Integer)reward;
 			if(money <= 0) return true;
 			return false;
 		case RANK:
+			if(!EpicSystem.usePermissions()) return true;
 			String rank = (String)reward;
 			if(rank != null && rank != "") return false;
 			return true;
