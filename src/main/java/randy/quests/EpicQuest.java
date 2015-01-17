@@ -68,6 +68,7 @@ public class EpicQuest {
 		epicPlayer.playerStatistics.AddQuestsCompleted(1);
 		
 		if(!epicPlayer.getQuestsCompleted().contains(questTag)) epicPlayer.getQuestsCompleted().add(questTag);
+		epicPlayer.setQuestTimer(questTag, EpicSystem.getGlobalTime());
 		epicPlayer.getQuestList().remove(this);
 	}
 	

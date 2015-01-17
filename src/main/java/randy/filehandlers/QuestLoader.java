@@ -49,8 +49,8 @@ public class QuestLoader {
     				itemRequirements.add(Utils.StringToItemStack(item, "="));
     			}
     			questRequirements.add(new EpicQuestRequirement(RequirementTypes.ITEMS, itemRequirements));
+    			questRequirements.add(new EpicQuestRequirement(RequirementTypes.RESET_TIME, quest.getInt("Reset_Time")));
     			EpicQuestDatabase.setRequirements(questTag, questRequirements);
-    			EpicQuestDatabase.setQuestResetTime(questTag, quest.getInt("Reset_Time"));
     			
     			//Get reward info
     			List<EpicQuestReward> questRewards = new ArrayList<EpicQuestReward>();

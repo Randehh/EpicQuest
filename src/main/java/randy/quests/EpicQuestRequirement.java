@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import main.java.randy.engine.EpicPlayer;
+import main.java.randy.engine.EpicSystem;
 
 public class EpicQuestRequirement {
 	
@@ -14,7 +15,8 @@ public class EpicQuestRequirement {
 		QUESTS_COMPLETED,
 		ITEMS,
 		WORLDS,
-		LEVEL
+		LEVEL,
+		RESET_TIME
 	}
 	
 	public RequirementTypes type;
@@ -26,7 +28,7 @@ public class EpicQuestRequirement {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public boolean hasRequirement(EpicPlayer ePlayer, boolean sendMessage){
+	public boolean hasRequirement(EpicPlayer ePlayer, String questTag, boolean sendMessage){
 		if(isEmpty()) return true;
 		Player player = ePlayer.getPlayer();
 		switch(type){
@@ -34,7 +36,7 @@ public class EpicQuestRequirement {
 			List<ItemStack> items = (List<ItemStack>)requirement;
 			for(ItemStack item : items){
 				if(!player.getInventory().contains(item.getType(), item.getAmount())){
-					player.sendMessage(ChatColor.RED + "You require " + item.getAmount() + " " + item.getType().toString().toLowerCase().replace("_", " ") + " to start this quest.");
+					if(sendMessage) player.sendMessage(ChatColor.RED + "You require " + item.getAmount() + " " + item.getType().toString().toLowerCase().replace("_", " ") + " to start this quest.");
 					return false;
 				}
 			}
@@ -42,15 +44,15 @@ public class EpicQuestRequirement {
 		case LEVEL:
 			int level = (Integer)requirement;
 			if(level > player.getLevel()){
-				player.sendMessage(ChatColor.RED + "You need to be at least level " + level + " to start this quest.");
+				if(sendMessage) player.sendMessage(ChatColor.RED + "You need to be at least level " + level + " to start this quest.");
 				return false;
 			}
 			return true;
 		case QUESTS_COMPLETED:
 			List<String> quests = (List<String>)requirement;
-			for(String quest : quests){
-				if(!ePlayer.getQuestsCompleted().contains(quest)){
-					player.sendMessage(ChatColor.RED + "You need to finish the quest '" + quest + "' before you can start this quest.");
+			for(String q : quests){
+				if(!ePlayer.getQuestsCompleted().contains(q)){
+					if(sendMessage) player.sendMessage(ChatColor.RED + "You need to finish the quest '" + q + "' before you can start this quest.");
 					return false;
 				}
 			}
@@ -64,6 +66,19 @@ public class EpicQuestRequirement {
 				}
 			}
 			return isInWorld;
+			
+		case RESET_TIME:
+			int time = (Integer)requirement;
+			if(time == -1 && ePlayer.getQuestsCompleted().contains(questTag)){
+				if(sendMessage) player.sendMessage(ChatColor.RED + "You can't do this quest anymore.");
+				return false;		
+			}
+			if(EpicSystem.getGlobalTime() - ePlayer.getQuestTimerMap().get(questTag) <= time){
+				return true; 
+			}else{
+				if(sendMessage) player.sendMessage(ChatColor.RED + "You need to wait " + (time - (EpicSystem.getGlobalTime() - ePlayer.getQuestTimerMap().get(questTag))) + " more seconds to do this quest again.");
+				return false;		
+			}
 		default:
 			break;
 		
@@ -89,6 +104,11 @@ public class EpicQuestRequirement {
 		case WORLDS:
 			List<String> worlds = (List<String>)requirement;
 			if(worlds.isEmpty()) return true;
+			break;
+			
+		case RESET_TIME:
+			int time = (Integer)requirement;
+			if(time == 0) return true; //Only return true if the player can always get the quest
 			break;
 		default:
 			break;

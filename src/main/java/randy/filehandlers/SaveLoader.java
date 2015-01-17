@@ -64,6 +64,7 @@ public class SaveLoader {
 		//Set time
 		config.set("Time", EpicSystem.getTime());
 		config.set("Save_Time", EpicSystem.getSaveTime());
+		config.set("Global_Time", EpicSystem.getGlobalTime());
 
 		config.save(configfile);
 
@@ -260,9 +261,6 @@ public class SaveLoader {
 		HashMap<String, Integer> timerQuestMap = epicPlayer.getQuestTimerMap();
 		List<String> timerQuestTags = new ArrayList<String>();
 		for(String questTag : timerQuestMap.keySet()){
-			
-			//Update timer
-			epicPlayer.checkTimer(questTag, true);
 
 			//Save the timer for the quests
 			save.set("Quest."+questTag+".timer", timerQuestMap.get(questTag));
@@ -293,8 +291,9 @@ public class SaveLoader {
 	 */
 	public static void load() {
 
-		EpicSystem.setTime(config.getInt("Time"));
-		EpicSystem.setSaveTime(config.getInt("Save_Time"));
+		EpicSystem.setTime(config.getInt("Time", 0));
+		EpicSystem.setSaveTime(config.getInt("Save_Time", 0));
+		EpicSystem.setGlobalTime(config.getInt("Global_Time", 0));
 
 		//Get the quest signs if possible and go through them
 		FileConfiguration sign = YamlConfiguration.loadConfiguration(signfile);

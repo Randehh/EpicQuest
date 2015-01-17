@@ -241,14 +241,13 @@ public class EpicPlayer {
 	public boolean canGetQuest(String questTag, boolean sendMessage){		
 		if(hasQuest(questTag) ||
 				!hasDailyQuestLeft() ||
-				isTimeOut(questTag) ||
 				isQuestListFull()){
 			return false;
 		}
 		
 		//Check quest specific requirements
 		for(EpicQuestRequirement requirement : EpicQuestDatabase.getQuestRequirements(questTag)){
-			if(!requirement.hasRequirement(this, true)){
+			if(!requirement.hasRequirement(this, questTag, true)){
 				return false;
 			}
 		}
@@ -274,29 +273,8 @@ public class EpicPlayer {
 		if(questDailyLeft > 0){ return true; }
 		return false;
 	}
-	public boolean isTimeOut(String questTag){
-		if(EpicQuestDatabase.getQuestResetTime(questTag) == -1 && getQuestsCompleted().contains(questTag)) return false;
-		
-		checkTimer(questTag, false);
-		
-		if(questTimer.get(questTag) <= 0){ return true; }
-		return false;
-	}
 	public boolean isQuestListFull(){
 		if(questList.size() >= EpicSystem.getQuestLimit()){ return true; }
 		return false;
-	}
-	public void checkTimer(String questTag, boolean substractDifference){		
-		int timeDifference = EpicSystem.getTime() - EpicSystem.getStartTime();
-		int newQuestTime = questTimer.get(questTag) - timeDifference;
-		
-		if(substractDifference){
-			questTimer.put(questTag, newQuestTime);
-		}
-		
-		if(newQuestTime <= 0){
-			newQuestTime = 0;
-			questTimer.put(questTag, 0);
-		}
 	}
 }

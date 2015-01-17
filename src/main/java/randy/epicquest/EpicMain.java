@@ -286,6 +286,7 @@ public class EpicMain extends JavaPlugin{
 				//Change time in the config
 				EpicSystem.modifyTime(1);
 				EpicSystem.modifySaveTime(1);
+				EpicSystem.modifyGlobalTime(1);
 
 				//If timer has ran a full day, reset block list, timer and daily quest counters
 				if(EpicSystem.getTime() >= 86400){
@@ -294,11 +295,6 @@ public class EpicMain extends JavaPlugin{
 					List<EpicPlayer> playerList = EpicSystem.getPlayerList();
 					for(int i = 0; i < playerList.size(); i ++){
 						EpicPlayer epicPlayer = playerList.get(i);
-						HashMap<String, Integer> questMap = epicPlayer.getQuestTimerMap();
-						for(String quest : questMap.keySet()){
-							epicPlayer.checkTimer(quest, true);
-						}
-
 						epicPlayer.setQuestDailyLeft(EpicSystem.getDailyLimit());
 					}
 
