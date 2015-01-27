@@ -47,7 +47,7 @@ public class TypeRepair extends TypeBase implements Listener{
 					if(content[i].getType() == craftedItem) itemsFound++;
 				}
 				
-				if(itemsFound == 2) task.ProgressTask(1, epicPlayer);
+				if(itemsFound == 2) task.ProgressTask(1, epicPlayer, true);
 				return;
 			}
 		}
@@ -99,7 +99,7 @@ public class TypeRepair extends TypeBase implements Listener{
 						int repairCost = repairable.getRepairCost();
 
 						if(player.getLevel() >= repairCost){
-							task.ProgressTask(1, epicPlayer);
+							task.ProgressTask(1, epicPlayer, true);
 						}
 					}
 				}

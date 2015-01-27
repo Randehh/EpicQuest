@@ -48,11 +48,12 @@ public class EpicQuestTask {
 		}
 	}
 
-	public void ProgressTask(int amount, EpicPlayer player){
+	public void ProgressTask(int amount, EpicPlayer player, boolean sendMessage){
 		taskCurrent += amount;
 		player.playerStatistics.AddTasksCompleted(1);
+		if(!sendMessage) return;
 		
-		if(player != null && SendText()){
+		if(player.getPlayer() != null && SendText()){
 			if(EpicSystem.useBarAPI()){
 				BarAPI.setMessage(player.getPlayer(), getPlayerTaskProgressText(), (float)getTaskProgress()/getTaskGoal());
 			}else{

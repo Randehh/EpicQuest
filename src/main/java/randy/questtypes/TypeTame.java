@@ -27,7 +27,7 @@ public class TypeTame extends TypeBase implements Listener{
 			String entityneeded = task.getTaskID();
 			
 			if(entitytamed.equalsIgnoreCase(entityneeded)){	
-				task.ProgressTask(1, epicPlayer);
+				task.ProgressTask(1, epicPlayer, true);
 			}
 		}
 	}

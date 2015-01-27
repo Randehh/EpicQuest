@@ -15,13 +15,8 @@ import org.bukkit.entity.Player;
 
 public class CommandListener implements CommandExecutor {
 
-	EpicPlayer epicPlayer;
 	
 	public CommandListener() {
-	}
-	
-	public CommandListener(EpicPlayer epicPlayer){
-		this.epicPlayer = epicPlayer;
 	}
 
 	//This sends a message right away, so you don't need to copy paste it all the time
@@ -38,25 +33,23 @@ public class CommandListener implements CommandExecutor {
 		
 		//Check if the player did a command to finish a quest first
 		if(sender instanceof Player){
-			if(epicPlayer != null){
-				Player player = (Player) sender;
-				epicPlayer = EpicSystem.getEpicPlayer(player.getUniqueId());
-	
-				List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.EXECUTE_COMMAND);
-	
-				if(!taskList.isEmpty()){
-					StringBuilder fullCommand = new StringBuilder();
-					fullCommand.append(commandName);
-					for(String arg : args){
-						fullCommand.append(" ");
-						fullCommand.append(arg);
-					}
-	
-	
-					for(EpicQuestTask task : taskList){
-						if(task.getTaskID().equalsIgnoreCase(fullCommand.toString())){
-							task.ProgressTask(1, epicPlayer);
-						}
+			Player player = (Player) sender;
+			EpicPlayer epicPlayer = EpicSystem.getEpicPlayer(player.getUniqueId());
+
+			List<EpicQuestTask> taskList = epicPlayer.getTasksByType(TaskTypes.EXECUTE_COMMAND);
+
+			if(!taskList.isEmpty()){
+				StringBuilder fullCommand = new StringBuilder();
+				fullCommand.append(commandName);
+				for(String arg : args){
+					fullCommand.append(" ");
+					fullCommand.append(arg);
+				}
+
+
+				for(EpicQuestTask task : taskList){
+					if(task.getTaskID().equalsIgnoreCase(fullCommand.toString())){
+						task.ProgressTask(1, epicPlayer, true);
 					}
 				}
 			}
@@ -67,49 +60,74 @@ public class CommandListener implements CommandExecutor {
 				CommandEmpty.Execute(sender, command, commandName, args);
 				return true;
 			}
+			
+			if(args[0].equalsIgnoreCase("drop")){
+				CommandDrop.Execute(sender, command, commandName, args);
+				return true;
+			}
+			
+			if(args[0].equalsIgnoreCase("give")){
+				CommandGive.Execute(sender, command, commandName, args);
+				return true;
+			}
+			
+			if(args[0].equalsIgnoreCase("info")){
+				CommandInfo.Execute(sender, command, commandName, args);
+				return true;
+			}
+			
+			if(args[0].equalsIgnoreCase("leaderboard")){
+				CommandLeaderboard.Execute(sender, command, commandName, args);
+				return true;
+			}
+			
+			if(args[0].equalsIgnoreCase("party")){
+				CommandParty.Execute(sender, command, commandName, args);
+				return true;
+			}
+			
+			if(args[0].equalsIgnoreCase("questblock")){
+				CommandQuestBlock.Execute(sender, command, commandName, args);
+				return true;
+			}
+			
+			if(args[0].equalsIgnoreCase("questbook") || args[0].equalsIgnoreCase("qb")){
+				CommandQuestBook.Execute(sender, command, commandName, args);
+				return true;
+			}
+			
+			if(args[0].equalsIgnoreCase("questentity")){
+				CommandQuestEntity.Execute(sender, command, commandName, args);
+				return true;
+			}
+			
+			if(args[0].equalsIgnoreCase("questlist") || args[0].equalsIgnoreCase("ql")){
+				CommandQuestList.Execute(sender, command, commandName, args);
+				return true;
+			}
+			
+			if(args[0].equalsIgnoreCase("reload")){
+				CommandReload.Execute(sender, command, commandName, args);
+				return true;
+			}
+			
+			if(args[0].equalsIgnoreCase("save")){
+				CommandSave.Execute(sender, command, commandName, args);
+				return true;
+			}
 
 			if(args[0].equalsIgnoreCase("help")){
 				CommandHelp.Execute(sender, command, commandName, args);
 				return true;
 			}
-
-			if(args[0].equalsIgnoreCase("party")){
-				CommandParty.Execute(sender, command, commandName, args);
-				return true;
-			}
-
-			if(args[0].equalsIgnoreCase("turnin")){
-				CommandTurnin.Execute(sender, command, commandName, args);
-				return true;
-			}
-
-			if(args[0].equalsIgnoreCase("give")){
-				CommandGive.Execute(sender, command, commandName, args);
-				return true;
-			}
-
-			if(args[0].equalsIgnoreCase("drop")){
-				CommandDrop.Execute(sender, command, commandName, args);
-				return true;
-			}
-
-			if(args[0].equalsIgnoreCase("info")){
-				CommandInfo.Execute(sender, command, commandName, args);
-				return true;
-			}
-
+			
 			if(args[0].equalsIgnoreCase("stats")){
 				CommandStats.Execute(sender, command, commandName, args);
 				return true;
 			}
 
-			if(args[0].equalsIgnoreCase("leaderboard")){
-				CommandLeaderboard.Execute(sender, command, commandName, args);
-				return true;
-			}
-
-			if(args[0].equalsIgnoreCase("questentity")){
-				CommandQuestEntity.Execute(sender, command, commandName, args);;
+			if(args[0].equalsIgnoreCase("turnin")){
+				CommandTurnin.Execute(sender, command, commandName, args);
 				return true;
 			}
 		}

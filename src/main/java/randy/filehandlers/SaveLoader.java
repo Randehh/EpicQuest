@@ -64,6 +64,7 @@ public class SaveLoader {
 		//Set time
 		config.set("Time", EpicSystem.getTime());
 		config.set("Save_Time", EpicSystem.getSaveTime());
+		config.set("Global_Time", EpicSystem.getGlobalTime());
 
 		config.save(configfile);
 
@@ -198,6 +199,7 @@ public class SaveLoader {
 						save.set("MiddleSentences."+quest, qEntity.middleSentences.get(quest).getSentences());
 						save.set("EndingSentences."+quest, qEntity.endingSentences.get(quest).getSentences());
 					}
+					save.set("NeutralSentences", qEntity.neutralSentences.getSentences());
 				}
 				
 				//Save player stuff
@@ -259,9 +261,6 @@ public class SaveLoader {
 		HashMap<String, Integer> timerQuestMap = epicPlayer.getQuestTimerMap();
 		List<String> timerQuestTags = new ArrayList<String>();
 		for(String questTag : timerQuestMap.keySet()){
-			
-			//Update timer
-			epicPlayer.checkTimer(questTag, true);
 
 			//Save the timer for the quests
 			save.set("Quest."+questTag+".timer", timerQuestMap.get(questTag));
@@ -292,8 +291,9 @@ public class SaveLoader {
 	 */
 	public static void load() {
 
-		EpicSystem.setTime(config.getInt("Time"));
-		EpicSystem.setSaveTime(config.getInt("Save_Time"));
+		EpicSystem.setTime(config.getInt("Time", 0));
+		EpicSystem.setSaveTime(config.getInt("Save_Time", 0));
+		EpicSystem.setGlobalTime(config.getInt("Global_Time", 0));
 
 		//Get the quest signs if possible and go through them
 		FileConfiguration sign = YamlConfiguration.loadConfiguration(signfile);
@@ -397,6 +397,12 @@ public class SaveLoader {
 					qEntity.middleSentences.put(quest, new SentenceBatch(save.getStringList("MiddleSentences."+quest)));
 					qEntity.endingSentences.put(quest, new SentenceBatch(save.getStringList("EndingSentences."+quest)));
 				}
+				qEntity.neutralSentences = new SentenceBatch(save.getStringList("NeutralSentences"));
+				if(qEntity.neutralSentences.sentences.isEmpty()){ //In case the sentences are empty for pre 3.5.4 quest entities
+					List<String> neutralList = new ArrayList<String>();
+					neutralList.add("How ya doin'?");
+					qEntity.neutralSentences = new SentenceBatch(neutralList);
+				}
 				
 				//Set player stuff
 				if(save.contains("Players")){
@@ -435,15 +441,16 @@ public class SaveLoader {
 				for(String questTag : questList){
 
 					//Create the EpicQuests
-					EpicQuest epicQuest = new EpicQuest(epicPlayer, questTag);
+					EpicQuest epicQuest = new EpicQuest(questTag);
 
 					//Load task progress
 					List<EpicQuestTask> taskList = epicQuest.getTasks();
 					for(int taskNumber = 0; taskNumber < taskList.size(); taskNumber++){
 						int amount = save.getInt("Quest."+questTag+"."+taskNumber);
-						taskList.get(taskNumber).ProgressTask(amount, epicPlayer);
+						taskList.get(taskNumber).ProgressTask(amount, epicPlayer, false);
 					}	
 					epicPlayer.getQuestList().add(epicQuest);
+					epicQuest.setEpicPlayer(epicPlayer);
 				}		
 			}
 

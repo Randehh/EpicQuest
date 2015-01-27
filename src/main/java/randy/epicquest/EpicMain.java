@@ -48,6 +48,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
+import org.mcstats.Metrics;
+
 import com.herocraftonline.heroes.Heroes;
 
 public class EpicMain extends JavaPlugin{
@@ -161,6 +163,7 @@ public class EpicMain extends JavaPlugin{
 		setupHeroes();
 		setupCitizens();
 		setupBarAPI();
+		setupSQLibrary();
 
 		SaveLoader.load();
 
@@ -181,12 +184,13 @@ public class EpicMain extends JavaPlugin{
 		startTimer();
 		
 		//Start streaming metrics data
-		/*try {
-	        MetricsLite metrics = new MetricsLite(this);
-	        metrics.start();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }*/
+		try {
+			Metrics metrics = new Metrics(this);
+			MetricsHandler.createGraphs(metrics);
+		    metrics.start();
+		} catch (IOException e) {
+			e.printStackTrace();
+	    }
 		
 		System.out.print(pluginname + " version " + pluginversion + " enabled.");
 	}
@@ -195,27 +199,31 @@ public class EpicMain extends JavaPlugin{
 	 * Vault functions
 	 */
 	private boolean setupPermissions(){
+		if(!EpicSystem.usePermissions()) return true;
 		RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
-		if (permissionProvider != null) {
+		if (permissionProvider != null && permissionProvider.getProvider().isEnabled()) {
 			permission = permissionProvider.getProvider();
+			System.out.print("[EpicQuest]: Successfully hooked into Permissions!");
+		}else{
+			EpicSystem.setUsePermissions(false);
+			System.out.print("[EpicQuest]: Permissions is enabled in the config, but isn't found! Disabling Permissions support.");
 		}
 		return (permission != null);
 	}
 
-	private void setupEconomy(){
-		Bukkit.getScheduler().scheduleSyncDelayedTask(EpicMain.getInstance(), new Runnable(){
-			@Override
-			public void run() {
-				RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-				if (economyProvider != null && economyProvider.getProvider().isEnabled()) {
-					economy = economyProvider.getProvider();
-				}else{
-					//Economy not used or found
-					EpicSystem.setEnabledMoneyRewards(false);
-					System.out.print("[EpicQuest] Couldn't find an economy plugin through Vault, deactivated currency rewards.");
-				}
-			}
-		}, 50);
+	private boolean setupEconomy(){
+		if(!EpicSystem.enabledMoneyRewards()) return true;
+		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+		if (economyProvider != null && economyProvider.getProvider().isEnabled()) {
+			System.out.print("[EpicQuest]: Succesfully hooked into Economy!");
+			economy = economyProvider.getProvider();
+			return false;
+		}else{
+			//Economy not used or found
+			EpicSystem.setEnabledMoneyRewards(false);
+			System.out.print("[EpicQuest]: Economy is enabled in the config, but isn't found! Disabling Economy support.");
+		}
+		return true;
 	}
 
 	private boolean setupHeroes(){
@@ -256,6 +264,19 @@ public class EpicMain extends JavaPlugin{
 		}
 		return true;
 	}
+	
+	private boolean setupSQLibrary(){
+		if(!EpicSystem.useSQLDatabase()) return true;
+
+		if(Bukkit.getPluginManager().getPlugin("SQLibrary") == null || !Bukkit.getPluginManager().getPlugin("SQLibrary").isEnabled()){
+			System.out.print("[EpicQuest]: SQLibrary is enabled in the config, but isn't found! Using yml as player storage.");
+			EpicSystem.setUseSQLDatabase(false);
+			return false;
+		}else{
+			System.out.print("[EpicQuest]: Successfully hooked into BarAPI!");
+		}
+		return true;
+	}
 
 	/*
 	 * 
@@ -274,6 +295,7 @@ public class EpicMain extends JavaPlugin{
 				//Change time in the config
 				EpicSystem.modifyTime(1);
 				EpicSystem.modifySaveTime(1);
+				EpicSystem.modifyGlobalTime(1);
 
 				//If timer has ran a full day, reset block list, timer and daily quest counters
 				if(EpicSystem.getTime() >= 86400){
@@ -282,11 +304,6 @@ public class EpicMain extends JavaPlugin{
 					List<EpicPlayer> playerList = EpicSystem.getPlayerList();
 					for(int i = 0; i < playerList.size(); i ++){
 						EpicPlayer epicPlayer = playerList.get(i);
-						HashMap<String, Integer> questMap = epicPlayer.getQuestTimerMap();
-						for(String quest : questMap.keySet()){
-							epicPlayer.checkTimer(quest, true);
-						}
-
 						epicPlayer.setQuestDailyLeft(EpicSystem.getDailyLimit());
 					}
 

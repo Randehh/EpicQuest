@@ -29,7 +29,7 @@ public class TypeGoTo extends TypeBase implements Listener {
 			Location location = new Location(Bukkit.getWorld(locationArray[0]), Integer.parseInt(locationArray[1]), Integer.parseInt(locationArray[2]), Integer.parseInt(locationArray[3]));
 			
 			if(player.getLocation().distance(location) < 15){
-				task.ProgressTask(1, epicPlayer);
+				task.ProgressTask(1, epicPlayer, true);
 			}
 		}
 	}

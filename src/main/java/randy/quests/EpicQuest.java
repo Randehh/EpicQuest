@@ -1,24 +1,15 @@
 package main.java.randy.quests;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import main.java.randy.engine.EpicAnnouncer;
 import main.java.randy.engine.EpicPlayer;
 import main.java.randy.engine.EpicSystem;
-import main.java.randy.epicquest.EpicMain;
 import main.java.randy.quests.EpicQuestTask.TaskTypes;
-import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.permission.Permission;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-
-import com.herocraftonline.heroes.characters.Hero;
 
 public class EpicQuest {
 	
@@ -27,11 +18,12 @@ public class EpicQuest {
 	private String questTag;
 	private List<EpicQuestTask> questTasks = new ArrayList<EpicQuestTask>();
 	
-	public EpicQuest(EpicPlayer epicPlayer, String questTag){
-		
-		this.epicPlayer = epicPlayer;
+	public EpicQuest(String questTag){
 		this.questTag = questTag;
-		
+	}
+	
+	public void setEpicPlayer(EpicPlayer epicPlayer){
+		this.epicPlayer = epicPlayer;
 		int totalTaskAmount = EpicQuestDatabase.getTaskTotal(questTag);
 		for(int i = 0; i < totalTaskAmount; i ++){	
 			TaskTypes taskType = EpicQuestDatabase.getTaskType(questTag, i);
@@ -57,76 +49,15 @@ public class EpicQuest {
 	public String getQuestName(){ return EpicQuestDatabase.getQuestName(questTag); }
 	public String getQuestStart(){ return EpicQuestDatabase.getQuestStartInfo(questTag); }
 	public String getQuestEnd(){ return EpicQuestDatabase.getQuestEndInfo(questTag); }
-	public List<String> getQuestWorlds(){ return EpicQuestDatabase.getQuestWorlds(questTag); }
-	public int getQuestResetTime(){ return EpicQuestDatabase.getQuestResetTime(questTag); }
-	public int getQuestRewardMoney(){ return EpicQuestDatabase.getRewardMoney(questTag); }
-	public List<ItemStack> getQuestRewardItem() { return EpicQuestDatabase.getRewardItems(questTag); }
-	public String getQuestRewardPermission() { return EpicQuestDatabase.getRewardRank(questTag); }
-	public List<String> getQuestRewardCommand() { return EpicQuestDatabase.getRewardCommand(questTag); }
-	public int getQuestRewardHeroesExp() { return EpicQuestDatabase.getRewardHeroesExp(questTag); }
+	public List<EpicQuestReward> getQuestRewards(){ return EpicQuestDatabase.getRewards(questTag); }
 	public Boolean getQuestAutoComplete() { return EpicQuestDatabase.getQuestAutoComplete(questTag); }
-	@SuppressWarnings("deprecation")
 	public void completeQuest(){
 		
 		//Basics
 		Player player = epicPlayer.getPlayer();
-		String playerName = player.getName();
 		
-		//Generate item reward
-		PlayerInventory inventory = player.getInventory();
-		List<ItemStack> itemList = getQuestRewardItem();
-		if(!itemList.isEmpty()){
-			for(int i = 0; i < itemList.size(); i++){
-				ItemStack itemStack = itemList.get(i);
-				inventory.addItem(itemStack);
-				player.sendMessage(ChatColor.GREEN + "You got " + itemStack.getAmount() + " " + itemStack.getType().toString().toLowerCase().replace("_", " ") + ".");
-			}
-		}
-			
-		//Generate money reward
-		Economy economy = EpicMain.economy;
-		int money = getQuestRewardMoney();
-		if(EpicSystem.enabledMoneyRewards()){
-			if(!economy.hasAccount(playerName)){ economy.createPlayerAccount(playerName); }
-			
-			//Add money if there's money to add
-			if(money >= 1){
-				economy.depositPlayer(playerName, money);
-				String moneyname = economy.currencyNamePlural();
-				if(money == 1){ moneyname = economy.currencyNameSingular(); }
-				
-				epicPlayer.playerStatistics.AddMoneyEarned(money);
-				player.sendMessage(ChatColor.GREEN + "You received " + money + " " + moneyname + ".");
-			}
-		}
-		
-		//Generate permission reward
-		Permission permission = EpicMain.permission;
-		String rank = getQuestRewardPermission();
-		if(permission != null && permission.isEnabled()){
-			if(Arrays.asList(permission.getGroups()).contains(rank)){
-				permission.playerAddGroup(player, rank);
-				player.sendMessage(ChatColor.GREEN + "You got promoted to " + rank + ".");
-			}
-		}
-		
-		//Execute command
-		List<String> commands = getQuestRewardCommand();
-		if(!commands.isEmpty()){
-			for(String command : commands){
-				if(command.contains("<player>"))
-					command = command.replaceAll("<player>", player.getName());
-		
-				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
-			}
-		}
-		
-		//Heroes EXP
-		int heroesExp = getQuestRewardHeroesExp();
-		if(heroesExp != 0 && EpicSystem.useHeroes()){
-			Hero playerHero = EpicMain.heroes.getCharacterManager().getHero(player);
-			playerHero.addExp(heroesExp, playerHero.getHeroClass(), player.getLocation());
-			player.sendMessage(ChatColor.GREEN + "You gained " + heroesExp + " experience points for " + playerHero.getHeroClass().getName() + ".");
+		for(EpicQuestReward reward : getQuestRewards()){
+			reward.GiveRewards(epicPlayer);
 		}
 		
 		//Send ending text
@@ -137,6 +68,7 @@ public class EpicQuest {
 		epicPlayer.playerStatistics.AddQuestsCompleted(1);
 		
 		if(!epicPlayer.getQuestsCompleted().contains(questTag)) epicPlayer.getQuestsCompleted().add(questTag);
+		epicPlayer.setQuestTimer(questTag, EpicSystem.getGlobalTime());
 		epicPlayer.getQuestList().remove(this);
 	}
 	

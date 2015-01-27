@@ -29,12 +29,14 @@ public class EpicSystem {
 	static int dailyLimit = 10;
 	static int saveTime = 0;
 	static int maxPartySize = 5;
+	static int globalTime = 0;
 	private final static double version = 3.5;
 	static boolean usePermissions = false;
 	static boolean useBook = true;
 	static boolean useHeroes = false;
 	static boolean useCitizens = false;
 	static boolean useBarAPI = false;
+	static boolean useSQLDatabase = false;
 	static boolean enabledAnnouncer = true;
 	static boolean enabledMoneyRewards = true;
 	
@@ -51,8 +53,10 @@ public class EpicSystem {
 	public static void setUseHeroes(boolean use) { useHeroes = use; }
 	public static void setUseCitizens(boolean use) { useCitizens = use; }
 	public static void setUseBarAPI(boolean use){ useBarAPI = use; }
+	public static void setUseSQLDatabase(boolean use){ useSQLDatabase = use; }
 	public static void setEnabledAnnouncer(boolean enabled) { enabledAnnouncer = enabled; }
 	public static void setEnabledMoneyRewards(boolean enabled) { enabledMoneyRewards = enabled; }
+	public static void setGlobalTime(int time) { globalTime = time; }
 	
 	public static int getQuestLimit(){ return questLimit; }
 	public static int getTime() { return time; }
@@ -68,11 +72,14 @@ public class EpicSystem {
 	public static boolean useHeroes() { return useHeroes; }
 	public static boolean useCitizens() { return useCitizens; }
 	public static boolean useBarAPI(){ return useBarAPI; }
+	public static boolean useSQLDatabase(){ return useSQLDatabase; }
 	public static boolean enabledAnnouncer(){ return enabledAnnouncer; }
 	public static boolean enabledMoneyRewards(){ return enabledMoneyRewards; }
+	public static int getGlobalTime(){ return globalTime; }
 	
-	public static void modifyTime(int newTime) { time += newTime; }
-	public static void modifySaveTime(int newSaveTime) { saveTime += newSaveTime; }
+	public static void modifyTime(int addTime) { time += addTime; }
+	public static void modifySaveTime(int addTime) { saveTime += addTime; }
+	public static void modifyGlobalTime(int addTime) { globalTime += addTime; }
 	
 	public static EpicPlayer getEpicPlayer(UUID id){
 		
@@ -112,7 +119,12 @@ public class EpicSystem {
 	}
 	
 	public static void addPlayer(EpicPlayer player){
-		if(!playerList.contains(player)) playerList.add(player);
+		for(EpicPlayer ePlayer : playerList){
+			if(ePlayer.getPlayerID().equals(player.getPlayerID())){
+				return;
+			}
+		}
+		playerList.add(player);
 	}
 	
 	public static void addFirstStart(UUID id){

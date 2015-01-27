@@ -9,6 +9,7 @@ import java.util.UUID;
 import main.java.randy.listeners.OpenBookListener;
 import main.java.randy.quests.EpicQuest;
 import main.java.randy.quests.EpicQuestDatabase;
+import main.java.randy.quests.EpicQuestRequirement;
 import main.java.randy.quests.EpicQuestTask;
 import main.java.randy.quests.EpicQuestTask.TaskTypes;
 
@@ -22,6 +23,7 @@ import org.bukkit.inventory.meta.BookMeta;
 public class EpicPlayer {
 	
 	UUID playerID;
+	String playerName;
 	List<EpicQuest> questList;
 	List<String> questCompleted;
 	int questDailyLeft;
@@ -71,6 +73,8 @@ public class EpicPlayer {
 		return null;
 	}
 	public UUID getPlayerID() { return playerID; }
+	public String getPlayerName() { return playerName; }
+	public void setPlayerName(String playerName) { this.playerName = playerName; }
 	
 	public EpicParty getParty(){
 		return currentParty;
@@ -135,10 +139,12 @@ public class EpicPlayer {
 	
 	//Quest managing
 	public boolean addQuest(EpicQuest quest){
-		if(canGetQuest(quest.getQuestTag()) == true){
+		if(canGetQuest(quest.getQuestTag(), false)){
+			
+			quest.setEpicPlayer(this);
 			
 			//Take items first
-			if(hasItemRequirements(quest.getQuestTag())){
+			/*if(hasItemRequirements(quest.getQuestTag())){
 				List<ItemStack> itemList = EpicQuestDatabase.getQuestItemsRequired(quest.getQuestTag());
 				Inventory inventory = getPlayer().getInventory();
 				
@@ -147,7 +153,7 @@ public class EpicPlayer {
 						inventory.remove(item.clone());
 					}
 				}
-			}
+			}*/
 			
 			questList.add(quest);
 			playerStatistics.AddQuestsGet(1);
@@ -160,14 +166,8 @@ public class EpicPlayer {
 			
 			OpenBookListener.UpdateBook(this);
 			return true;
-		}else{
-			
-			//If the reason was not having the required items
-			if(!hasItemRequirements(quest.getQuestTag())){
-				getPlayer().sendMessage(ChatColor.RED + "You do not have the required items for this quest!");
-			}
-			return false;
 		}
+		return false;
 	}
 	public void removeQuest(EpicQuest quest){
 		if(hasQuest(quest)){
@@ -207,7 +207,7 @@ public class EpicPlayer {
 		if(!obtainableQuests.isEmpty()){
 			Random generator = new Random();
 			int randomQuest = generator.nextInt(obtainableQuests.size());
-			EpicQuest quest = new EpicQuest(this, obtainableQuests.get(randomQuest));
+			EpicQuest quest = new EpicQuest(obtainableQuests.get(randomQuest));
 			addQuest(quest);
 		}
 	}
@@ -231,25 +231,28 @@ public class EpicPlayer {
 		List<String> obtainableQuests = new ArrayList<String>();
 		if(!isQuestListFull()){
 			for(String questTag : EpicQuestDatabase.getQuestTags()){
-				if(canGetQuest(questTag)){
+				if(canGetQuest(questTag, false)){
 					obtainableQuests.add(questTag);
 				}
 			}
 		}
 		return obtainableQuests;
 	}
-	public boolean canGetQuest(String questTag){
-		
-		if(!hasQuest(questTag) &&
-				hasUnlockedQuest(questTag) &&
-				hasDailyQuestLeft() &&
-				isTimeOut(questTag) &&
-				!isQuestListFull() &&
-				hasItemRequirements(questTag) &&
-				isHighEnoughLevel(questTag)){
-			return true;
+	public boolean canGetQuest(String questTag, boolean sendMessage){		
+		if(hasQuest(questTag) ||
+				!hasDailyQuestLeft() ||
+				isQuestListFull()){
+			return false;
 		}
-		return false;
+		
+		//Check quest specific requirements
+		for(EpicQuestRequirement requirement : EpicQuestDatabase.getQuestRequirements(questTag)){
+			if(!requirement.hasRequirement(this, questTag, true)){
+				return false;
+			}
+		}
+		
+		return true;
 	}
 	public boolean canGetQuest(){
 		if(getObtainableQuests().isEmpty()) { return false; } else { return true; }
@@ -266,57 +269,12 @@ public class EpicPlayer {
 		if(questList.contains(quest)){ return true; }
 		return false;
 	}
-	public boolean hasUnlockedQuest(String questTag){
-		List<String> questLockedList = EpicQuestDatabase.getQuestLocked(questTag);
-		if(questLockedList.isEmpty()) return true;
-		
-		if(questCompleted.containsAll(questLockedList)){ return true; }
-		return false;
-	}
 	public boolean hasDailyQuestLeft(){
 		if(questDailyLeft > 0){ return true; }
-		return false;
-	}
-	public boolean isTimeOut(String questTag){
-		if(EpicQuestDatabase.getQuestResetTime(questTag) == -1 && getQuestsCompleted().contains(questTag)) return true;
-		
-		checkTimer(questTag, false);
-		
-		if(questTimer.get(questTag) <= 0){ return true; }
 		return false;
 	}
 	public boolean isQuestListFull(){
 		if(questList.size() >= EpicSystem.getQuestLimit()){ return true; }
 		return false;
-	}
-	public boolean hasItemRequirements(String questTag){
-		List<ItemStack> itemList = EpicQuestDatabase.getQuestItemsRequired(questTag);
-		Inventory inventory = getPlayer().getInventory();
-		
-		if(itemList.isEmpty()) return true;
-		
-		for(ItemStack item : itemList){
-			if(!inventory.contains(item.getType(), item.getAmount())) return false;
-		}
-		return true;
-	}
-	public boolean isHighEnoughLevel(String questTag){
-		int requiredLevel = EpicQuestDatabase.getQuestLevel(questTag);
-		int playerLevel = getPlayer().getLevel();
-		if(playerLevel >= requiredLevel) return true;
-		return false;
-	}
-	public void checkTimer(String questTag, boolean substractDifference){		
-		int timeDifference = EpicSystem.getTime() - EpicSystem.getStartTime();
-		int newQuestTime = questTimer.get(questTag) - timeDifference;
-		
-		if(substractDifference){
-			questTimer.put(questTag, newQuestTime);
-		}
-		
-		if(newQuestTime <= 0){
-			newQuestTime = 0;
-			questTimer.put(questTag, 0);
-		}
 	}
 }

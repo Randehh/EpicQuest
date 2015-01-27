@@ -28,3 +28,4 @@ Enable_Announcer: true
 #Don't touch this
 Time: 0
 Save_Time: 0
+Global_Time: 0

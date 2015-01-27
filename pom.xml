@@ -1,11 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>randy</groupId>
-  <artifactId>epicquest3</artifactId>
-  <version>3.5.3</version>
+  <artifactId>EpicQuest</artifactId>
+  <version>3.5.4</version>
   
   <build>
-    <pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -44,7 +43,6 @@
                 </executions>
             </plugin>
         </plugins>
-    </pluginManagement>
   </build>
   
     <repositories>
@@ -114,7 +112,7 @@
 		<dependency>
             <groupId>org.mcstats.bukkit</groupId>
             <artifactId>metrics</artifactId>
-            <version>R7</version>
+            <version>R8-SNAPSHOT</version>
         </dependency>
 		
 		<dependency>
