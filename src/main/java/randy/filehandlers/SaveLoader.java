@@ -19,6 +19,7 @@ import main.java.randy.questentities.QuestEntityHandler;
 import main.java.randy.questentities.SentenceBatch;
 import main.java.randy.questentities.QuestEntity.QuestPhase;
 import main.java.randy.quests.EpicQuest;
+import main.java.randy.quests.EpicQuestDatabase;
 import main.java.randy.quests.EpicQuestTask;
 
 import org.bukkit.Bukkit;
@@ -439,6 +440,9 @@ public class SaveLoader {
 				//Get quest numbers
 				List<String> questList = save.getStringList("Quest_list");
 				for(String questTag : questList){
+					
+					//Don't load the quest if it doesn't exist
+					if(!EpicQuestDatabase.getQuestTags().contains(questTag)) continue;
 
 					//Create the EpicQuests
 					EpicQuest epicQuest = new EpicQuest(questTag);
