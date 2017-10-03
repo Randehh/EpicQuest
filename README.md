@@ -1,8 +1,8 @@
-#EpicQuest, The ultimate, lightweight quest plugin!
+# EpicQuest, The ultimate, lightweight quest plugin!
 
 EpicQuest is an easy to use yet highly customizable quest plugin. Immerse your players into Minecraft with a commandless questing experience through villagers, bounty signs and a book to show your progress!
 
-##Features:
+## Features:
 * Multiple tasks per quest
 * Multiple quests at the same time
 * Quest types:
@@ -46,11 +46,11 @@ EpicQuest is an easy to use yet highly customizable quest plugin. Immerse your p
 * Check which quests you have in a book - no commands! -
 * Includes Vault integration
 
-###Coming Soon:
+### Coming Soon:
 * RPG Items support (collect quest type and rewards)
 * BarAPI for progress tracking
 
-##Commands
+## Commands
 You must use either /q or /quest to precede the following commands:
 
 Command	| Description | Permission
@@ -76,13 +76,13 @@ questentity create <name> | Select a Citizen after this command to make him give
 questentity remove <name> | Remove a villager with a quest | epicquest.admin.questentity
 reload | Reload quests from the quests file | epicquest.admin.reload
 
-##How to use
-####[Quests](http://dev.bukkit.org/bukkit-plugins/epicquest/pages/creating-quests/)
-####[Quest Givers](http://dev.bukkit.org/bukkit-plugins/epicquest/pages/how-to-use-quest-givers/)
-####[Tips and Tricks](http://dev.bukkit.org/bukkit-plugins/epicquest/pages/tips-and-tricks/)
-####[Sharing Quests](http://dev.bukkit.org/server-mods/epicquest/pages/quest-sharing/)
+## How to use
+#### [Quests](http://dev.bukkit.org/bukkit-plugins/epicquest/pages/creating-quests/)
+#### [Quest Givers](http://dev.bukkit.org/bukkit-plugins/epicquest/pages/how-to-use-quest-givers/)
+#### [Tips and Tricks](http://dev.bukkit.org/bukkit-plugins/epicquest/pages/tips-and-tricks/)
+#### [Sharing Quests](http://dev.bukkit.org/server-mods/epicquest/pages/quest-sharing/)
 
-##Contribute!
+## Contribute!
 Feel like you want to help EpicQuest grow and become more than what it is now? Simply clone the repo and import it to your favourite IDE with Maven integrated and away you go! Whatever contribution, regardless of how big or small will be appreciated and thus don't be afraid to submit a pull request.
 
 For instructions on how to use Maven with Eclipse, [check out this guide here](http://theopentutorials.com/tutorials/eclipse/installing-m2eclipse-maven-plugin-for-eclipse/). For other IDE's, you will need to look up how to use Maven with your respective IDE.
